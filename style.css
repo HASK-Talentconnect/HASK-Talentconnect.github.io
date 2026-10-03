@@ -1,3 +1,9 @@
+/* ============================================
+   HASK - Human Resource & Administration Sheikhupura
+   Final Style Sheet
+   ============================================ */
+
+/* ===== Global Reset ===== */
 * {
     margin: 0;
     padding: 0;
@@ -62,7 +68,7 @@ nav ul li a:hover {
     transform: scale(1.05);
 }
 
-/* ===== Hero Section ===== */
+/* ===== Hero Section (Simple) ===== */
 .hero {
     background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
     color: white;
@@ -83,6 +89,59 @@ nav ul li a:hover {
     opacity: 0.95;
 }
 
+/* ===== Hero Section with Background Image ===== */
+.hero-bg {
+    background-image: url('images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.hero-overlay {
+    background: rgba(26, 42, 108, 0.85);
+    color: white;
+    text-align: center;
+    padding: 80px 40px;
+    border-radius: 20px;
+    max-width: 900px;
+    margin: 40px 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    backdrop-filter: blur(5px);
+}
+
+.hero-overlay h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.hero-overlay .tagline {
+    font-size: 1.3rem;
+    color: #f9c74f;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero-overlay .hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    opacity: 0.95;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ===== Buttons ===== */
 .btn-primary {
     display: inline-block;
     background: white;
@@ -98,6 +157,24 @@ nav ul li a:hover {
 .btn-primary:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.btn-secondary {
+    display: inline-block;
+    background: transparent;
+    color: white;
+    padding: 14px 35px;
+    border: 2px solid white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: #1a2a6c;
+    transform: scale(1.05);
 }
 
 /* ===== Sections ===== */
@@ -119,6 +196,15 @@ nav ul li a:hover {
     color: #666;
     margin-bottom: 50px;
     font-size: 1.1rem;
+}
+
+.section-text {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #444;
+    font-size: 1.05rem;
+    line-height: 1.8;
 }
 
 /* ===== Team Grid ===== */
@@ -185,119 +271,7 @@ nav ul li a:hover {
     transform: scale(1.05);
 }
 
-/* ===== Footer ===== */
-footer {
-    background: #1a2a6c;
-    color: white;
-    text-align: center;
-    padding: 30px 20px;
-    margin-top: 50px;
-}
-
-footer p {
-    opacity: 0.8;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-    nav {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-    }
-    nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    .hero h1 {
-        font-size: 2rem;
-    }
-    .hero p {
-        font-size: 1rem;
-    }
-}
-/* ===== Hero Section with Background Image ===== */
-.hero-bg {
-    background-image: url('images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.hero-overlay {
-    background: rgba(26, 42, 108, 0.85);
-    color: white;
-    text-align: center;
-    padding: 80px 40px;
-    border-radius: 20px;
-    max-width: 900px;
-    margin: 40px 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    backdrop-filter: blur(5px);
-}
-
-.hero-overlay h1 {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
-}
-
-.hero-overlay .tagline {
-    font-size: 1.3rem;
-    color: #f9c74f;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.hero-overlay .hero-desc {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 30px;
-    opacity: 0.95;
-}
-
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.btn-secondary {
-    display: inline-block;
-    background: transparent;
-    color: white;
-    padding: 14px 35px;
-    border: 2px solid white;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.btn-secondary:hover {
-    background: white;
-    color: #1a2a6c;
-    transform: scale(1.05);
-}
-
-/* ===== Section Text ===== */
-.section-text {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-    color: #444;
-    font-size: 1.05rem;
-    line-height: 1.8;
-}
-
-/* ===== Features Section ===== */
+/* ===== Features Section (with top color bar) ===== */
 .features-section {
     padding: 70px 20px;
     background: #f4f6fb;
@@ -313,12 +287,40 @@ footer p {
 
 .feature-card {
     background: white;
-    padding: 35px 25px;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     transition: 0.3s;
-    border-top: 4px solid #f9c74f;
+    position: relative;
+    overflow: hidden;
+    padding: 45px 25px 35px 25px;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #1a2a6c, #f9c74f);
+}
+
+/* Different colors for each card */
+.feature-card:nth-child(1)::before {
+    background: linear-gradient(90deg, #1a2a6c, #3b5998);
+}
+
+.feature-card:nth-child(2)::before {
+    background: linear-gradient(90deg, #b21f1f, #fdbb2d);
+}
+
+.feature-card:nth-child(3)::before {
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+}
+
+.feature-card:nth-child(4)::before {
+    background: linear-gradient(90deg, #764ba2, #f9c74f);
 }
 
 .feature-card:hover {
@@ -363,21 +365,6 @@ footer p {
     opacity: 0.95;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-    .hero-overlay h1 {
-        font-size: 1.8rem;
-    }
-    .hero-overlay .tagline {
-        font-size: 1.1rem;
-    }
-    .hero-overlay {
-        padding: 50px 25px;
-    }
-    .cta-section h2 {
-        font-size: 1.6rem;
-    }
-}
 /* ===== Gallery Slideshow ===== */
 .slideshow-container {
     max-width: 900px;
@@ -423,7 +410,6 @@ footer p {
     font-weight: 500;
 }
 
-/* Prev & Next buttons */
 .prev, .next {
     cursor: pointer;
     position: absolute;
@@ -456,7 +442,6 @@ footer p {
     color: #1a2a6c;
 }
 
-/* Dots */
 .dots-container {
     text-align: center;
     margin-top: 15px;
@@ -478,7 +463,6 @@ footer p {
     transform: scale(1.2);
 }
 
-/* Fade animation */
 .fade {
     animation-name: fade;
     animation-duration: 1s;
@@ -489,8 +473,51 @@ footer p {
     to {opacity: 1}
 }
 
-/* Responsive */
+/* ===== Footer ===== */
+footer {
+    background: #1a2a6c;
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 50px;
+}
+
+footer p {
+    opacity: 0.8;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
 @media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .hero-overlay h1 {
+        font-size: 1.8rem;
+    }
+    .hero-overlay .tagline {
+        font-size: 1.1rem;
+    }
+    .hero-overlay {
+        padding: 50px 25px;
+    }
+    .cta-section h2 {
+        font-size: 1.6rem;
+    }
     .mySlides img {
         height: 300px;
     }
