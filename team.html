@@ -127,7 +127,6 @@
 
     <!-- Smart Image Loader -->
     <script>
-        // Supported image formats (in priority order)
         const formats = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG'];
 
         document.querySelectorAll('.team-card img').forEach(img => {
@@ -137,7 +136,6 @@
 
             function tryNextFormat() {
                 if (formatIndex >= formats.length) {
-                    // No image found — use auto-generated avatar
                     img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(fullName) + '&background=1a2a6c&color=fff&size=200';
                     return;
                 }
