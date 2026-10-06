@@ -988,4 +988,88 @@
                 let msg = '❌ Login failed.';
                 if (error.code === 'auth/wrong-password') msg = '❌ Incorrect password.';
                 else if (error.code === 'auth/user-not-found') msg = '❌ No account found.';
-                else if (error.code === 'auth/invalid-
+                else if (error.code === 'auth/invalid-credential') msg = '❌ Invalid credentials.';
+                else msg = '❌ ' + error.message;
+                showAdminMessage(msg, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Login as Admin';
+            }
+        };
+
+        // ===== Email Link Verification =====
+        async function checkEmailLink() {
+            if (isSignInWithEmailLink(auth, window.location.href)) {
+                let email = window.localStorage.getItem('hask_email_for_signin');
+                const name = window.localStorage.getItem('hask_pending_name');
+                const role = window.localStorage.getItem('hask_pending_role');
+
+                if (!email) {
+                    email = window.prompt('Please enter your email to complete sign in:');
+                }
+                if (!email) return;
+
+                try {
+                    const result = await signInWithEmailLink(auth, email, window.location.href);
+                    const user = result.user;
+
+                    if (name && role) {
+                        await setDoc(doc(db, "users", user.uid), {
+                            uid: user.uid,
+                            name: name,
+                            email: email,
+                            role: role,
+                            status: 'active',
+                            createdAt: new Date().toISOString()
+                        }, { merge: true });
+                        if (user.displayName !== name) {
+                            await updateProfile(user, { displayName: name });
+                        }
+                    }
+
+                    window.localStorage.removeItem('hask_email_for_signin');
+                    window.localStorage.removeItem('hask_pending_name');
+                    window.localStorage.removeItem('hask_pending_role');
+
+                    sessionStorage.setItem('hask_logged_in', 'true');
+                    showMessage('✅ Verified! Redirecting to dashboard...', 'success');
+                    setTimeout(() => window.location.replace('dashboard.html'), 1200);
+                } catch (error) {
+                    console.error(error);
+                    showMessage('❌ Link verification failed: ' + error.message, 'error');
+                }
+            }
+        }
+
+        checkEmailLink();
+
+        // ===== Back-Button Protection =====
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+
+        window.addEventListener('pageshow', function() {
+            if (sessionStorage.getItem('hask_logged_in') === 'true') {
+                const unsubscribe = auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        // Check if admin
+                        if (sessionStorage.getItem('hask_is_admin') === 'true') {
+                            window.location.replace('admin.html');
+                        } else {
+                            window.location.replace('dashboard.html');
+                        }
+                    }
+                    unsubscribe();
+                });
+            }
+        });
+
+        // Close admin modal on outside click
+        document.getElementById('adminModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAdminModal();
+        });
+    </script>
+
+</body>
+</html>
