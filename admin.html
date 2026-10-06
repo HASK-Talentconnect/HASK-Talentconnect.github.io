@@ -803,4 +803,249 @@
                     <td>${joined}</td>
                     <td>
                         <div class="action-cell">
-                            <button class="btn btn-primary btn-sm" onclick="viewUser('${u.id
+                            <button class="btn btn-primary btn-sm" onclick="viewUser('${u.id}')">👁️ View</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}', '${escapeHtml(u.name)}')">🗑️ Delete</button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            html += `</tbody></table></div>`;
+            wrap.innerHTML = html;
+        };
+
+        // ===== Render Jobs =====
+        window.renderJobs = function() {
+            const search = (document.getElementById('jobSearch').value || '').toLowerCase();
+            const jobs = allJobs.filter(j => 
+                !search || 
+                (j.title || '').toLowerCase().includes(search) ||
+                (j.company || '').toLowerCase().includes(search)
+            );
+
+            const wrap = document.getElementById('jobsTableWrap');
+
+            if (jobs.length === 0) {
+                wrap.innerHTML = `<div class="empty-state"><span class="icon">💼</span><p>No jobs posted yet. Jobs will appear here when employers post them.</p></div>`;
+                return;
+            }
+
+            let html = `<div class="table-wrap"><table>
+                <thead><tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Posted</th>
+                    <th>Actions</th>
+                </tr></thead><tbody>`;
+
+            jobs.forEach(j => {
+                const posted = j.createdAt ? new Date(j.createdAt).toLocaleDateString('en-GB') : '-';
+                html += `<tr>
+                    <td><strong>${escapeHtml(j.title)}</strong></td>
+                    <td>${escapeHtml(j.company)}</td>
+                    <td>${escapeHtml(j.location || '-')}</td>
+                    <td>${posted}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}', '${escapeHtml(j.title)}')">🗑️ Delete</button>
+                    </td>
+                </tr>`;
+            });
+
+            html += `</tbody></table></div>`;
+            wrap.innerHTML = html;
+        };
+
+        // ===== Storage Info =====
+        function renderStorageInfo() {
+            const info = document.getElementById('storageInfo');
+            info.innerHTML = `
+                <div>📊 <strong>Total users:</strong> ${allUsers.length}</div>
+                <div>💼 <strong>Total jobs:</strong> ${allJobs.length}</div>
+                <div>📧 <strong>Emails sent:</strong> <span id="storageEmails">-</span></div>
+                <div>👁️ <strong>Total visits:</strong> <span id="storageVisits">-</span></div>
+            `;
+            (async () => {
+                const eSnap = await getDoc(doc(db, "stats", "email_counter"));
+                document.getElementById('storageEmails').textContent = eSnap.exists() ? eSnap.data().count : 0;
+                const vSnap = await getDoc(doc(db, "stats", "visits"));
+                document.getElementById('storageVisits').textContent = vSnap.exists() ? vSnap.data().count : 0;
+            })();
+        }
+
+        // ===== View User Modal =====
+        window.viewUser = function(id) {
+            const u = allUsers.find(x => x.id === id);
+            if (!u) return;
+
+            document.getElementById('modalTitle').textContent = u.name || 'User Details';
+            const joined = u.createdAt ? new Date(u.createdAt).toLocaleString('en-GB') : '-';
+            const isBlocked = u.status === 'blocked';
+
+            document.getElementById('modalBody').innerHTML = `
+                <div class="profile-row"><strong>Full Name:</strong> <span>${escapeHtml(u.name)}</span></div>
+                <div class="profile-row"><strong>Email:</strong> <span>${escapeHtml(u.email)}</span></div>
+                <div class="profile-row"><strong>Role:</strong> <span>${u.role || 'seeker'}</span></div>
+                <div class="profile-row"><strong>Status:</strong> <span>${isBlocked ? '🚫 Blocked' : '✅ Active'}</span></div>
+                <div class="profile-row"><strong>Phone:</strong> <span>${escapeHtml(u.phone || '-')}</span></div>
+                <div class="profile-row"><strong>Company:</strong> <span>${escapeHtml(u.company || '-')}</span></div>
+                <div class="profile-row"><strong>Location:</strong> <span>${escapeHtml(u.location || '-')}</span></div>
+                <div class="profile-row"><strong>Skills:</strong> <span>${escapeHtml(u.skills || '-')}</span></div>
+                <div class="profile-row"><strong>Experience:</strong> <span>${escapeHtml(u.experience || '-')}</span></div>
+                <div class="profile-row"><strong>Education:</strong> <span>${escapeHtml(u.education || '-')}</span></div>
+                <div class="profile-row"><strong>CV Link:</strong> <span>${u.cvLink ? `<a href="${escapeHtml(u.cvLink)}" target="_blank" style="color: #1a2a6c;">View CV</a>` : '-'}</span></div>
+                <div class="profile-row"><strong>Bio:</strong> <span>${escapeHtml(u.bio || '-')}</span></div>
+                <div class="profile-row"><strong>Joined:</strong> <span>${joined}</span></div>
+                <div class="profile-row"><strong>User ID:</strong> <span style="font-size: 0.75rem; font-family: monospace;">${u.id}</span></div>
+                
+                <div style="margin-top: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    ${isBlocked 
+                        ? `<button class="btn btn-success" onclick="unblockUser('${u.id}'); closeModal();">✓ Unblock User</button>`
+                        : `<button class="btn btn-warning" onclick="blockUser('${u.id}'); closeModal();">🚫 Block User</button>`
+                    }
+                    <button class="btn btn-danger" onclick="deleteUser('${u.id}', '${escapeHtml(u.name)}'); closeModal();">🗑️ Delete Account</button>
+                </div>
+            `;
+            document.getElementById('userModal').classList.add('show');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('userModal').classList.remove('show');
+        };
+
+        // ===== Block / Unblock =====
+        window.blockUser = async function(id) {
+            if (!confirm('Block this user? They will not be able to login.')) return;
+            try {
+                await updateDoc(doc(db, "users", id), { status: 'blocked' });
+                showAlert('✅ User blocked successfully', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        window.unblockUser = async function(id) {
+            try {
+                await updateDoc(doc(db, "users", id), { status: 'active' });
+                showAlert('✅ User unblocked successfully', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        // ===== Delete User =====
+        window.deleteUser = async function(id, name) {
+            if (!confirm(`⚠️ Delete user "${name}"? This cannot be undone.`)) return;
+            if (!confirm('Really delete this account?')) return;
+            try {
+                await deleteDoc(doc(db, "users", id));
+                showAlert('✅ User deleted', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        // ===== Delete Job =====
+        window.deleteJob = async function(id, title) {
+            if (!confirm(`Delete job "${title}"?`)) return;
+            try {
+                await deleteDoc(doc(db, "jobs", id));
+                showAlert('✅ Job deleted', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        // ===== Reset Counters =====
+        window.resetEmailCounter = async function() {
+            if (!confirm('Reset email counter to 0?')) return;
+            try {
+                await setDoc(doc(db, "stats", "email_counter"), { count: 0 });
+                showAlert('✅ Email counter reset', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        window.resetVisitCounter = async function() {
+            if (!confirm('Reset visit counter to 0?')) return;
+            try {
+                await setDoc(doc(db, "stats", "visits"), { count: 0 });
+                showAlert('✅ Visit counter reset', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        // ===== Delete All =====
+        window.deleteAllUsers = async function() {
+            if (!confirm('⚠️ Delete ALL users? This is VERY dangerous!')) return;
+            if (!confirm('Are you ABSOLUTELY sure? Type OK in next prompt.')) return;
+            const check = prompt('Type "DELETE ALL" to confirm:');
+            if (check !== 'DELETE ALL') {
+                showAlert('❌ Cancelled', 'error');
+                return;
+            }
+            try {
+                for (const u of allUsers) {
+                    await deleteDoc(doc(db, "users", u.id));
+                }
+                showAlert('✅ All users deleted', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        window.deleteAllJobs = async function() {
+            if (!confirm('⚠️ Delete ALL jobs?')) return;
+            const check = prompt('Type "DELETE ALL" to confirm:');
+            if (check !== 'DELETE ALL') {
+                showAlert('❌ Cancelled', 'error');
+                return;
+            }
+            try {
+                for (const j of allJobs) {
+                    await deleteDoc(doc(db, "jobs", j.id));
+                }
+                showAlert('✅ All jobs deleted', 'success');
+                loadAllData();
+            } catch (err) {
+                showAlert('❌ ' + err.message, 'error');
+            }
+        };
+
+        // ===== Tab Switching =====
+        window.switchTab = function(tab, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            btn.classList.add('active');
+        };
+
+        // ===== Logout =====
+        window.handleLogout = async function() {
+            if (!confirm('Logout from Admin Panel?')) return;
+            try {
+                sessionStorage.removeItem('hask_logged_in');
+                await signOut(auth);
+                window.location.replace('login.html');
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        };
+
+        // Close modal on outside click
+        document.getElementById('userModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</body>
+</html>
