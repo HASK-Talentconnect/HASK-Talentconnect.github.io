@@ -4,43 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Sign Up - HASK TalentConnect</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #1a2a6c;
+        .auth-wrap {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px 15px;
-            color: white;
+            padding: 30px 15px;
+            background: #f5f7fa;
         }
 
-        .login-container {
+        .auth-card {
             background: white;
-            border-radius: 20px;
-            padding: 40px 35px;
+            border-radius: 12px;
+            padding: 35px 30px;
             width: 100%;
-            max-width: 440px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            color: #222;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
 
-        .login-logo {
+        .auth-logo {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #1a2a6c;
             margin-bottom: 5px;
         }
 
-        .login-tagline {
+        .auth-sub {
             text-align: center;
-            font-size: 0.9rem;
             color: #888;
-            margin-bottom: 25px;
+            font-size: 0.88rem;
+            margin-bottom: 22px;
         }
 
         .tabs {
@@ -48,7 +44,7 @@
             background: #f0f2f8;
             border-radius: 50px;
             padding: 4px;
-            margin-bottom: 25px;
+            margin-bottom: 22px;
         }
 
         .tab-btn {
@@ -56,11 +52,11 @@
             background: transparent;
             border: none;
             color: #666;
-            padding: 12px;
+            padding: 10px;
             cursor: pointer;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: 0.2s;
             font-family: inherit;
         }
@@ -70,26 +66,27 @@
             color: white;
         }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 14px; }
 
         .form-group label {
             display: block;
-            font-size: 0.88rem;
-            margin-bottom: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
             color: #444;
             font-weight: 500;
         }
 
         .input-wrap { position: relative; }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 13px 45px 13px 16px;
-            border: 1.5px solid #ddd;
+            padding: 12px 42px 12px 14px;
+            border: 1.5px solid #dfe3ec;
             background: #fafbfc;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #222;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             outline: none;
             transition: 0.2s;
             font-family: inherit;
@@ -104,29 +101,29 @@
 
         .toggle-pw {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1.1rem;
-            padding: 5px;
-            color: #666;
+            font-size: 1rem;
+            padding: 4px;
+            color: #888;
         }
 
         .role-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 6px;
+            gap: 8px;
+            margin-top: 5px;
         }
 
         .role-option {
             background: #fafbfc;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 12px 8px;
+            border: 2px solid #dfe3ec;
+            border-radius: 8px;
+            padding: 10px 6px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
@@ -140,36 +137,33 @@
         }
 
         .role-option .icon {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             display: block;
             margin-bottom: 3px;
         }
 
         .role-option span {
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.8rem;
+            font-weight: 600;
             color: #333;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             background: #1a2a6c;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: 0.2s;
-            margin-top: 8px;
+            margin-top: 6px;
             font-family: inherit;
         }
 
-        .btn-submit:hover {
-            background: #f9c74f;
-            color: #1a2a6c;
-        }
+        .btn-submit:hover { background: #29b6f6; }
 
         .btn-submit:disabled {
             opacity: 0.6;
@@ -179,207 +173,69 @@
         .forgot-link {
             display: block;
             text-align: right;
-            color: #1a2a6c;
-            font-size: 0.82rem;
+            color: #29b6f6;
+            font-size: 0.8rem;
             text-decoration: none;
-            margin-top: -8px;
-            margin-bottom: 12px;
+            margin-top: -6px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .forgot-link:hover { text-decoration: underline; }
 
-        .login-footer {
+        .auth-footer {
             text-align: center;
-            margin-top: 20px;
-            font-size: 0.88rem;
+            margin-top: 18px;
+            font-size: 0.85rem;
             color: #666;
         }
 
-        .login-footer a {
+        .auth-footer a {
             color: #1a2a6c;
-            text-decoration: none;
             font-weight: 600;
         }
 
-        .login-footer a:hover { text-decoration: underline; }
+        .form-section { display: none; }
+        .form-section.active { display: block; }
 
-        /* ===== Admin Login Link ===== */
-        .admin-login-wrap {
+        .code-input {
             text-align: center;
-            margin-top: 18px;
-            padding-top: 18px;
-            border-top: 1px solid #eee;
+            font-size: 1.6rem;
+            letter-spacing: 8px;
+            font-family: monospace;
+            font-weight: bold;
+            padding: 12px !important;
         }
 
-        .admin-login-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #888;
+        .info-banner {
+            background: #e8f4fd;
+            color: #0277bd;
+            padding: 10px 14px;
+            border-radius: 8px;
             font-size: 0.82rem;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #f4f6fb;
-            transition: 0.2s;
-            font-weight: 500;
-        }
-
-        .admin-login-link:hover {
-            background: #1a2a6c;
-            color: white;
+            margin-bottom: 14px;
+            text-align: center;
         }
 
         .back-home {
             position: absolute;
             top: 20px;
             left: 20px;
-            color: white;
+            color: #1a2a6c;
             text-decoration: none;
-            font-weight: 500;
-            background: rgba(255,255,255,0.15);
-            padding: 8px 18px;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            transition: 0.2s;
-        }
-
-        .back-home:hover { background: rgba(255,255,255,0.3); }
-
-        .form-section { display: none; }
-        .form-section.active { display: block; }
-
-        .message-box {
-            padding: 12px 16px;
-            border-radius: 10px;
+            font-weight: 600;
             font-size: 0.88rem;
-            margin-bottom: 16px;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .message-box.show { display: block; }
-        .message-box.error { background: #fee; border: 1px solid #fcc; color: #c33; }
-        .message-box.success { background: #e8f8ee; border: 1px solid #a8e0bd; color: #1a7a3e; }
-        .message-box.info { background: #fff8e1; border: 1px solid #f9c74f; color: #8a6d00; }
-
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .code-input {
-            text-align: center;
-            font-size: 1.8rem;
-            letter-spacing: 10px;
-            font-family: monospace;
-            font-weight: bold;
-        }
-
-        .info-banner {
-            background: #eef1f8;
-            color: #1a2a6c;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-size: 0.82rem;
-            margin-bottom: 15px;
-            text-align: center;
-            border-left: 4px solid #1a2a6c;
-        }
-
-        /* ===== Admin Modal ===== */
-        .admin-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .admin-modal-overlay.show { display: flex; }
-
-        .admin-modal {
             background: white;
-            border-radius: 18px;
-            padding: 35px 30px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
-            position: relative;
+            padding: 8px 16px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .admin-modal-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .admin-modal-header .lock-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .admin-modal-header h2 {
-            color: #1a2a6c;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
-
-        .admin-modal-header p {
-            color: #888;
-            font-size: 0.85rem;
-        }
-
-        .admin-modal-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            color: #999;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-
-        .admin-modal-close:hover { color: #dc3545; }
-
-        .admin-modal input {
-            width: 100%;
-            padding: 13px 45px 13px 16px;
-            border: 1.5px solid #ddd;
-            background: #fafbfc;
-            border-radius: 10px;
-            color: #222;
-            font-size: 0.95rem;
-            outline: none;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-
-        .admin-modal input:focus {
-            border-color: #1a2a6c;
-            background: white;
-        }
-
-        .admin-modal input::placeholder { color: #aaa; }
+        .back-home:hover { background: #f0f2f8; }
 
         @media (max-width: 500px) {
-            .login-container { padding: 30px 22px; }
-            .login-logo { font-size: 1.5rem; }
-            .back-home { top: 12px; left: 12px; padding: 6px 12px; font-size: 0.78rem; }
+            .auth-card { padding: 25px 20px; }
+            .back-home { top: 12px; left: 12px; padding: 6px 12px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -387,162 +243,108 @@
 
     <a href="index.html" class="back-home">← Back to Home</a>
 
-    <div class="login-container">
-        <div class="login-logo">HASK TalentConnect</div>
-        <p class="login-tagline">Connect • Grow • Succeed</p>
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <div class="auth-logo">HASK TalentConnect</div>
+            <p class="auth-sub">Connect • Grow • Succeed</p>
 
-        <div class="tabs">
-            <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
-            <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
-        </div>
-
-        <div id="messageBox" class="message-box"></div>
-
-        <!-- ===== LOGIN FORM ===== -->
-        <div id="login-form" class="form-section active">
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="input-wrap">
-                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                        <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">👁️</button>
-                    </div>
-                </div>
-                <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot Password?</a>
-                <button type="submit" class="btn-submit" id="loginBtn">Login to Your Account</button>
-            </form>
-            <p class="login-footer">
-                Don't have an account? 
-                <a href="#" onclick="switchTab('signup'); return false;">Sign Up</a>
-            </p>
-            <div class="admin-login-wrap">
-                <a href="#" class="admin-login-link" onclick="openAdminModal(event)">
-                    🔒 Login as Admin
-                </a>
+            <div class="tabs">
+                <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
             </div>
-        </div>
 
-        <!-- ===== SIGNUP FORM ===== -->
-        <div id="signup-form" class="form-section">
-            <form onsubmit="handleSignupStart(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="signupName" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="input-wrap">
-                        <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-                        <button type="button" class="toggle-pw" onclick="togglePassword('signupPassword', this)">👁️</button>
+            <div id="messageBox" class="message-box"></div>
+
+            <!-- ===== LOGIN ===== -->
+            <div id="login-form" class="form-section active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="you@example.com" required>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <div class="input-wrap">
-                        <input type="password" id="signupConfirm" placeholder="Re-enter your password" required minlength="6">
-                        <button type="button" class="toggle-pw" onclick="togglePassword('signupConfirm', this)">👁️</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>I am a...</label>
-                    <div class="role-selector">
-                        <div class="role-option selected" id="roleSeeker" onclick="selectRole('seeker')">
-                            <span class="icon">👤</span>
-                            <span>Job Seeker</span>
-                        </div>
-                        <div class="role-option" id="roleEmployer" onclick="selectRole('employer')">
-                            <span class="icon">🏢</span>
-                            <span>Employer</span>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrap">
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">👁️</button>
                         </div>
                     </div>
-                </div>
-                <button type="submit" class="btn-submit" id="signupBtn">Send Verification Code</button>
-            </form>
-            <p class="login-footer">
-                Already have an account? 
-                <a href="#" onclick="switchTab('login'); return false;">Login</a>
-            </p>
-        </div>
-
-        <!-- ===== VERIFICATION FORM ===== -->
-        <div id="verify-form" class="form-section">
-            <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 8px;">Verify Your Email</h3>
-            <p style="text-align: center; color: #666; font-size: 0.88rem; margin-bottom: 20px;">
-                We sent a 6-digit code to<br>
-                <strong id="verifyEmail" style="color: #1a2a6c;"></strong>
-            </p>
-            <form onsubmit="handleVerifyCode(event)">
-                <div class="form-group">
-                    <label>Verification Code</label>
-                    <input type="text" id="verifyCode" class="code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
-                </div>
-                <button type="submit" class="btn-submit" id="verifyBtn">Verify & Create Account</button>
-            </form>
-            <p class="login-footer">
-                Didn't receive code? 
-                <a href="#" onclick="resendCode(event)">Resend</a> | 
-                <a href="#" onclick="backToSignup(event)">Back</a>
-            </p>
-        </div>
-
-        <!-- ===== LINK SENT FORM (after 200 limit) ===== -->
-        <div id="link-form" class="form-section">
-            <div style="text-align: center; padding: 20px 0;">
-                <div style="font-size: 3rem; margin-bottom: 15px;">📧</div>
-                <h3 style="color: #1a2a6c; margin-bottom: 10px;">Check Your Email</h3>
-                <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
-                    We've sent a <strong>verification link</strong> to<br>
-                    <strong id="linkEmail" style="color: #1a2a6c;"></strong>
-                </p>
-                <div class="info-banner">
-                    ℹ️ Click the link in your email to complete registration.
-                </div>
-                <p style="color: #888; font-size: 0.82rem; margin-top: 15px;">
-                    Didn't receive it? Check your spam folder.
+                    <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot Password?</a>
+                    <button type="submit" class="btn-submit" id="loginBtn">Login to Your Account</button>
+                </form>
+                <p class="auth-footer">
+                    Don't have an account? 
+                    <a href="#" onclick="switchTab('signup'); return false;">Sign Up</a>
                 </p>
             </div>
-            <p class="login-footer">
-                <a href="#" onclick="backToSignup(event)">← Back to Sign Up</a>
-            </p>
-        </div>
 
-    </div>
-
-    <!-- ===== ADMIN LOGIN MODAL ===== -->
-    <div class="admin-modal-overlay" id="adminModal">
-        <div class="admin-modal">
-            <button class="admin-modal-close" onclick="closeAdminModal()">✕</button>
-            
-            <div class="admin-modal-header">
-                <div class="lock-icon">🔒</div>
-                <h2>Admin Login</h2>
-                <p>Restricted access only</p>
-            </div>
-
-            <div id="adminMessageBox" class="message-box"></div>
-
-            <form onsubmit="handleAdminLogin(event)">
-                <div class="form-group">
-                    <label>Admin Email</label>
-                    <input type="email" id="adminEmail" placeholder="admin@hask.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Admin Password</label>
-                    <div class="input-wrap">
-                        <input type="password" id="adminPassword" placeholder="Enter admin password" required>
-                        <button type="button" class="toggle-pw" onclick="togglePassword('adminPassword', this)">👁️</button>
+            <!-- ===== SIGNUP ===== -->
+            <div id="signup-form" class="form-section">
+                <form onsubmit="handleSignupStart(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your full name" required>
                     </div>
-                </div>
-                <button type="submit" class="btn-submit" id="adminBtn">Login as Admin</button>
-            </form>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrap">
+                            <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
+                            <button type="button" class="toggle-pw" onclick="togglePassword('signupPassword', this)">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="input-wrap">
+                            <input type="password" id="signupConfirm" placeholder="Re-enter password" required minlength="6">
+                            <button type="button" class="toggle-pw" onclick="togglePassword('signupConfirm', this)">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>I am a...</label>
+                        <div class="role-selector">
+                            <div class="role-option selected" id="roleSeeker" onclick="selectRole('seeker')">
+                                <span class="icon">👤</span>
+                                <span>Job Seeker</span>
+                            </div>
+                            <div class="role-option" id="roleEmployer" onclick="selectRole('employer')">
+                                <span class="icon">🏢</span>
+                                <span>Employer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="signupBtn">Send Verification Code</button>
+                </form>
+                <p class="auth-footer">
+                    Already have an account? 
+                    <a href="#" onclick="switchTab('login'); return false;">Login</a>
+                </p>
+            </div>
+
+            <!-- ===== VERIFY ===== -->
+            <div id="verify-form" class="form-section">
+                <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 6px; font-size: 1.15rem;">Verify Your Email</h3>
+                <p style="text-align: center; color: #666; font-size: 0.85rem; margin-bottom: 18px;">
+                    We sent a 6-digit code to<br>
+                    <strong id="verifyEmail" style="color: #1a2a6c;"></strong>
+                </p>
+                <form onsubmit="handleVerifyCode(event)">
+                    <div class="form-group">
+                        <label>Verification Code</label>
+                        <input type="text" id="verifyCode" class="code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
+                    </div>
+                    <button type="submit" class="btn-submit" id="verifyBtn">Verify & Create Account</button>
+                </form>
+                <p class="auth-footer">
+                    Didn't receive? 
+                    <a href="#" onclick="resendCode(event)">Resend</a> | 
+                    <a href="#" onclick="backToSignup(event)">Back</a>
+                </p>
+            </div>
+
         </div>
     </div>
 
@@ -554,9 +356,6 @@
             signInWithEmailAndPassword,
             sendPasswordResetEmail,
             updateProfile,
-            sendSignInLinkToEmail,
-            isSignInWithEmailLink,
-            signInWithEmailLink,
             signOut
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { 
@@ -568,7 +367,6 @@
             increment
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
             authDomain: "hask-talentconnect.firebaseapp.com",
@@ -578,18 +376,10 @@
             appId: "1:532290737820:web:49f70281b0f34837757f59"
         };
 
-        // EmailJS Config
         const EMAILJS_SERVICE_ID = "service_b10tgpg";
         const EMAILJS_TEMPLATE_ID = "template_ekb1wzl";
         const EMAILJS_PUBLIC_KEY = "QYEECDuF-iOCcOaoU";
-
         const EMAIL_LIMIT = 200;
-
-        // Admin emails - only these can access admin panel
-        const ADMIN_EMAILS = [
-            "hafeezmehar.pk007@gmail.com",
-            "hasktalentconnect@gmail.com"
-        ];
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -600,6 +390,15 @@
         let generatedCode = null;
         let codeExpiry = null;
 
+        // ===== Redirect param =====
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectTo = urlParams.get('redirect') || 'dashboard.html';
+        const presetRole = urlParams.get('role') || '';
+
+        if (presetRole === 'employer') {
+            setTimeout(() => selectRole('employer'), 100);
+        }
+
         // ===== Helpers =====
         function showMessage(text, type = 'info') {
             const box = document.getElementById('messageBox');
@@ -608,19 +407,7 @@
         }
 
         function hideMessage() {
-            const box = document.getElementById('messageBox');
-            box.className = 'message-box';
-        }
-
-        function showAdminMessage(text, type = 'info') {
-            const box = document.getElementById('adminMessageBox');
-            box.textContent = text;
-            box.className = 'message-box show ' + type;
-        }
-
-        function hideAdminMessage() {
-            const box = document.getElementById('adminMessageBox');
-            box.className = 'message-box';
+            document.getElementById('messageBox').className = 'message-box';
         }
 
         window.switchTab = function(tab) {
@@ -628,11 +415,10 @@
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
             const verifyForm = document.getElementById('verify-form');
-            const linkForm = document.getElementById('link-form');
             const tabLogin = document.getElementById('tabLogin');
             const tabSignup = document.getElementById('tabSignup');
 
-            [loginForm, signupForm, verifyForm, linkForm].forEach(f => f.classList.remove('active'));
+            [loginForm, signupForm, verifyForm].forEach(f => f.classList.remove('active'));
             tabLogin.classList.remove('active');
             tabSignup.classList.remove('active');
 
@@ -645,8 +431,8 @@
             }
         };
 
-        window.togglePassword = function(inputId, btn) {
-            const input = document.getElementById(inputId);
+        window.togglePassword = function(id, btn) {
+            const input = document.getElementById(id);
             if (input.type === 'password') {
                 input.type = 'text';
                 btn.textContent = '🙈';
@@ -671,34 +457,43 @@
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
 
-        // ===== Email counter =====
+        // ===== Generate Unique User ID (JS-2026-XXXX) =====
+        async function generateUserID(role) {
+            const year = new Date().getFullYear();
+            const counterDoc = doc(db, "stats", "user_counter");
+            const snap = await getDoc(counterDoc);
+
+            let nextNum = 1;
+            if (snap.exists()) {
+                nextNum = (snap.data().count || 0) + 1;
+            }
+            await setDoc(counterDoc, { count: nextNum }, { merge: true });
+
+            const prefix = role === 'employer' ? 'EM' : 'JS';
+            const padded = String(nextNum).padStart(4, '0');
+            return `${prefix}-${year}-${padded}`;
+        }
+
+        // ===== Email Counter =====
         async function getEmailCount() {
             try {
                 const snap = await getDoc(doc(db, "stats", "email_counter"));
                 return snap.exists() ? (snap.data().count || 0) : 0;
-            } catch (e) {
-                console.warn("Counter read error:", e.message);
-                return 0;
-            }
+            } catch (e) { return 0; }
         }
 
         async function incrementEmailCount() {
             try {
                 const ref = doc(db, "stats", "email_counter");
                 const snap = await getDoc(ref);
-                if (!snap.exists()) {
-                    await setDoc(ref, { count: 1 });
-                } else {
-                    await updateDoc(ref, { count: increment(1) });
-                }
-            } catch (e) {
-                console.warn("Counter increment error:", e.message);
-            }
+                if (!snap.exists()) await setDoc(ref, { count: 1 });
+                else await updateDoc(ref, { count: increment(1) });
+            } catch (e) {}
         }
 
-        // ===== Send EmailJS =====
+        // ===== EmailJS Send =====
         async function sendEmailJS(toEmail, toName, code) {
-            const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+            const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -713,28 +508,11 @@
                     }
                 })
             });
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error("Email send failed: " + errText);
-            }
+            if (!res.ok) throw new Error("Email send failed");
             await incrementEmailCount();
-            return true;
         }
 
-        // ===== Send Firebase Link =====
-        async function sendFirebaseLink(toEmail, toName, role) {
-            const actionCodeSettings = {
-                url: 'https://hask-talentconnect.github.io/login.html?mode=verify',
-                handleCodeInApp: true
-            };
-            await sendSignInLinkToEmail(auth, toEmail, actionCodeSettings);
-            window.localStorage.setItem('hask_email_for_signin', toEmail);
-            window.localStorage.setItem('hask_pending_name', toName);
-            window.localStorage.setItem('hask_pending_role', role);
-            return true;
-        }
-
-        // ===== Handle Signup =====
+        // ===== Signup Step 1 =====
         window.handleSignupStart = async function(event) {
             event.preventDefault();
             hideMessage();
@@ -755,41 +533,34 @@
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Please wait...';
+            btn.innerHTML = 'Please wait...';
 
             try {
                 const currentCount = await getEmailCount();
-
-                if (currentCount < EMAIL_LIMIT) {
-                    generatedCode = generateCode();
-                    codeExpiry = Date.now() + (10 * 60 * 1000);
-                    pendingUser = { name, email, password, role: selectedRole };
-
-                    await sendEmailJS(email, name, generatedCode);
-
-                    document.getElementById('verifyEmail').textContent = email;
-                    document.getElementById('login-form').classList.remove('active');
-                    document.getElementById('signup-form').classList.remove('active');
-                    document.getElementById('verify-form').classList.add('active');
-                    document.getElementById('tabLogin').classList.remove('active');
-                    document.getElementById('tabSignup').classList.remove('active');
-
-                    showMessage('✅ Code sent! Check your email inbox.', 'success');
-                } else {
-                    await sendFirebaseLink(email, name, selectedRole);
-
-                    document.getElementById('linkEmail').textContent = email;
-                    document.getElementById('login-form').classList.remove('active');
-                    document.getElementById('signup-form').classList.remove('active');
-                    document.getElementById('link-form').classList.add('active');
-                    document.getElementById('tabLogin').classList.remove('active');
-                    document.getElementById('tabSignup').classList.remove('active');
-
-                    showMessage('✅ Verification link sent to your email.', 'success');
+                if (currentCount >= EMAIL_LIMIT) {
+                    showMessage('❌ Email limit reached. Please try later.', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Send Verification Code';
+                    return;
                 }
-            } catch (error) {
-                console.error(error);
-                showMessage('❌ Failed: ' + error.message, 'error');
+
+                generatedCode = generateCode();
+                codeExpiry = Date.now() + (10 * 60 * 1000);
+                pendingUser = { name, email, password, role: selectedRole };
+
+                await sendEmailJS(email, name, generatedCode);
+
+                document.getElementById('verifyEmail').textContent = email;
+                document.getElementById('login-form').classList.remove('active');
+                document.getElementById('signup-form').classList.remove('active');
+                document.getElementById('verify-form').classList.add('active');
+                document.getElementById('tabLogin').classList.remove('active');
+                document.getElementById('tabSignup').classList.remove('active');
+
+                showMessage('✅ Code sent! Check your email inbox.', 'success');
+            } catch (err) {
+                console.error(err);
+                showMessage('❌ Failed: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Send Verification Code';
@@ -813,22 +584,24 @@
                 return;
             }
             if (entered !== generatedCode) {
-                showMessage('❌ Incorrect code. Please try again.', 'error');
+                showMessage('❌ Incorrect code.', 'error');
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Creating account...';
+            btn.innerHTML = 'Creating account...';
 
             try {
-                const userCredential = await createUserWithEmailAndPassword(
-                    auth, pendingUser.email, pendingUser.password
-                );
-                const user = userCredential.user;
+                const cred = await createUserWithEmailAndPassword(auth, pendingUser.email, pendingUser.password);
+                const user = cred.user;
                 await updateProfile(user, { displayName: pendingUser.name });
+
+                // Generate unique User ID
+                const userId = await generateUserID(pendingUser.role);
 
                 await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
+                    userId: userId,
                     name: pendingUser.name,
                     email: pendingUser.email,
                     role: pendingUser.role,
@@ -836,50 +609,44 @@
                     createdAt: new Date().toISOString()
                 });
 
-                showMessage('✅ Account created! Redirecting...', 'success');
+                showMessage('✅ Account created! Your ID: ' + userId, 'success');
                 sessionStorage.setItem('hask_logged_in', 'true');
                 setTimeout(() => {
-                    window.location.replace('dashboard.html');
-                }, 1200);
+                    window.location.replace(redirectTo);
+                }, 1500);
 
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                console.error(err);
                 let msg = 'Something went wrong.';
-                if (error.code === 'auth/email-already-in-use') msg = '❌ This email is already registered.';
-                else if (error.code === 'auth/weak-password') msg = '❌ Password is too weak.';
-                else if (error.code === 'auth/invalid-email') msg = '❌ Invalid email.';
-                else msg = '❌ ' + error.message;
+                if (err.code === 'auth/email-already-in-use') msg = '❌ This email is already registered.';
+                else if (err.code === 'auth/weak-password') msg = '❌ Password is too weak.';
+                else msg = '❌ ' + err.message;
                 showMessage(msg, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Verify & Create Account';
             }
         };
 
-        // ===== Resend =====
-        window.resendCode = async function(event) {
-            event.preventDefault();
-            if (!pendingUser) {
-                showMessage('❌ Please start signup again.', 'error');
-                return;
-            }
+        // ===== Resend / Back =====
+        window.resendCode = async function(e) {
+            e.preventDefault();
+            if (!pendingUser) return;
             hideMessage();
             try {
                 generatedCode = generateCode();
                 codeExpiry = Date.now() + (10 * 60 * 1000);
                 await sendEmailJS(pendingUser.email, pendingUser.name, generatedCode);
-                showMessage('✅ New code sent! Check your inbox.', 'success');
-            } catch (error) {
-                showMessage('❌ Failed to resend: ' + error.message, 'error');
+                showMessage('✅ New code sent!', 'success');
+            } catch (err) {
+                showMessage('❌ ' + err.message, 'error');
             }
         };
 
-        // ===== Back to Signup =====
-        window.backToSignup = function(event) {
-            event.preventDefault();
+        window.backToSignup = function(e) {
+            e.preventDefault();
             pendingUser = null;
             generatedCode = null;
             document.getElementById('verify-form').classList.remove('active');
-            document.getElementById('link-form').classList.remove('active');
             document.getElementById('signup-form').classList.add('active');
             document.getElementById('tabSignup').classList.add('active');
             hideMessage();
@@ -895,16 +662,16 @@
             const btn = document.getElementById('loginBtn');
 
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Logging in...';
+            btn.innerHTML = 'Logging in...';
 
             try {
-                const userCred = await signInWithEmailAndPassword(auth, email, password);
-                
-                // Check if user is blocked
-                const userDoc = await getDoc(doc(db, "users", userCred.user.uid));
+                const cred = await signInWithEmailAndPassword(auth, email, password);
+
+                // Check blocked
+                const userDoc = await getDoc(doc(db, "users", cred.user.uid));
                 if (userDoc.exists() && userDoc.data().status === 'blocked') {
                     await signOut(auth);
-                    showMessage('🚫 Your account has been blocked by admin.', 'error');
+                    showMessage('🚫 Your account has been blocked.', 'error');
                     btn.disabled = false;
                     btn.textContent = 'Login to Your Account';
                     return;
@@ -913,17 +680,18 @@
                 showMessage('✅ Login successful! Redirecting...', 'success');
                 sessionStorage.setItem('hask_logged_in', 'true');
                 setTimeout(() => {
-                    window.location.replace('dashboard.html');
-                }, 900);
-            } catch (error) {
-                console.error(error);
+                    window.location.replace(redirectTo);
+                }, 800);
+
+            } catch (err) {
+                console.error(err);
                 let msg = 'Something went wrong.';
-                if (error.code === 'auth/user-not-found') msg = '❌ No account found with this email.';
-                else if (error.code === 'auth/wrong-password') msg = '❌ Incorrect password.';
-                else if (error.code === 'auth/invalid-credential') msg = '❌ Invalid email or password.';
-                else if (error.code === 'auth/invalid-email') msg = '❌ Invalid email.';
-                else if (error.code === 'auth/too-many-requests') msg = '❌ Too many attempts. Try later.';
-                else msg = '❌ ' + error.message;
+                if (err.code === 'auth/user-not-found') msg = '❌ No account found.';
+                else if (err.code === 'auth/wrong-password') msg = '❌ Incorrect password.';
+                else if (err.code === 'auth/invalid-credential') msg = '❌ Invalid email or password.';
+                else if (err.code === 'auth/invalid-email') msg = '❌ Invalid email.';
+                else if (err.code === 'auth/too-many-requests') msg = '❌ Too many attempts. Try later.';
+                else msg = '❌ ' + err.message;
                 showMessage(msg, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Login to Your Account';
@@ -931,8 +699,8 @@
         };
 
         // ===== Forgot Password =====
-        window.handleForgotPassword = async function(event) {
-            event.preventDefault();
+        window.handleForgotPassword = async function(e) {
+            e.preventDefault();
             hideMessage();
             const email = document.getElementById('loginEmail').value.trim();
             if (!email) {
@@ -941,133 +709,15 @@
             }
             try {
                 await sendPasswordResetEmail(auth, email);
-                showMessage('✅ Password reset link sent to ' + email, 'success');
-            } catch (error) {
-                showMessage('❌ ' + error.message, 'error');
+                showMessage('✅ Reset link sent to ' + email, 'success');
+            } catch (err) {
+                showMessage('❌ ' + err.message, 'error');
             }
         };
 
-        // ===== ADMIN LOGIN =====
-        window.openAdminModal = function(event) {
-            event.preventDefault();
-            document.getElementById('adminModal').classList.add('show');
-            hideAdminMessage();
-        };
-
-        window.closeAdminModal = function() {
-            document.getElementById('adminModal').classList.remove('show');
-        };
-
-        window.handleAdminLogin = async function(event) {
-            event.preventDefault();
-            hideAdminMessage();
-
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value;
-            const btn = document.getElementById('adminBtn');
-
-            // First check if email is in admin list
-            if (!ADMIN_EMAILS.includes(email)) {
-                showAdminMessage('🚫 This email is not authorized as admin.', 'error');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Verifying...';
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                showAdminMessage('✅ Admin verified! Redirecting...', 'success');
-                sessionStorage.setItem('hask_logged_in', 'true');
-                sessionStorage.setItem('hask_is_admin', 'true');
-                setTimeout(() => {
-                    window.location.replace('admin.html');
-                }, 900);
-            } catch (error) {
-                console.error(error);
-                let msg = '❌ Login failed.';
-                if (error.code === 'auth/wrong-password') msg = '❌ Incorrect password.';
-                else if (error.code === 'auth/user-not-found') msg = '❌ No account found.';
-                else if (error.code === 'auth/invalid-credential') msg = '❌ Invalid credentials.';
-                else msg = '❌ ' + error.message;
-                showAdminMessage(msg, 'error');
-                btn.disabled = false;
-                btn.textContent = 'Login as Admin';
-            }
-        };
-
-        // ===== Email Link Verification =====
-        async function checkEmailLink() {
-            if (isSignInWithEmailLink(auth, window.location.href)) {
-                let email = window.localStorage.getItem('hask_email_for_signin');
-                const name = window.localStorage.getItem('hask_pending_name');
-                const role = window.localStorage.getItem('hask_pending_role');
-
-                if (!email) {
-                    email = window.prompt('Please enter your email to complete sign in:');
-                }
-                if (!email) return;
-
-                try {
-                    const result = await signInWithEmailLink(auth, email, window.location.href);
-                    const user = result.user;
-
-                    if (name && role) {
-                        await setDoc(doc(db, "users", user.uid), {
-                            uid: user.uid,
-                            name: name,
-                            email: email,
-                            role: role,
-                            status: 'active',
-                            createdAt: new Date().toISOString()
-                        }, { merge: true });
-                        if (user.displayName !== name) {
-                            await updateProfile(user, { displayName: name });
-                        }
-                    }
-
-                    window.localStorage.removeItem('hask_email_for_signin');
-                    window.localStorage.removeItem('hask_pending_name');
-                    window.localStorage.removeItem('hask_pending_role');
-
-                    sessionStorage.setItem('hask_logged_in', 'true');
-                    showMessage('✅ Verified! Redirecting to dashboard...', 'success');
-                    setTimeout(() => window.location.replace('dashboard.html'), 1200);
-                } catch (error) {
-                    console.error(error);
-                    showMessage('❌ Link verification failed: ' + error.message, 'error');
-                }
-            }
-        }
-
-        checkEmailLink();
-
-        // ===== Back-Button Protection =====
+        // ===== Back button protection =====
         window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
-        });
-
-        window.addEventListener('pageshow', function() {
-            if (sessionStorage.getItem('hask_logged_in') === 'true') {
-                const unsubscribe = auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        // Check if admin
-                        if (sessionStorage.getItem('hask_is_admin') === 'true') {
-                            window.location.replace('admin.html');
-                        } else {
-                            window.location.replace('dashboard.html');
-                        }
-                    }
-                    unsubscribe();
-                });
-            }
-        });
-
-        // Close admin modal on outside click
-        document.getElementById('adminModal').addEventListener('click', function(e) {
-            if (e.target === this) closeAdminModal();
+            if (event.persisted) window.location.reload();
         });
     </script>
 
