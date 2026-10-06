@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details - HASK TalentConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .job-header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .job-header h1 {
+            color: #1a2a6c;
+            font-size: 1.7rem;
+            margin-bottom: 10px;
+        }
+
+        .job-header .company-info {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 18px;
+        }
+
+        .job-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            padding-top: 18px;
+            border-top: 1px solid #eef1f5;
+        }
+
+        .job-meta-grid .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .job-meta-grid .meta-item .ico {
+            font-size: 1.3rem;
+        }
+
+        .job-meta-grid .meta-item .label {
+            color: #888;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+        }
+
+        .job-meta-grid .meta-item .value {
+            color: #1a2a6c;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .job-body {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .job-body h2 {
+            color: #1a2a6c;
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            margin-top: 22px;
+        }
+
+        .job-body h2:first-child { margin-top: 0; }
+
+        .job-body p {
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+
+        .apply-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+            position: sticky;
+            bottom: 20px;
+        }
+
+        .btn-apply-big {
+            background: #29b6f6;
+            color: white;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn-apply-big:hover { background: #0288d1; }
+
+        .btn-apply-big:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .applied-badge {
+            display: inline-block;
+            background: #e8f8ee;
+            color: #1a7a3e;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #1a2a6c;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .back-link:hover { color: #29b6f6; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">HASK TalentConnect</div>
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="jobs.html">Browse Jobs</a></li>
+            <li><a href="login.html" class="btn-primary">Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" id="content">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px;">Loading job details...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
+            authDomain: "hask-talentconnect.firebaseapp.com",
+            projectId: "hask-talentconnect",
+            storageBucket: "hask-talentconnect.firebasestorage.app",
+            messagingSenderId: "532290737820",
+            appId: "1:532290737820:web:49f70281b0f34837757f59"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobId = urlParams.get('job');
+        let currentUser = null;
+        let jobData = null;
+
+        // Check auth
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (!jobId) {
+                showError('Job not found');
+                return;
+            }
+            await loadJob();
+        });
+
+        async function loadJob() {
+            try {
+                const snap = await getDoc(doc(db, "jobs", jobId));
+                if (!snap.exists()) {
+                    showError('This job no longer exists');
+                    return;
+                }
+                jobData = { id: snap.id, ...snap.data() };
+                await renderJob();
+            } catch (err) {
+                console.error(err);
+                showError('Error loading job');
+            }
+        }
+
+        async function renderJob() {
+            let hasApplied = false;
+
+            // Check if user already applied
+            if (currentUser) {
+                try {
+                    const q = query(
+                        collection(db, "applications"),
+                        where("jobId", "==", jobId),
+                        where("userId", "==", currentUser.uid)
+                    );
+                    const apps = await getDocs(q);
+                    hasApplied = !apps.empty;
+                } catch (e) {
+                    console.warn(e);
+                }
+            }
+
+            const j = jobData;
+            const jobRef = j.jobId || j.id.slice(0, 6).toUpperCase();
+
+            document.getElementById('content').innerHTML = `
+                <a href="jobs.html" class="back-link">← Back to Jobs</a>
+
+                <div class="job-header">
+                    <h1>${escapeHtml(j.title || 'Untitled Position')}</h1>
+                    <div class="company-info">
+                        🏢 <strong>${escapeHtml(j.company || 'Unknown Company')}</strong>
+                        &nbsp;|&nbsp; Job ID: #${jobRef}
+                    </div>
+
+                    <div class="job-meta-grid">
+                        <div class="meta-item">
+                            <span class="ico">📍</span>
+                            <div>
+                                <div class="label">Location</div>
+                                <div class="value">${escapeHtml(j.location || 'Pakistan')}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="ico">💼</span>
+                            <div>
+                                <div class="label">Job Type</div>
+                                <div class="value">${formatType(j.type)}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="ico">📂</span>
+                            <div>
+                                <div class="label">Category</div>
+                                <div class="value">${formatCat(j.category)}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="ico">💰</span>
+                            <div>
+                                <div class="label">Salary</div>
+                                <div class="value">${escapeHtml(j.salary || 'Negotiable')}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="ico">🎓</span>
+                            <div>
+                                <div class="label">Experience</div>
+                                <div class="value">${escapeHtml(j.experience || 'Any')}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="ico">📅</span>
+                            <div>
+                                <div class="label">Posted</div>
+                                <div class="value">${timeAgo(j.createdAt)}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="job-body">
+                    <h2>📋 Job Description</h2>
+                    <p>${escapeHtml(j.description || 'No description provided.')}</p>
+
+                    ${j.requirements ? `
+                        <h2>✅ Requirements</h2>
+                        <p>${escapeHtml(j.requirements)}</p>
+                    ` : ''}
+
+                    ${j.education ? `
+                        <h2>🎓 Education</h2>
+                        <p>${escapeHtml(j.education)}</p>
+                    ` : ''}
+
+                    ${j.benefits ? `
+                        <h2>🎁 Benefits</h2>
+                        <p>${escapeHtml(j.benefits)}</p>
+                    ` : ''}
+                </div>
+
+                <div class="apply-section">
+                    ${!currentUser ? `
+                        <button class="btn-apply-big" onclick="goToLogin()">
+                            🔒 Login to Apply
+                        </button>
+                        <p style="color: #666; font-size: 0.85rem; margin-top: 10px;">
+                            Don't have an account? <a href="login.html?redirect=${encodeURIComponent('job-details.html?job=' + jobId)}" style="color: #29b6f6; font-weight: 600;">Sign up free</a>
+                        </p>
+                    ` : hasApplied ? `
+                        <div class="applied-badge">✅ You have already applied for this job</div>
+                    ` : `
+                        <button class="btn-apply-big" id="applyBtn" onclick="applyNow()">
+                            ✅ Apply Now
+                        </button>
+                    `}
+                </div>
+            `;
+        }
+
+        window.goToLogin = function() {
+            const redirect = 'job-details.html?job=' + jobId;
+            window.location.href = 'login.html?redirect=' + encodeURIComponent(redirect);
+        };
+
+        window.applyNow = async function() {
+            if (!currentUser) {
+                goToLogin();
+                return;
+            }
+
+            const btn = document.getElementById('applyBtn');
+            btn.disabled = true;
+            btn.textContent = 'Submitting application...';
+
+            try {
+                await addDoc(collection(db, "applications"), {
+                    jobId: jobId,
+                    jobTitle: jobData.title,
+                    company: jobData.company,
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || '',
+                    userEmail: currentUser.email,
+                    appliedAt: new Date().toISOString(),
+                    status: 'pending'
+                });
+
+                btn.outerHTML = '<div class="applied-badge">✅ Application submitted successfully!</div>';
+
+            } catch (err) {
+                console.error(err);
+                btn.disabled = false;
+                btn.textContent = '✅ Apply Now';
+                alert('Failed to apply: ' + err.message);
+            }
+        };
+
+        function showError(msg) {
+            document.getElementById('content').innerHTML = `
+                <div class="empty-state">
+                    <span class="icon">😔</span>
+                    <h3 style="color: #1a2a6c; margin-bottom: 10px;">${msg}</h3>
+                    <a href="jobs.html" class="btn-primary" style="margin-top: 15px; display: inline-block;">Browse All Jobs</a>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({
+                '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+            })[c]);
+        }
+
+        function formatCat(c) {
+            if (!c) return 'Other';
+            return c.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+
+        function formatType(t) {
+            if (!t) return 'Full Time';
+            return t.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+
+        function timeAgo(dateStr) {
+            if (!dateStr) return '-';
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (days < 1) return 'Today';
+            if (days === 1) return '1 day ago';
+            if (days < 30) return `${days} days ago`;
+            return `${Math.floor(days / 30)} months ago`;
+        }
+    </script>
+
+</body>
+</html>
