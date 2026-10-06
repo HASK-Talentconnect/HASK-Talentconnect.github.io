@@ -260,4 +260,191 @@
         <!-- Applications -->
         <div class="section-head">
             <h3>My Applications</h3>
-            <a href
+            <a href="jobs.html">Browse More Jobs →</a>
+        </div>
+        <div class="apps-list" id="appsList">
+            <div class="app-row" style="justify-content: center; color: #888; padding: 40px;">
+                Loading applications...
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
+            authDomain: "hask-talentconnect.firebaseapp.com",
+            projectId: "hask-talentconnect",
+            storageBucket: "hask-talentconnect.firebasestorage.app",
+            messagingSenderId: "532290737820",
+            appId: "1:532290737820:web:49f70281b0f34837757f59"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace('login.html');
+                return;
+            }
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                let data = {
+                    name: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    role: 'seeker',
+                    userId: '-'
+                };
+                if (userDoc.exists()) data = { ...data, ...userDoc.data() };
+
+                renderDashboard(data, user.uid);
+                document.getElementById('loadingScreen').style.display = 'none';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loadingScreen').style.display = 'none';
+            }
+        });
+
+        async function renderDashboard(data, uid) {
+            const firstName = data.name.split(' ')[0];
+            document.getElementById('userName').textContent = data.name;
+            document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
+            document.getElementById('userIdTag').textContent = '🆔 ' + (data.userId || '-');
+            document.getElementById('roleTag').textContent = data.role === 'employer' ? '🏢 Employer' : '👤 Job Seeker';
+
+            // Actions
+            const actionGrid = document.getElementById('actionGrid');
+            if (data.role === 'employer') {
+                actionGrid.innerHTML = `
+                    <a href="post-job.html" class="action-card">
+                        <div class="icon">➕</div>
+                        <h4>Post a Job</h4>
+                        <p>Create new job posting</p>
+                    </a>
+                    <a href="#" class="action-card" onclick="alert('Coming soon!'); return false;">
+                        <div class="icon">📋</div>
+                        <h4>My Job Posts</h4>
+                        <p>Manage your listings</p>
+                    </a>
+                    <a href="#" class="action-card" onclick="alert('Coming soon!'); return false;">
+                        <div class="icon">👥</div>
+                        <h4>View Applicants</h4>
+                        <p>Review applications</p>
+                    </a>
+                    <a href="#" class="action-card" onclick="alert('Coming soon!'); return false;">
+                        <div class="icon">🏢</div>
+                        <h4>Company Profile</h4>
+                        <p>Update company info</p>
+                    </a>
+                `;
+            } else {
+                actionGrid.innerHTML = `
+                    <a href="jobs.html" class="action-card">
+                        <div class="icon">🔍</div>
+                        <h4>Browse Jobs</h4>
+                        <p>Find new opportunities</p>
+                    </a>
+                    <a href="#" class="action-card" onclick="alert('Coming soon!'); return false;">
+                        <div class="icon">👤</div>
+                        <h4>My Profile</h4>
+                        <p>Update CV & skills</p>
+                    </a>
+                    <a href="#" class="action-card" onclick="alert('Coming soon!'); return false;">
+                        <div class="icon">⭐</div>
+                        <h4>Saved Jobs</h4>
+                        <p>Your bookmarked jobs</p>
+                    </a>
+                    <a href="#" class="action-card" onclick="alert('Coming soon!'); return false;">
+                        <div class="icon">🤖</div>
+                        <h4>AI Job Match</h4>
+                        <p>Personalized jobs</p>
+                    </a>
+                `;
+            }
+
+            // Load applications
+            await loadApplications(uid);
+        }
+
+        async function loadApplications(uid) {
+            const list = document.getElementById('appsList');
+            try {
+                const q = query(collection(db, "applications"), where("userId", "==", uid));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    list.innerHTML = `
+                        <div class="app-row" style="justify-content: center; color: #888; padding: 40px; flex-direction: column; gap: 10px;">
+                            <div style="font-size: 2.5rem;">📭</div>
+                            <div>You haven't applied to any jobs yet.</div>
+                            <a href="jobs.html" class="btn-primary" style="margin-top: 8px;">Browse Jobs →</a>
+                        </div>
+                    `;
+                    document.getElementById('statApps').textContent = '0';
+                    return;
+                }
+
+                const apps = [];
+                snap.forEach(d => apps.push({ id: d.id, ...d.data() }));
+                apps.sort((a, b) => (b.appliedAt || '').localeCompare(a.appliedAt || ''));
+
+                document.getElementById('statApps').textContent = apps.length;
+
+                list.innerHTML = apps.map(a => `
+                    <div class="app-row">
+                        <div>
+                            <div class="app-title">${escapeHtml(a.jobTitle || 'Job')}</div>
+                            <div class="app-company">🏢 ${escapeHtml(a.company || '-')} • Applied ${timeAgo(a.appliedAt)}</div>
+                        </div>
+                        <span class="status-tag status-${a.status || 'pending'}">${(a.status || 'pending').toUpperCase()}</span>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = `<div class="app-row" style="justify-content: center; color: #c33; padding: 30px;">Error loading applications</div>`;
+            }
+        }
+
+        window.handleLogout = async function() {
+            if (!confirm('Logout from your account?')) return;
+            try {
+                sessionStorage.removeItem('hask_logged_in');
+                await signOut(auth);
+                window.location.replace('login.html');
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        };
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({
+                '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+            })[c]);
+        }
+
+        function timeAgo(dateStr) {
+            if (!dateStr) return '-';
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (days < 1) return 'today';
+            if (days === 1) return '1 day ago';
+            if (days < 30) return days + ' days ago';
+            return Math.floor(days / 30) + ' months ago';
+        }
+    </script>
+
+</body>
+</html>
