@@ -26,7 +26,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Floating shapes */
         .login-body::before,
         .login-body::after {
             content: '';
@@ -50,7 +49,6 @@
             50% { transform: translateY(-30px) scale(1.05); }
         }
 
-        /* Main card */
         .login-container {
             background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(20px);
@@ -82,14 +80,12 @@
             margin-bottom: 30px;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             background: rgba(255,255,255,0.1);
             border-radius: 50px;
             padding: 5px;
             margin-bottom: 30px;
-            position: relative;
         }
 
         .tab-btn {
@@ -112,7 +108,6 @@
             box-shadow: 0 5px 15px rgba(249,199,79,0.4);
         }
 
-        /* Form */
         .form-group {
             margin-bottom: 18px;
         }
@@ -124,8 +119,7 @@
             color: rgba(255,255,255,0.9);
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 14px 18px;
             border: 1px solid rgba(255,255,255,0.25);
@@ -142,19 +136,12 @@
             color: rgba(255,255,255,0.5);
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             border-color: #f9c74f;
             background: rgba(255,255,255,0.15);
             box-shadow: 0 0 0 3px rgba(249,199,79,0.2);
         }
 
-        .form-group select option {
-            background: #1a2a6c;
-            color: white;
-        }
-
-        /* Role selector */
         .role-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -192,7 +179,6 @@
             font-weight: 500;
         }
 
-        /* Button */
         .btn-submit {
             width: 100%;
             padding: 15px;
@@ -214,7 +200,12 @@
             box-shadow: 0 10px 25px rgba(249,199,79,0.4);
         }
 
-        /* Divider */
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .divider {
             display: flex;
             align-items: center;
@@ -236,7 +227,6 @@
             padding: 0 15px;
         }
 
-        /* Social buttons */
         .social-login {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -265,7 +255,6 @@
             transform: translateY(-2px);
         }
 
-        /* Forgot password */
         .forgot-link {
             display: block;
             text-align: right;
@@ -281,7 +270,6 @@
             color: #f9c74f;
         }
 
-        /* Footer link */
         .login-footer {
             text-align: center;
             margin-top: 25px;
@@ -299,7 +287,6 @@
             text-decoration: underline;
         }
 
-        /* Back to home link */
         .back-home {
             position: absolute;
             top: 25px;
@@ -321,7 +308,6 @@
             transform: translateX(-3px);
         }
 
-        /* Hide/Show forms */
         .form-section {
             display: none;
         }
@@ -336,7 +322,57 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Responsive */
+        /* Message Box */
+        .message-box {
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .message-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message-box.error {
+            background: rgba(220, 53, 69, 0.25);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ffb3ba;
+        }
+
+        .message-box.success {
+            background: rgba(40, 167, 69, 0.25);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #b3ffc4;
+        }
+
+        .message-box.info {
+            background: rgba(249, 199, 79, 0.25);
+            border: 1px solid rgba(249, 199, 79, 0.5);
+            color: #ffe9b3;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(26,42,108,0.3);
+            border-top-color: #1a2a6c;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @media (max-width: 500px) {
             .login-container {
                 padding: 35px 25px;
@@ -355,37 +391,37 @@
 </head>
 <body class="login-body">
 
-    <!-- Back to Home -->
     <a href="index.html" class="back-home">← Back to Home</a>
 
-    <!-- Login/Signup Card -->
     <div class="login-container">
 
         <div class="login-logo">HASK TalentConnect</div>
         <p class="login-tagline">Connect • Grow • Succeed</p>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('login')">Login</button>
             <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
         </div>
+
+        <!-- Message Box -->
+        <div id="messageBox" class="message-box"></div>
 
         <!-- ===== LOGIN FORM ===== -->
         <div id="login-form" class="form-section active">
             <form onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="you@example.com" required>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
                 </div>
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="••••••••" required>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
                 </div>
 
-                <a href="#" class="forgot-link">Forgot Password?</a>
+                <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot Password?</a>
 
-                <button type="submit" class="btn-submit">Login to Your Account</button>
+                <button type="submit" class="btn-submit" id="loginBtn">Login to Your Account</button>
 
                 <div class="divider"><span>OR</span></div>
 
@@ -406,34 +442,34 @@
             <form onsubmit="handleSignup(event)">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" placeholder="Enter your full name" required>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
                 </div>
 
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" placeholder="you@example.com" required>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
                 </div>
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="Create a strong password" required>
+                    <input type="password" id="signupPassword" placeholder="Create a strong password (min 6 chars)" required minlength="6">
                 </div>
 
                 <div class="form-group">
                     <label>I am a...</label>
                     <div class="role-selector">
-                        <div class="role-option selected" onclick="selectRole(this, 'seeker')">
+                        <div class="role-option selected" id="roleSeeker" onclick="selectRole('seeker')">
                             <span class="icon">👤</span>
                             <span>Job Seeker</span>
                         </div>
-                        <div class="role-option" onclick="selectRole(this, 'employer')">
+                        <div class="role-option" id="roleEmployer" onclick="selectRole('employer')">
                             <span class="icon">🏢</span>
                             <span>Employer</span>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Create My Account</button>
+                <button type="submit" class="btn-submit" id="signupBtn">Create My Account</button>
 
                 <div class="divider"><span>OR</span></div>
 
@@ -451,10 +487,54 @@
 
     </div>
 
-    <!-- JavaScript -->
-    <script>
+    <!-- ===== Firebase SDK ===== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc 
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
+            authDomain: "hask-talentconnect.firebaseapp.com",
+            projectId: "hask-talentconnect",
+            storageBucket: "hask-talentconnect.firebasestorage.app",
+            messagingSenderId: "532290737820",
+            appId: "1:532290737820:web:49f70281b0f34837757f59",
+            measurementId: "G-KVHDN2H1F0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let selectedRole = 'seeker';
+
+        // Show message
+        function showMessage(text, type = 'info') {
+            const box = document.getElementById('messageBox');
+            box.textContent = text;
+            box.className = 'message-box show ' + type;
+        }
+
+        function hideMessage() {
+            const box = document.getElementById('messageBox');
+            box.className = 'message-box';
+        }
+
         // Tab switching
-        function switchTab(tab) {
+        window.switchTab = function(tab) {
+            hideMessage();
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
             const tabBtns = document.querySelectorAll('.tab-btn');
@@ -470,27 +550,133 @@
                 tabBtns[1].classList.add('active');
                 tabBtns[0].classList.remove('active');
             }
-        }
+        };
 
         // Role selection
-        function selectRole(element, role) {
-            document.querySelectorAll('.role-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            element.classList.add('selected');
-        }
+        window.selectRole = function(role) {
+            selectedRole = role;
+            document.getElementById('roleSeeker').classList.remove('selected');
+            document.getElementById('roleEmployer').classList.remove('selected');
+            if (role === 'seeker') {
+                document.getElementById('roleSeeker').classList.add('selected');
+            } else {
+                document.getElementById('roleEmployer').classList.add('selected');
+            }
+        };
 
-        // Handle login (placeholder - Firebase later)
-        function handleLogin(event) {
+        // ===== SIGNUP =====
+        window.handleSignup = async function(event) {
             event.preventDefault();
-            alert('✅ Login successful! (Backend will be connected soon)');
-        }
+            hideMessage();
 
-        // Handle signup (placeholder - Firebase later)
-        function handleSignup(event) {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const btn = document.getElementById('signupBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Creating account...';
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                await updateProfile(user, { displayName: name });
+
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    name: name,
+                    email: email,
+                    role: selectedRole,
+                    createdAt: new Date().toISOString()
+                });
+
+                showMessage('✅ Account created successfully! Redirecting...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error(error);
+                let msg = 'Something went wrong. Please try again.';
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = '❌ This email is already registered. Please login instead.';
+                } else if (error.code === 'auth/weak-password') {
+                    msg = '❌ Password is too weak. Use at least 6 characters.';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = '❌ Invalid email address.';
+                } else {
+                    msg = '❌ ' + error.message;
+                }
+                showMessage(msg, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Create My Account';
+            }
+        };
+
+        // ===== LOGIN =====
+        window.handleLogin = async function(event) {
             event.preventDefault();
-            alert('✅ Account created! (Backend will be connected soon)');
-        }
+            hideMessage();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Logging in...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('✅ Login successful! Redirecting...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1200);
+
+            } catch (error) {
+                console.error(error);
+                let msg = 'Something went wrong. Please try again.';
+                if (error.code === 'auth/user-not-found') {
+                    msg = '❌ No account found with this email.';
+                } else if (error.code === 'auth/wrong-password') {
+                    msg = '❌ Incorrect password. Please try again.';
+                } else if (error.code === 'auth/invalid-credential') {
+                    msg = '❌ Invalid email or password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    msg = '❌ Invalid email address.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    msg = '❌ Too many failed attempts. Please try again later.';
+                } else {
+                    msg = '❌ ' + error.message;
+                }
+                showMessage(msg, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Login to Your Account';
+            }
+        };
+
+        // ===== FORGOT PASSWORD =====
+        window.handleForgotPassword = async function(event) {
+            event.preventDefault();
+            hideMessage();
+
+            const email = document.getElementById('loginEmail').value.trim();
+
+            if (!email) {
+                showMessage('⚠️ Please enter your email address first.', 'error');
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showMessage('✅ Password reset link sent to ' + email, 'success');
+            } catch (error) {
+                console.error(error);
+                showMessage('❌ ' + error.message, 'error');
+            }
+        };
     </script>
 
 </body>
