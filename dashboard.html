@@ -4,393 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - HASK TalentConnect</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f0f2f8;
-            color: #222;
-            min-height: 100vh;
-        }
-
-        .topnav {
-            background: #1a2a6c;
-            color: white;
-            padding: 15px 30px;
+        .user-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .topnav .logo { font-size: 1.3rem; font-weight: bold; color: #f9c74f; }
-
-        .topnav .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-info-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
         .user-avatar {
-            width: 38px; height: 38px; border-radius: 50%;
-            background: #f9c74f; color: #1a2a6c;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 1rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1a2a6c;
+            color: #f9c74f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            flex-shrink: 0;
         }
 
-        .user-name { font-weight: 500; font-size: 0.92rem; }
-
-        .btn-logout {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.88rem;
-            font-family: inherit;
-            transition: 0.2s;
-        }
-
-        .btn-logout:hover { background: #dc3545; border-color: #dc3545; }
-
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: calc(100vh - 68px);
-        }
-
-        .sidebar {
-            background: white;
-            padding: 25px 0;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-        }
-
-        .sidebar-menu { list-style: none; }
-
-        .sidebar-menu li a {
-            display: flex; align-items: center; gap: 12px;
-            padding: 13px 25px;
-            color: #444;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: 0.2s;
-            border-left: 4px solid transparent;
-        }
-
-        .sidebar-menu li a:hover,
-        .sidebar-menu li a.active {
-            background: #f4f6fb;
+        .user-name-title h2 {
             color: #1a2a6c;
-            border-left-color: #1a2a6c;
+            font-size: 1.25rem;
+            margin-bottom: 3px;
+        }
+
+        .user-id-tag {
+            display: inline-block;
+            background: #e8f4fd;
+            color: #0277bd;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: monospace;
+            margin-right: 6px;
+        }
+
+        .role-tag {
+            display: inline-block;
+            background: #f9c74f;
+            color: #1a2a6c;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .btn-logout-dash {
+            background: #dc3545;
+            color: white;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.88rem;
+            transition: 0.2s;
+        }
+
+        .btn-logout-dash:hover { background: #b02a37; }
+
+        .stats-row-dash {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .stat-dash {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid #29b6f6;
+        }
+
+        .stat-dash .icon {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-dash .num {
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #1a2a6c;
+        }
+
+        .stat-dash .lbl {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 3px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 25px 0 12px;
+        }
+
+        .section-head h3 {
+            color: #1a2a6c;
+            font-size: 1.15rem;
+        }
+
+        .section-head a {
+            color: #29b6f6;
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
-        .main-content { padding: 30px 40px; }
-
-        .page-title { font-size: 1.8rem; color: #1a2a6c; margin-bottom: 6px; }
-        .page-subtitle { color: #666; margin-bottom: 30px; font-size: 1rem; }
-
-        .welcome-card {
-            background: linear-gradient(135deg, #1a2a6c 0%, #764ba2 100%);
-            color: white;
-            border-radius: 16px;
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(26, 42, 108, 0.2);
-        }
-
-        .welcome-card h2 { font-size: 1.6rem; margin-bottom: 8px; }
-        .welcome-card p { font-size: 1rem; opacity: 0.9; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 18px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 22px;
-            border-radius: 14px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-            position: relative;
-            overflow: hidden;
-            transition: 0.2s;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0;
-            width: 4px; height: 100%;
-            background: #f9c74f;
-        }
-
-        .stat-card:hover { transform: translateY(-4px); }
-
-        .stat-icon { font-size: 1.8rem; margin-bottom: 8px; }
-        .stat-number { font-size: 1.8rem; font-weight: bold; color: #1a2a6c; }
-        .stat-label { color: #666; font-size: 0.9rem; }
-
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
         }
 
         .action-card {
             background: white;
-            padding: 28px 22px;
-            border-radius: 14px;
-            text-decoration: none;
-            color: #222;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-            transition: 0.2s;
-            border: 2px solid transparent;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             text-align: center;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .action-card:hover {
-            transform: translateY(-6px);
-            border-color: #f9c74f;
+            border-color: #1a2a6c;
+            transform: translateY(-3px);
         }
 
-        .action-icon { font-size: 2.2rem; margin-bottom: 12px; }
-        .action-card h3 { color: #1a2a6c; font-size: 1.05rem; margin-bottom: 6px; }
-        .action-card p { color: #666; font-size: 0.88rem; line-height: 1.5; }
+        .action-card .icon { font-size: 2rem; margin-bottom: 8px; }
+        .action-card h4 { color: #1a2a6c; font-size: 1rem; margin-bottom: 5px; }
+        .action-card p { color: #666; font-size: 0.82rem; }
+
+        .apps-list { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .app-row {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eef1f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .app-row:last-child { border-bottom: none; }
+        .app-row .app-title { color: #1a2a6c; font-weight: 600; font-size: 0.95rem; }
+        .app-row .app-company { color: #666; font-size: 0.82rem; margin-top: 3px; }
+
+        .status-tag {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-reviewed { background: #d1ecf1; color: #0c5460; }
+        .status-accepted { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
 
         .loading-screen {
             position: fixed; inset: 0;
             background: #1a2a6c; color: white;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            z-index: 9999; gap: 18px;
-        }
-
-        .loader {
-            width: 45px; height: 45px;
-            border: 4px solid rgba(249,199,79,0.2);
-            border-top-color: #f9c74f;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        @media (max-width: 768px) {
-            .dashboard-container { grid-template-columns: 1fr; }
-            .sidebar { order: 2; padding: 10px 0; }
-            .sidebar-menu { display: flex; overflow-x: auto; }
-            .sidebar-menu li a {
-                flex-direction: column; padding: 10px 15px;
-                font-size: 0.75rem; gap: 4px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-                min-width: 75px;
-            }
-            .sidebar-menu li a.active { border-left: none; border-bottom-color: #f9c74f; }
-            .main-content { padding: 20px; }
-            .user-name { display: none; }
+            z-index: 9999; gap: 15px;
         }
     </style>
 </head>
 <body>
 
     <div class="loading-screen" id="loadingScreen">
-        <div class="loader"></div>
-        <p>Loading your dashboard...</p>
+        <div class="spinner"></div>
+        <p>Loading...</p>
     </div>
 
-    <div class="topnav">
+    <nav class="navbar">
         <div class="logo">HASK TalentConnect</div>
-        <div class="user-info">
-            <div class="user-avatar" id="userAvatar">?</div>
-            <span class="user-name" id="userName">Loading...</span>
-            <button class="btn-logout" onclick="handleLogout()">Logout</button>
+        <ul class="menu">
+            <li><a href="jobs.html">Browse Jobs</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+        <!-- User Header -->
+        <div class="user-header">
+            <div class="user-info-block">
+                <div class="user-avatar" id="userAvatar">?</div>
+                <div class="user-name-title">
+                    <h2 id="userName">Loading...</h2>
+                    <span class="user-id-tag" id="userIdTag">—</span>
+                    <span class="role-tag" id="roleTag">—</span>
+                </div>
+            </div>
+            <button class="btn-logout-dash" onclick="handleLogout()">Logout</button>
         </div>
-    </div>
 
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <ul class="sidebar-menu">
-                <li><a href="dashboard.html" class="active"><span>🏠</span> Dashboard</a></li>
-                <li><a href="#"><span>💼</span> Browse Jobs</a></li>
-                <li><a href="#"><span>📄</span> My Applications</a></li>
-                <li><a href="#"><span>👤</span> Profile</a></li>
-                <li><a href="#"><span>⚙️</span> Settings</a></li>
-            </ul>
-        </aside>
-
-        <main class="main-content">
-            <h1 class="page-title">Welcome back, <span id="firstName">User</span>! 👋</h1>
-            <p class="page-subtitle" id="roleSubtitle">Loading your role...</p>
-
-            <div class="welcome-card">
-                <h2 id="welcomeTitle">Welcome to HASK TalentConnect</h2>
-                <p id="welcomeDesc">Your gateway to HR & Admin opportunities in Sheikhupura.</p>
+        <!-- Stats -->
+        <div class="stats-row-dash" id="statsRow">
+            <div class="stat-dash">
+                <div class="icon">📄</div>
+                <div class="num" id="statApps">0</div>
+                <div class="lbl">Applications Sent</div>
             </div>
-
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-card">
-                    <div class="stat-icon">📄</div>
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Applications</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Saved Jobs</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👁️</div>
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Profile Views</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Messages</div>
-                </div>
+            <div class="stat-dash" style="border-left-color: #f9c74f;">
+                <div class="icon">⭐</div>
+                <div class="num">0</div>
+                <div class="lbl">Saved Jobs</div>
             </div>
-
-            <div class="action-grid" id="actionGrid">
-                <a href="#" class="action-card">
-                    <div class="action-icon">💼</div>
-                    <h3>Browse Jobs</h3>
-                    <p>Explore HR & Admin opportunities</p>
-                </a>
-                <a href="#" class="action-card">
-                    <div class="action-icon">📄</div>
-                    <h3>My Applications</h3>
-                    <p>Track your job applications</p>
-                </a>
-                <a href="#" class="action-card">
-                    <div class="action-icon">👤</div>
-                    <h3>Update Profile</h3>
-                    <p>Complete your CV and profile</p>
-                </a>
-                <a href="#" class="action-card">
-                    <div class="action-icon">🤖</div>
-                    <h3>AI Job Match</h3>
-                    <p>Personalized recommendations</p>
-                </a>
+            <div class="stat-dash" style="border-left-color: #28a745;">
+                <div class="icon">👁️</div>
+                <div class="num">0</div>
+                <div class="lbl">Profile Views</div>
             </div>
-        </main>
-    </div>
+            <div class="stat-dash" style="border-left-color: #764ba2;">
+                <div class="icon">💬</div>
+                <div class="num">0</div>
+                <div class="lbl">Messages</div>
+            </div>
+        </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        <!-- Actions -->
+        <div class="section-head">
+            <h3>Quick Actions</h3>
+        </div>
+        <div class="action-grid" id="actionGrid">
+            <!-- Filled by JS -->
+        </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
-            authDomain: "hask-talentconnect.firebaseapp.com",
-            projectId: "hask-talentconnect",
-            storageBucket: "hask-talentconnect.firebasestorage.app",
-            messagingSenderId: "532290737820",
-            appId: "1:532290737820:web:49f70281b0f34837757f59"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Session timeout: 30 minutes
-        const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
-        let logoutTimer = null;
-
-        function resetLogoutTimer() {
-            if (logoutTimer) clearTimeout(logoutTimer);
-            logoutTimer = setTimeout(async () => {
-                alert('Session expired. You will be logged out.');
-                await signOut(auth);
-                sessionStorage.removeItem('hask_logged_in');
-                window.location.replace('login.html');
-            }, SESSION_TIMEOUT_MS);
-        }
-
-        // Reset timer on any user activity
-        ['click', 'keypress', 'scroll', 'mousemove'].forEach(evt => {
-            document.addEventListener(evt, resetLogoutTimer);
-        });
-
-        // Check auth
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                sessionStorage.removeItem('hask_logged_in');
-                window.location.replace('login.html');
-                return;
-            }
-
-            sessionStorage.setItem('hask_logged_in', 'true');
-            resetLogoutTimer();
-
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                let userData = {
-                    name: user.displayName || user.email.split('@')[0],
-                    email: user.email,
-                    role: 'seeker'
-                };
-                if (userDoc.exists()) userData = { ...userData, ...userDoc.data() };
-
-                updateDashboard(userData);
-                document.getElementById('loadingScreen').style.display = 'none';
-            } catch (err) {
-                console.error(err);
-                document.getElementById('loadingScreen').style.display = 'none';
-            }
-        });
-
-        function updateDashboard(data) {
-            const firstName = data.name.split(' ')[0];
-            document.getElementById('firstName').textContent = firstName;
-            document.getElementById('userName').textContent = data.name;
-            document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
-
-            if (data.role === 'employer') {
-                document.getElementById('roleSubtitle').textContent = 'Manage your job postings and applicants.';
-                document.getElementById('welcomeTitle').textContent = 'Welcome Employer!';
-                document.getElementById('welcomeDesc').textContent = 'Post jobs and find the best HR & Admin talent in Sheikhupura.';
-                document.getElementById('statsGrid').innerHTML = `
-                    <div class="stat-card"><div class="stat-icon">💼</div><div class="stat-number">0</div><div class="stat-label">Active Jobs</div></div>
-                    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-number">0</div><div class="stat-label">Applicants</div></div>
-                    <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-number">0</div><div class="stat-label">Job Views</div></div>
-                    <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-number">0</div><div class="stat-label">Messages</div></div>
-                `;
-                document.getElementById('actionGrid').innerHTML = `
-                    <a href="#" class="action-card"><div class="action-icon">➕</div><h3>Post a Job</h3><p>Create a new job posting</p></a>
-                    <a href="#" class="action-card"><div class="action-icon">📋</div><h3>My Job Posts</h3><p>Manage active listings</p></a>
-                    <a href="#" class="action-card"><div class="action-icon">👥</div><h3>View Applicants</h3><p>Review applications</p></a>
-                    <a href="#" class="action-card"><div class="action-icon">🏢</div><h3>Company Profile</h3><p>Update company info</p></a>
-                `;
-            } else {
-                document.getElementById('roleSubtitle').textContent = 'Find your dream HR or Admin job in Sheikhupura.';
-            }
-        }
-
-        window.handleLogout = async function() {
-            if (confirm('Are you sure you want to logout?')) {
-                try {
-                    sessionStorage.removeItem('hask_logged_in');
-                    if (logoutTimer) clearTimeout(logoutTimer);
-                    await signOut(auth);
-                    window.location.replace('login.html');
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            }
-        };
-
-        // Prevent back button after logout
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) window.location.reload();
-        });
-    </script>
-
-</body>
-</html>
+        <!-- Applications -->
+        <div class="section-head">
+            <h3>My Applications</h3>
+            <a href
