@@ -230,4 +230,167 @@
 
             <div class="welcome-card">
                 <h2 id="welcomeTitle">Welcome to HASK TalentConnect</h2>
-                <p id="welcomeDesc">Your gateway to HR & Admin
+                <p id="welcomeDesc">Your gateway to HR & Admin opportunities in Sheikhupura.</p>
+            </div>
+
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Saved Jobs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Profile Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Messages</div>
+                </div>
+            </div>
+
+            <div class="action-grid" id="actionGrid">
+                <a href="#" class="action-card">
+                    <div class="action-icon">💼</div>
+                    <h3>Browse Jobs</h3>
+                    <p>Explore HR & Admin opportunities</p>
+                </a>
+                <a href="#" class="action-card">
+                    <div class="action-icon">📄</div>
+                    <h3>My Applications</h3>
+                    <p>Track your job applications</p>
+                </a>
+                <a href="#" class="action-card">
+                    <div class="action-icon">👤</div>
+                    <h3>Update Profile</h3>
+                    <p>Complete your CV and profile</p>
+                </a>
+                <a href="#" class="action-card">
+                    <div class="action-icon">🤖</div>
+                    <h3>AI Job Match</h3>
+                    <p>Personalized recommendations</p>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
+            authDomain: "hask-talentconnect.firebaseapp.com",
+            projectId: "hask-talentconnect",
+            storageBucket: "hask-talentconnect.firebasestorage.app",
+            messagingSenderId: "532290737820",
+            appId: "1:532290737820:web:49f70281b0f34837757f59"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Session timeout: 30 minutes
+        const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+        let logoutTimer = null;
+
+        function resetLogoutTimer() {
+            if (logoutTimer) clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(async () => {
+                alert('Session expired. You will be logged out.');
+                await signOut(auth);
+                sessionStorage.removeItem('hask_logged_in');
+                window.location.replace('login.html');
+            }, SESSION_TIMEOUT_MS);
+        }
+
+        // Reset timer on any user activity
+        ['click', 'keypress', 'scroll', 'mousemove'].forEach(evt => {
+            document.addEventListener(evt, resetLogoutTimer);
+        });
+
+        // Check auth
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                sessionStorage.removeItem('hask_logged_in');
+                window.location.replace('login.html');
+                return;
+            }
+
+            sessionStorage.setItem('hask_logged_in', 'true');
+            resetLogoutTimer();
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                let userData = {
+                    name: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    role: 'seeker'
+                };
+                if (userDoc.exists()) userData = { ...userData, ...userDoc.data() };
+
+                updateDashboard(userData);
+                document.getElementById('loadingScreen').style.display = 'none';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loadingScreen').style.display = 'none';
+            }
+        });
+
+        function updateDashboard(data) {
+            const firstName = data.name.split(' ')[0];
+            document.getElementById('firstName').textContent = firstName;
+            document.getElementById('userName').textContent = data.name;
+            document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
+
+            if (data.role === 'employer') {
+                document.getElementById('roleSubtitle').textContent = 'Manage your job postings and applicants.';
+                document.getElementById('welcomeTitle').textContent = 'Welcome Employer!';
+                document.getElementById('welcomeDesc').textContent = 'Post jobs and find the best HR & Admin talent in Sheikhupura.';
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card"><div class="stat-icon">💼</div><div class="stat-number">0</div><div class="stat-label">Active Jobs</div></div>
+                    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-number">0</div><div class="stat-label">Applicants</div></div>
+                    <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-number">0</div><div class="stat-label">Job Views</div></div>
+                    <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-number">0</div><div class="stat-label">Messages</div></div>
+                `;
+                document.getElementById('actionGrid').innerHTML = `
+                    <a href="#" class="action-card"><div class="action-icon">➕</div><h3>Post a Job</h3><p>Create a new job posting</p></a>
+                    <a href="#" class="action-card"><div class="action-icon">📋</div><h3>My Job Posts</h3><p>Manage active listings</p></a>
+                    <a href="#" class="action-card"><div class="action-icon">👥</div><h3>View Applicants</h3><p>Review applications</p></a>
+                    <a href="#" class="action-card"><div class="action-icon">🏢</div><h3>Company Profile</h3><p>Update company info</p></a>
+                `;
+            } else {
+                document.getElementById('roleSubtitle').textContent = 'Find your dream HR or Admin job in Sheikhupura.';
+            }
+        }
+
+        window.handleLogout = async function() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    sessionStorage.removeItem('hask_logged_in');
+                    if (logoutTimer) clearTimeout(logoutTimer);
+                    await signOut(auth);
+                    window.location.replace('login.html');
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+        };
+
+        // Prevent back button after logout
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) window.location.reload();
+        });
+    </script>
+
+</body>
+</html>
