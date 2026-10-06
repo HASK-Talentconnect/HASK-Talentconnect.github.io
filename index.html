@@ -3,84 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HASK - Human Resource & Administration Sheikhupura</title>
+    <title>HASK TalentConnect - Find Jobs in Pakistan</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">HASK</div>
-        <ul>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">HASK TalentConnect</div>
+        <ul class="menu">
             <li><a href="index.html">Home</a></li>
+            <li><a href="jobs.html">Browse Jobs</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="team.html">Core Team</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="jobs.html" class="btn-login">TalentConnect</a></li>
+            <li><a href="team.html">Team</a></li>
+            <li><a href="login.html" class="btn-primary">Login</a></li>
         </ul>
     </nav>
 
     <!-- Hero -->
-    <section class="hero-bg">
-        <div class="hero-overlay">
-            <h1>HASK - Human Resource & Administration Sheikhupura</h1>
-            <p class="tagline">Empowering Sheikhupura's Professional Community</p>
-            <p class="hero-desc">
-                HASK is a premier collective initiative uniting HR and Administration professionals across Sheikhupura. Our platform brings together experts working within the city and those representing Sheikhupura globally, under one dedicated umbrella.
-            </p>
-            <div class="hero-buttons">
-                <a href="jobs.html" class="btn-primary">Browse Jobs</a>
-                <a href="team.html" class="btn-secondary">Meet Our Team</a>
-            </div>
+    <section class="hero">
+        <h1>Find Your Dream Job in Pakistan</h1>
+        <p>Thousands of opportunities from top employers across the country</p>
+        <div class="hero-search">
+            <input type="text" id="heroSearch" placeholder="Job title, skills, or company...">
+            <button onclick="searchJobs()">Search Jobs</button>
         </div>
     </section>
 
-    <!-- Who We Are -->
-    <section class="section">
-        <h2>Who We Are</h2>
-        <p class="subtitle">A united platform for HR & Admin professionals of Sheikhupura</p>
-        <p class="section-text">
-            HASK is dedicated to empowering the professional community of Sheikhupura by connecting HR and Administration experts, sharing knowledge, and building a strong network that benefits both local and global organizations.
-        </p>
-    </section>
+    <div class="container">
 
-    <!-- Features -->
-    <section class="features-section">
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🤝</div>
-                <h3>Networking</h3>
-                <p>Connect with HR & Admin professionals across Sheikhupura.</p>
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="num" id="statJobs">0</div>
+                <div class="lbl">Active Jobs</div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">💼</div>
-                <h3>Job Opportunities</h3>
-                <p>Find the latest HR & Admin jobs in the region.</p>
+            <div class="stat-box">
+                <div class="num" id="statCompanies">0</div>
+                <div class="lbl">Companies</div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">📚</div>
-                <h3>Knowledge Sharing</h3>
-                <p>Learn best practices and industry trends.</p>
+            <div class="stat-box">
+                <div class="num" id="statSeekers">0</div>
+                <div class="lbl">Job Seekers</div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🚀</div>
-                <h3>Career Growth</h3>
-                <p>Unlock professional development opportunities.</p>
+            <div class="stat-box">
+                <div class="num">100%</div>
+                <div class="lbl">Free to Use</div>
             </div>
         </div>
-    </section>
 
-    <!-- CTA -->
-    <section class="cta-section">
-        <h2>Ready to Join HASK?</h2>
-        <p>Become part of Sheikhupura's premier HR & Admin community</p>
-        <a href="login.html" class="btn-primary">Create Free Account</a>
-    </section>
+        <!-- Categories -->
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="categories">
+            <div class="category-card" onclick="goCategory('it')">
+                <div class="icon">💻</div>
+                <div class="name">IT & Software</div>
+            </div>
+            <div class="category-card" onclick="goCategory('sales')">
+                <div class="icon">📊</div>
+                <div class="name">Sales & Marketing</div>
+            </div>
+            <div class="category-card" onclick="goCategory('finance')">
+                <div class="icon">💰</div>
+                <div class="name">Accounting</div>
+            </div>
+            <div class="category-card" onclick="goCategory('hr')">
+                <div class="icon">👔</div>
+                <div class="name">HR & Admin</div>
+            </div>
+            <div class="category-card" onclick="goCategory('engineering')">
+                <div class="icon">🏗️</div>
+                <div class="name">Engineering</div>
+            </div>
+            <div class="category-card" onclick="goCategory('education')">
+                <div class="icon">📚</div>
+                <div class="name">Education</div>
+            </div>
+            <div class="category-card" onclick="goCategory('healthcare')">
+                <div class="icon">🏥</div>
+                <div class="name">Healthcare</div>
+            </div>
+            <div class="category-card" onclick="goCategory('construction')">
+                <div class="icon">🔨</div>
+                <div class="name">Construction</div>
+            </div>
+            <div class="category-card" onclick="goCategory('transport')">
+                <div class="icon">🚚</div>
+                <div class="name">Transport & Driver</div>
+            </div>
+            <div class="category-card" onclick="goCategory('security')">
+                <div class="icon">🛡️</div>
+                <div class="name">Security</div>
+            </div>
+            <div class="category-card" onclick="goCategory('hospitality')">
+                <div class="icon">🍽️</div>
+                <div class="name">Hospitality</div>
+            </div>
+            <div class="category-card" onclick="goCategory('other')">
+                <div class="icon">✨</div>
+                <div class="name">Other Jobs</div>
+            </div>
+        </div>
+
+        <!-- Latest Jobs -->
+        <h2 class="section-title">
+            Latest Jobs
+            <a href="jobs.html">View All →</a>
+        </h2>
+        <div class="jobs-table-wrap">
+            <table class="jobs-table">
+                <thead>
+                    <tr>
+                        <th>Job-ID</th>
+                        <th>Position Title</th>
+                        <th>Employer</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="latestJobsBody">
+                    <tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- For Employers -->
+        <div class="info-banner">
+            <h3>🏢 Are You an Employer?</h3>
+            <p>Post your job openings and find the right talent for your company</p>
+            <a href="login.html?role=employer" class="btn-primary">Post a Job</a>
+        </div>
+
+        <!-- For Job Seekers -->
+        <div class="info-banner">
+            <h3>👤 Looking for a Job?</h3>
+            <p>Create your free account and apply to unlimited jobs</p>
+            <a href="login.html" class="btn-primary">Create Free Account</a>
+        </div>
+
+    </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 HASK - Human Resource & Administration Sheikhupura. All rights reserved.</p>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
     </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
+            authDomain: "hask-talentconnect.firebaseapp.com",
+            projectId: "hask-talentconnect",
+            storageBucket: "hask-talentconnect.firebasestorage.app",
+            messagingSenderId: "532290737820",
+            appId: "1:532290737820:web:49f70281b0f34837757f59"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ===== Load stats & latest jobs =====
+        async function loadHome() {
+            try {
+                // Users count
+                const usersSnap = await getDocs(collection(db, "users"));
+                let seekers = 0;
+                usersSnap.forEach(d => { if (d.data().role !== 'employer') seekers++; });
+                document.getElementById('statSeekers').textContent = seekers;
+
+                // Jobs
+                const jobsSnap = await getDocs(collection(db, "jobs"));
+                const jobs = [];
+                jobsSnap.forEach(d => jobs.push({ id: d.id, ...d.data() }));
+
+                document.getElementById('statJobs').textContent = jobs.length;
+
+                // Companies
+                const companies = [...new Set(jobs.map(j => j.company).filter(Boolean))];
+                document.getElementById('statCompanies').textContent = companies.length;
+
+                // Latest 5 jobs
+                jobs.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                const latest = jobs.slice(0, 5);
+                renderLatestJobs(latest);
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderLatestJobs(jobs) {
+            const tbody = document.getElementById('latestJobsBody');
+            if (jobs.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="6" class="empty-state">
+                        <span class="icon">📭</span>
+                        <p>No jobs posted yet. Check back soon!</p>
+                    </td></tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = jobs.map(job => `
+                <tr onclick="window.location.href='job-details.html?job=${job.id}'">
+                    <td class="job-id">#${(job.jobId || job.id.slice(0,6)).toUpperCase()}</td>
+                    <td class="job-title">
+                        ${escapeHtml(job.title || 'Untitled')}
+                        <small>Click for more information...</small>
+                    </td>
+                    <td class="company-cell">${escapeHtml(job.company || '-')}</td>
+                    <td><span class="category-badge">${formatCat(job.category)}</span></td>
+                    <td>${escapeHtml(job.location || 'Pakistan')}</td>
+                    <td><button class="apply-btn" onclick="event.stopPropagation(); window.location.href='job-details.html?job=${job.id}'">Apply</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({
+                '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+            })[c]);
+        }
+
+        function formatCat(c) {
+            if (!c) return 'Other';
+            return c.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+
+        window.searchJobs = function() {
+            const q = document.getElementById('heroSearch').value.trim();
+            if (q) {
+                window.location.href = 'jobs.html?q=' + encodeURIComponent(q);
+            } else {
+                window.location.href = 'jobs.html';
+            }
+        };
+
+        window.goCategory = function(cat) {
+            window.location.href = 'jobs.html?category=' + cat;
+        };
+
+        // Enter key for search
+        document.getElementById('heroSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchJobs();
+        });
+
+        loadHome();
+    </script>
 
 </body>
 </html>
