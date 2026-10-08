@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - HASK TalentConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+    <!-- ===== Navbar (same as other pages) ===== -->
+    <nav class="navbar">
+        <div class="logo">HASK TalentConnect</div>
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="team.html">Team</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="#" id="logoutBtn" class="btn-primary">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- ===== Profile Layout ===== -->
+    <div class="profile-layout">
+
+        <!-- ===== Sidebar ===== -->
+        <aside class="profile-sidebar">
+
+            <!-- Profile Card -->
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+                <div class="sidebar-name" id="sidebarName">Loading...</div>
+                <div class="sidebar-id" id="sidebarId">—</div>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span>Profile Completion</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <ul class="sidebar-menu" id="sidebarMenu">
+                <li>
+                    <a href="#" class="menu-item" data-section="personal">
+                        <span class="check-box" id="check-personal">⬜</span>
+                        <span class="menu-label">Personal Details</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="education">
+                        <span class="check-box" id="check-education">⬜</span>
+                        <span class="menu-label">Education</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="experience">
+                        <span class="check-box" id="check-experience">⬜</span>
+                        <span class="menu-label">Experience</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="skills">
+                        <span class="check-box" id="check-skills">⬜</span>
+                        <span class="menu-label">Skills</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="self">
+                        <span class="check-box" id="check-self">⬜</span>
+                        <span class="menu-label">Self Assessment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="references">
+                        <span class="check-box" id="check-references">⬜</span>
+                        <span class="menu-label">References</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="misc">
+                        <span class="check-box" id="check-misc">⬜</span>
+                        <span class="menu-label">Miscellaneous</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="compensation">
+                        <span class="check-box" id="check-compensation">⬜</span>
+                        <span class="menu-label">Compensation</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Applying For -->
+            <div class="applying-for">
+                <label>Applying for:</label>
+                <select id="applyingFor">
+                    <option value="full-time">Full Time Employee</option>
+                    <option value="part-time">Part Time Employee</option>
+                    <option value="contract">Contract</option>
+                    <option value="internship">Internship</option>
+                    <option value="daily-wages">Daily Wages</option>
+                </select>
+            </div>
+
+        </aside>
+
+        <!-- ===== Main Content ===== -->
+        <main class="profile-main">
+
+            <div id="messageBox" class="message-box"></div>
+
+            <!-- ============================================
+                 SECTION 1: PERSONAL DETAILS
+                 ============================================ -->
+            <section class="profile-section active" id="section-personal">
+                <div class="section-header">
+                    <h2>👤 Personal Details</h2>
+                    <p class="section-note">All fields with an asterisk (<span class="req">*</span>) are mandatory</p>
+                </div>
+
+                <div class="green-banner">Candidate ID: <span id="candidateId">—</span></div>
+
+                <form onsubmit="savePersonal(event)">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Title <span class="req">*</span></label>
+                            <select id="pTitle" required>
+                                <option value="">Select</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Dr.">Dr.</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Full Name <span class="req">*</span></label>
+                            <input type="text" id="pFullName" required>
+                        </div>
+                        <div class="field">
+                            <label>Father's/Husband's Name <span class="req">*</span></label>
+                            <input type="text" id="pFatherName" required>
+                        </div>
+                        <div class="field">
+                            <label>Nationality <span class="req">*</span></label>
+                            <select id="pNationality" required>
+                                <option value="Pakistan">Pakistan</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>CNIC # <span class="req">*</span></label>
+                            <input type="text" id="pCnic" placeholder="35202-1234567-1" required>
+                        </div>
+                        <div class="field">
+                            <label>Date of Birth <span class="req">*</span></label>
+                            <input type="date" id="pDob" required>
+                        </div>
+                        <div class="field">
+                            <label>Gender <span class="req">*</span></label>
+                            <select id="pGender" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Area of Interest <span class="req">*</span></label>
+                            <select id="pInterest" required>
+                                <option value="">Select</option>
+                                <option value="IT & Software">IT & Software</option>
+                                <option value="Sales & Marketing">Sales & Marketing</option>
+                                <option value="Accounting & Finance">Accounting & Finance</option>
+                                <option value="HR & Admin">HR & Admin</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Education">Education</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Construction">Construction</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Security">Security</option>
+                                <option value="Hospitality">Hospitality</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Other Interest</label>
+                            <input type="text" id="pOtherInterest">
+                        </div>
+                        <div class="field">
+                            <label>Domicile District <span class="req">*</span></label>
+                            <input type="text" id="pDomicile" placeholder="e.g. Sheikhupura" required>
+                        </div>
+                        <div class="field full">
+                            <label>Present Address <span class="req">*</span></label>
+                            <input type="text" id="pAddress" required>
+                        </div>
+                        <div class="field">
+                            <label>Country <span class="req">*</span></label>
+                            <select id="pCountry" required>
+                                <option value="Pakistan">Pakistan</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>City/District <span class="req">*</span></label>
+                            <input type="text" id="pCity" required>
+                        </div>
+                        <div class="field">
+                            <label>Tehsil/Town</label>
+                            <input type="text" id="pTehsil">
+                        </div>
+                        <div class="field">
+                            <label>Postal Code</label>
+                            <input type="text" id="pPostalCode">
+                        </div>
+                        <div class="field">
+                            <label>Landline #</label>
+                            <input type="text" id="pLandline">
+                        </div>
+                        <div class="field">
+                            <label>Cell # <span class="req">*</span></label>
+                            <input type="tel" id="pCell" placeholder="03XX-XXXXXXX" required>
+                        </div>
+                        <div class="field">
+                            <label>Email <span class="req">*</span></label>
+                            <input type="email" id="pEmail" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Save & Continue →</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ============================================
+                 SECTION 2: EDUCATION
+                 ============================================ -->
+            <section class="profile-section" id="section-education">
+                <div class="section-header">
+                    <h2>🎓 Education</h2>
+                    <p class="section-note">You have to add at least one education to proceed further</p>
+                </div>
+
+                <button type="button" class="btn-add" onclick="openEducationModal()">
+                    <span>⊕</span> Add Education
+                </button>
+
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Degree Level</th>
+                                <th>Institution</th>
+                                <th>Degree Title</th>
+                                <th>Completion Date</th>
+                                <th>Percentage</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="educationTableBody">
+                            <tr><td colspan="6" class="empty-row">No education added yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="goToSection('personal')">← Previous</button>
+                    <button type="button" class="btn-save" onclick="nextSection('experience')">Save & Continue →</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SECTION 3: EXPERIENCE
+                 ============================================ -->
+            <section class="profile-section" id="section-experience">
+                <div class="section-header">
+                    <h2>💼 Experience</h2>
+                </div>
+
+                <div class="exp-toggle">
+                    <label>Do you have any working experience?</label>
+                    <label class="radio-label">
+                        <input type="radio" name="hasExp" value="yes" onchange="toggleExperience(true)" checked> Yes
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="hasExp" value="no" onchange="toggleExperience(false)"> No
+                    </label>
+                    <label style="margin-left: 30px;">Overall Experience <span class="req">*</span></label>
+                    <input type="number" id="overallExp" value="0" step="0.5" style="width: 80px;">
+                    <label style="margin-left: 20px;">Industry Experience <span class="req">*</span></label>
+                    <input type="number" id="industryExp" value="0" step="0.5" style="width: 80px;">
+                </div>
+
+                <button type="button" class="btn-add" onclick="openExperienceModal()">
+                    <span>⊕</span> Add Job Detail
+                </button>
+
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Employer</th>
+                                <th>Manager's Name</th>
+                                <th>Nature of Business</th>
+                                <th>Job Title</th>
+                                <th>Joining Date</th>
+                                <th>Leaving Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="experienceTableBody">
+                            <tr><td colspan="7" class="empty-row">No experience added yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="goToSection('education')">← Previous</button>
+                    <button type="button" class="btn-save" onclick="nextSection('skills')">Save & Continue →</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SECTION 4: SKILLS
+                 ============================================ -->
+            <section class="profile-section" id="section-skills">
+                <div class="section-header">
+                    <h2>🛠️ Skills</h2>
+                </div>
+
+                <button type="button" class="btn-add" onclick="openSkillModal()">
+                    <span>⊕</span> Add Skill
+                </button>
+
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Skill Name</th>
+                                <th>Skill Level</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="skillsTableBody">
+                            <tr><td colspan="4" class="empty-row">No skills added yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="goToSection('experience')">← Previous</button>
+                    <button type="button" class="btn-save" onclick="nextSection('self')">Save & Continue →</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SECTION 5: SELF ASSESSMENT
+                 ============================================ -->
+            <section class="profile-section" id="section-self">
+                <div class="section-header">
+                    <h2>📝 Self Assessment</h2>
+                    <p class="section-note">All fields are mandatory</p>
+                </div>
+
+                <div class="green-banner">Self Assessment Details</div>
+
+                <form onsubmit="saveSelf(event)">
+                    <div class="field">
+                        <label>Objective <span class="req">*</span></label>
+                        <textarea id="saObjective" rows="3" maxlength="500" required></textarea>
+                        <small class="char-count"><span id="c1">0</span> / 500 characters</small>
+                    </div>
+                    <div class="field">
+                        <label>Strengths <span class="req">*</span></label>
+                        <textarea id="saStrengths" rows="4" maxlength="500" required></textarea>
+                        <small class="char-count"><span id="c2">0</span> / 500 characters</small>
+                    </div>
+                    <div class="field">
+                        <label>Areas of Improvement <span class="req">*</span></label>
+                        <textarea id="saImprovements" rows="4" maxlength="500" required></textarea>
+                        <small class="char-count"><span id="c3">0</span> / 500 characters</small>
+                    </div>
+                    <div class="field">
+                        <label>Briefly explain your skills and experience <span class="req">*</span></label>
+                        <textarea id="saSummary" rows="4" maxlength="800" required></textarea>
+                        <small class="char-count"><span id="c4">0</span> / 800 characters</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-prev" onclick="goToSection('skills')">← Previous</button>
+                        <button type="submit" class="btn-save">Save & Continue →</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ============================================
+                 SECTION 6: REFERENCES
+                 ============================================ -->
+            <section class="profile-section" id="section-references">
+                <div class="section-header">
+                    <h2>👥 References</h2>
+                    <p class="section-note">All fields with an asterisk (<span class="req">*</span>) are mandatory</p>
+                </div>
+
+                <div class="green-banner">References Details</div>
+
+                <form onsubmit="saveReferences(event)">
+                    <h4 class="sub-heading">Reference #1: Personal (should not be immediate relative)</h4>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Title</label>
+                            <select id="ref1Title">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Referee's Full Name <span class="req">*</span></label>
+                            <input type="text" id="ref1Name" required>
+                        </div>
+                        <div class="field">
+                            <label>Designation <span class="req">*</span></label>
+                            <input type="text" id="ref1Designation" required>
+                        </div>
+                        <div class="field">
+                            <label>Organization <span class="req">*</span></label>
+                            <input type="text" id="ref1Org" required>
+                        </div>
+                        <div class="field">
+                            <label>Phone # <span class="req">*</span></label>
+                            <input type="tel" id="ref1Phone" required>
+                        </div>
+                        <div class="field">
+                            <label>How long known? (years) <span class="req">*</span></label>
+                            <input type="number" id="ref1Known" step="0.5" required>
+                        </div>
+                        <div class="field full">
+                            <label>Email <span class="req">*</span></label>
+                            <input type="email" id="ref1Email" required>
+                        </div>
+                    </div>
+
+                    <h4 class="sub-heading">Reference #2: Professional (someone you know in a professional capacity)</h4>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Title</label>
+                            <select id="ref2Title">
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Referee's Full Name <span class="req">*</span></label>
+                            <input type="text" id="ref2Name" required>
+                        </div>
+                        <div class="field">
+                            <label>Designation <span class="req">*</span></label>
+                            <input type="text" id="ref2Designation" required>
+                        </div>
+                        <div class="field">
+                            <label>Organization <span class="req">*</span></label>
+                            <input type="text" id="ref2Org" required>
+                        </div>
+                        <div class="field">
+                            <label>Phone # <span class="req">*</span></label>
+                            <input type="tel" id="ref2Phone" required>
+                        </div>
+                        <div class="field">
+                            <label>How long known? (years) <span class="req">*</span></label>
+                            <input type="number" id="ref2Known" step="0.5" required>
+                        </div>
+                        <div class="field full">
+                            <label>Email <span class="req">*</span></label>
+                            <input type="email" id="ref2Email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-prev" onclick="goToSection('self')">← Previous</button>
+                        <button type="submit" class="btn-save">Save & Continue →</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ============================================
+                 SECTION 7: MISCELLANEOUS
+                 ============================================ -->
+            <section class="profile-section" id="section-misc">
+                <div class="section-header">
+                    <h2>📋 Miscellaneous</h2>
+                    <p class="section-note">All fields with an asterisk (<span class="req">*</span>) are mandatory</p>
+                </div>
+
+                <div class="green-banner">Miscellaneous</div>
+
+                <form onsubmit="saveMisc(event)">
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label>Have you ever been convicted of any crime? <span class="req">*</span></label>
+                            <select id="mCrime" required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="field full">
+                            <label>Do you have any relatives working presently with HASK TalentConnect? <span class="req">*</span></label>
+                            <select id="mRelatives" required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="field full">
+                            <label>Do you have any disability? <span class="req">*</span></label>
+                            <select id="mDisability" required>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>From where did you hear about the opportunity? <span class="req">*</span></label>
+                            <select id="mSource" required>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Friend">Friend</option>
+                                <option value="Website">Website</option>
+                                <option value="Newspaper">Newspaper</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Notice Period <span class="req">*</span></label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="number" id="mNoticeNum" value="1" min="0" required>
+                                <select id="mNoticeUnit" required>
+                                    <option value="Month">Month</option>
+                                    <option value="Week">Week</option>
+                                    <option value="Day">Day</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field full">
+                            <label>LinkedIn URL</label>
+                            <input type="url" id="mLinkedin" placeholder="https://www.linkedin.com/in/username">
+                        </div>
+                        <div class="field">
+                            <label>Blood Group</label>
+                            <select id="mBlood">
+                                <option value="">Select</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Marital Status</label>
+                            <select id="mMarital">
+                                <option value="">Select</option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Religion</label>
+                            <select id="mReligion">
+                                <option value="">Select</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Christianity">Christianity</option>
+                                <option value="Hinduism">Hinduism</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-prev" onclick="goToSection('references')">← Previous</button>
+                        <button type="submit" class="btn-save">Save & Continue →</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ============================================
+                 SECTION 8: COMPENSATION
+                 ============================================ -->
+            <section class="profile-section" id="section-compensation">
+                <div class="section-header">
+                    <h2>💰 Compensation</h2>
+                    <p class="section-note">Mention your most-recent compensation</p>
+                    <div class="info-note">If some field is not applicable simply write NIL and for numerical value write zero</div>
+                </div>
+
+                <div class="green-banner">Compensation Details</div>
+
+                <form onsubmit="saveCompensation(event)">
+                    <div class="form-grid-3">
+                        <div class="field">
+                            <label>Monthly Basic Salary <span class="req">*</span></label>
+                            <input type="number" id="cBasic" value="0" min="0" required>
+                            <small>Please enter salary in PKR</small>
+                        </div>
+                        <div class="field">
+                            <label>Monthly Gross Salary <span class="req">*</span></label>
+                            <input type="number" id="cGross" value="0" min="0" required>
+                        </div>
+                        <div class="field">
+                            <label>Monthly Expected Salary <span class="req">*</span></label>
+                            <input type="number" id="cExpected" value="0" min="0" required>
+                        </div>
+                    </div>
+
+                    <h4 class="sub-heading">Bonus</h4>
+                    <div class="comp-row">
+                        <label>Bonus(es) <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="bonus" value="Yes" onchange="toggleBonus(true)" checked> Yes</label>
+                        <label class="radio-label"><input type="radio" name="bonus" value="No" onchange="toggleBonus(false)"> No</label>
+                        <label class="radio-label"><input type="radio" name="bonusType" value="On basic" checked> On basic</label>
+                        <label class="radio-label"><input type="radio" name="bonusType" value="On gross"> On gross</label>
+                        <input type="number" id="bonusCount" value="1" min="0" style="width:80px;" placeholder="Count">
+                        <small>No. of Bonus(es) per year</small>
+                    </div>
+
+                    <h4 class="sub-heading">Allowances</h4>
+
+                    <div class="comp-row">
+                        <label>Leave Encashment <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="leave" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="leave" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Medical Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="medical" value="Yes" onchange="toggleMed(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="medical" value="No" onchange="toggleMed(false)" checked> No</label>
+                        <input type="number" id="medAmount" value="0" min="0" style="width:150px;">
+                        <small>Amount for Medical Allowance</small>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Transport Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="transport" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="transport" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Fuel Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="fuel" value="Yes" onchange="toggleFuel(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="fuel" value="No" onchange="toggleFuel(false)" checked> No</label>
+                        <input type="number" id="fuelAmount" value="0" min="0" style="width:120px;" placeholder="Rs.">
+                        <input type="number" id="fuelLiters" value="0" min="0" style="width:100px;" placeholder="Liters">
+                        <small>Number of Liters</small>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Accommodation Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="accom" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="accom" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Vehicle Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="vehicle" value="Yes" onchange="toggleVehicle(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="vehicle" value="No" onchange="toggleVehicle(false)" checked> No</label>
+                    </div>
+
+                    <div class="comp-row" id="vehicleDetailsRow" style="display:none;">
+                        <label>Vehicle Detail</label>
+                        <input type="text" id="vehicleDetail" placeholder="Honda CG-125">
+                        <label class="radio-label"><input type="radio" name="buyback" value="Yes"> Buy Back</label>
+                        <label class="radio-label"><input type="radio" name="buyback" value="No" checked> No Buy Back</label>
+                        <input type="number" id="buybackYears" value="3" min="0" style="width:80px;">
+                        <small>Years for Buy back</small>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Mobile Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="mobile" value="Yes" onchange="toggleMobile(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="mobile" value="No" onchange="toggleMobile(false)" checked> No</label>
+                        <input type="number" id="mobileAmount" value="0" min="0" style="width:120px;">
+                        <small>Amount for Monthly Usage</small>
+                    </div>
+
+                    <h4 class="sub-heading">Insurance and Coverage</h4>
+
+                    <div class="comp-row">
+                        <label>OPD Limit <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="opd" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="opd" value="No" checked> No</label>
+                        <input type="number" id="opdAmount" value="0" min="0" style="width:150px;">
+                        <small>Amount per annum</small>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Health Insurance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="health" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="health" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Life Insurance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="life" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="life" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Provident Fund <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="pf" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="pf" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Gratuity <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="gratuity" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="gratuity" value="No" checked> No</label>
+                        <label class="radio-label"><input type="radio" name="gratuityType" value="On basic" checked> On basic</label>
+                        <label class="radio-label"><input type="radio" name="gratuityType" value="On gross"> On gross</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>WPPF <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="wppf" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="wppf" value="No" checked> No</label>
+                    </div>
+
+                    <h4 class="sub-heading">Leaves</h4>
+
+                    <div class="form-grid-4">
+                        <div class="field">
+                            <label>Annual</label>
+                            <input type="number" id="leaveAnnual" value="0" min="0">
+                        </div>
+                        <div class="field">
+                            <label>Casual</label>
+                            <input type="number" id="leaveCasual" value="0" min="0">
+                        </div>
+                        <div class="field">
+                            <label>Sick</label>
+                            <input type="number" id="leaveSick" value="0" min="0">
+                        </div>
+                        <div class="field">
+                            <label>Working Days/Week</label>
+                            <input type="number" id="workingDays" value="5" min="1" max="7">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Any Other Benefit</label>
+                        <textarea id="otherBenefit" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-prev" onclick="goToSection('misc')">← Previous</button>
+                        <button type="submit" class="btn-save">Save & Finish ✓</button>
+                    </div>
+                </form>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- ===== Modal for Education/Experience/Skill entry ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Entry</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="profile.js"></script>
+
+</body>
+</html>
