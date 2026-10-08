@@ -6,8 +6,6 @@
     <title>Our Team - HASK TalentConnect</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ===== Team Carousel Styles ===== */
-
         .team-page {
             min-height: 100vh;
             background: #f5f0e8;
@@ -17,7 +15,6 @@
             overflow-x: hidden;
         }
 
-        /* Header */
         .team-header {
             text-align: center;
             margin-bottom: 30px;
@@ -39,7 +36,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Carousel */
         .carousel-wrap {
             position: relative;
             flex: 1;
@@ -65,7 +61,6 @@
             perspective: 1400px;
         }
 
-        /* Member Card */
         .member-card {
             position: absolute;
             top: 50%;
@@ -135,25 +130,42 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 30px 25px;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 30px 25px 25px;
+            background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.65) 60%, transparent);
             color: white;
         }
 
         .member-card .card-info h3 {
             font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             letter-spacing: 0.2px;
+            line-height: 1.2;
         }
 
-        .member-card .card-info p {
+        .member-card .card-info .role-line {
             font-size: 0.92rem;
-            opacity: 0.88;
-            font-weight: 400;
+            opacity: 0.92;
+            font-weight: 500;
+            margin-bottom: 10px;
         }
 
-        /* LinkedIn overlay */
+        .member-card .card-info .industry-line {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            color: #f9c74f;
+            font-weight: 600;
+            background: rgba(249, 199, 79, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(249, 199, 79, 0.35);
+            max-width: 100%;
+        }
+
+        .member-card .card-info .industry-line .ico { font-size: 0.9rem; }
+
         .linkedin-mini {
             position: absolute;
             top: 18px;
@@ -175,16 +187,9 @@
             z-index: 5;
         }
 
-        .member-card.active .linkedin-mini {
-            opacity: 1;
-        }
+        .member-card.active .linkedin-mini { opacity: 1; }
+        .linkedin-mini:hover { background: #0077b5; transform: scale(1.1); }
 
-        .linkedin-mini:hover {
-            background: #0077b5;
-            transform: scale(1.1);
-        }
-
-        /* "Click to connect" hint */
         .click-hint {
             position: absolute;
             top: 18px;
@@ -212,7 +217,28 @@
             50% { opacity: 1; }
         }
 
-        /* Navigation */
+        /* Hover pause indicator */
+        .member-card.active .hover-pause {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+            z-index: 6;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .member-card.active.paused-show .hover-pause { opacity: 1; }
+
         .carousel-nav {
             display: flex;
             flex-direction: column;
@@ -247,6 +273,7 @@
             transition: 0.25s;
             color: #1a1a1a;
             font-size: 1.2rem;
+            font-family: inherit;
         }
 
         .nav-btn:hover {
@@ -261,7 +288,6 @@
             color: #1a1a1a;
         }
 
-        /* Progress bar */
         .progress-bar {
             display: flex;
             align-items: center;
@@ -282,9 +308,7 @@
             width: 60px;
         }
 
-        .progress-bar .bar:hover {
-            background: #999;
-        }
+        .progress-bar .bar:hover { background: #999; }
 
         .drag-hint {
             color: #aaa;
@@ -293,9 +317,9 @@
             font-weight: 600;
             text-transform: uppercase;
             margin-top: 5px;
+            text-align: center;
         }
 
-        /* Timer indicator */
         .timer-info {
             color: #888;
             font-size: 0.72rem;
@@ -323,16 +347,13 @@
             50% { opacity: 0.4; transform: scale(0.8); }
         }
 
-        /* Responsive */
         @media (max-width: 900px) {
             .team-header h1 { font-size: 1.9rem; }
             .carousel-track { height: 540px; }
-            .member-card {
-                width: 340px;
-                height: 480px;
-            }
+            .member-card { width: 340px; height: 480px; }
             .member-card .card-info h3 { font-size: 1.2rem; }
-            .member-card .card-info p { font-size: 0.85rem; }
+            .member-card .card-info .role-line { font-size: 0.85rem; }
+            .member-card .card-info .industry-line { font-size: 0.75rem; }
         }
 
         @media (max-width: 600px) {
@@ -341,14 +362,11 @@
             .team-header .small-tag { font-size: 0.62rem; letter-spacing: 2px; }
             .carousel-wrap { min-height: 520px; }
             .carousel-track { height: 480px; }
-            .member-card {
-                width: 280px;
-                height: 400px;
-                border-radius: 18px;
-            }
-            .member-card .card-info { padding: 22px 18px; }
+            .member-card { width: 280px; height: 400px; border-radius: 18px; }
+            .member-card .card-info { padding: 20px 16px 16px; }
             .member-card .card-info h3 { font-size: 1.05rem; }
-            .member-card .card-info p { font-size: 0.78rem; }
+            .member-card .card-info .role-line { font-size: 0.78rem; margin-bottom: 6px; }
+            .member-card .card-info .industry-line { font-size: 0.68rem; padding: 4px 10px; }
             .nav-btn { width: 44px; height: 44px; font-size: 1rem; }
             .progress-bar .bar { width: 26px; }
             .progress-bar .bar.active { width: 40px; }
@@ -371,20 +389,15 @@
 
     <div class="team-page">
 
-        <!-- Header -->
         <div class="team-header">
             <div class="small-tag">HASK TALENTCONNECT · 10 MEMBERS</div>
             <h1>Our Core Team</h1>
         </div>
 
-        <!-- Carousel -->
         <div class="carousel-wrap" id="carouselWrap">
-            <div class="carousel-track" id="carouselTrack">
-                <!-- Cards injected by JS -->
-            </div>
+            <div class="carousel-track" id="carouselTrack"></div>
         </div>
 
-        <!-- Navigation -->
         <div class="carousel-nav">
             <div class="counter-text" id="counterText">01 / 10</div>
 
@@ -396,88 +409,27 @@
 
             <div class="timer-info">
                 <span class="timer-dot" id="timerDot"></span>
-                <span id="timerText">Auto-rotating every 4s</span>
+                <span id="timerText">Auto-rotating every 1.3s</span>
                 <button class="nav-btn paused" id="pauseBtn" onclick="toggleAutoRotate()" style="width: 28px; height: 28px; font-size: 0.75rem; margin-left: 5px;" title="Pause/Resume">⏸</button>
             </div>
 
-            <div class="drag-hint">Drag · Scroll · Arrows · Click for LinkedIn</div>
+            <div class="drag-hint">Drag · Scroll · Arrows · Hover to Pause</div>
         </div>
 
     </div>
 
     <script>
-        // ===== Team Members Data =====
         const teamMembers = [
-            {
-                name: "Hafeez Ur Rehman",
-                role: "Manager Admin & HR",
-                company: "National Feed Limited Sheikhupura",
-                photo: "images/hafeez.jpg",
-                linkedin: "https://www.linkedin.com/in/hafeez-ur-rehman-chrp-%C2%AE-7186a62b0/"
-            },
-            {
-                name: "Shahrukh Irfan",
-                role: "Senior Manager HR & Admin",
-                company: "Shahzad Textile Mills Ltd.",
-                photo: "images/shahrukh.jpg",
-                linkedin: "https://www.linkedin.com/in/shahrukh-irfan-5a527750/"
-            },
-            {
-                name: "Humayun Akhtar",
-                role: "Unit Head HR",
-                company: "National Bank of Pakistan",
-                photo: "images/humayun.jpg",
-                linkedin: "https://www.linkedin.com/in/humayunakhtar21/"
-            },
-            {
-                name: "Muhammad Usman",
-                role: "Assistant Manager HR",
-                company: "Millat Tractors Ltd.",
-                photo: "images/usman.jpg",
-                linkedin: "https://www.linkedin.com/in/muhammad-usman-chrp-93bb82113/"
-            },
-            {
-                name: "Zeeshan Ali",
-                role: "Deputy Manager HR",
-                company: "Clive Shoes",
-                photo: "images/zeeshan.jpg",
-                linkedin: "https://www.linkedin.com/in/zeeshan-ali-chrp/"
-            },
-            {
-                name: "Ikram Hafeez Choudhry",
-                role: "Team Lead HR",
-                company: "Fatima Fertilizer Limited",
-                photo: "images/ikram.jpg",
-                linkedin: "https://www.linkedin.com/in/ikraam-hafeez-495766191/"
-            },
-            {
-                name: "Jehanzaib Abbas",
-                role: "Assistant Manager HR",
-                company: "Nimir Chemicals Pakistan",
-                photo: "images/jehanzaib.jpg",
-                linkedin: "https://www.linkedin.com/in/jehanzaib-abbas-b39222139/"
-            },
-            {
-                name: "Irfan Maqbool",
-                role: "Dy. Manager Admin & HR",
-                company: "Balochistan Glass Limited",
-                photo: "images/irfan.jpg",
-                linkedin: "https://www.linkedin.com/in/irfan-maqbool-787b0a31/"
-            },
-            {
-                name: "Muhammad Ahtisham",
-                role: "Assistant Manager HR / IR",
-                company: "Anwer Rashid Industries",
-                photo: "images/ahtisham.jpg",
-                linkedin: "https://www.linkedin.com/in/malik-ahtisham-b55993242/"
-            },
-            {
-                name: "Rida Zainab",
-                role: "Executive Admin / HR",
-                company: "DreamBig Semiconductor Inc.",
-                photo: "images/rida.jpg",
-                linkedin: "#"
-            }
+            { name: "Hafeez Ur Rehman", role: "Manager Admin & HR", industry: "National Feed Limited Sheikhupura", photo: "images/hafeez.jpg", linkedin: "https://www.linkedin.com/in/hafeez-ur-rehman-chrp-%C2%AE-7186a62b0/" },
+            { name: "Shahrukh Irfan", role: "Senior Manager HR & Admin", industry: "Shahzad Textile Mills Ltd.", photo: "images/shahrukh.jpg", linkedin: "https://www.linkedin.com/in/shahrukh-irfan-5a527750/" },
+            { name: "Humayun Akhtar", role: "Unit Head HR", industry: "National Bank of Pakistan", photo: "images/humayun.jpg", linkedin: "https://www.linkedin.com/in/humayunakhtar21/" },
+            { name: "Muhammad Usman", role: "Assistant Manager HR", industry: "Millat Tractors Ltd.", photo: "images/usman.jpg", linkedin: "https://www.linkedin.com/in/muhammad-usman-chrp-93bb82113/" },
+            { name: "Zeeshan Ali", role: "Deputy Manager HR", industry: "Clive Shoes", photo: "images/zeeshan.jpg", linkedin: "https://www.linkedin.com/in/zeeshan-ali-chrp/" },
+            { name: "Ikram Hafeez Choudhry", role: "Team Lead HR", industry: "Fatima Fertilizer Limited", photo: "images/ikram.jpg", linkedin: "https://www.linkedin.com/in/ikraam-hafeez-495766191/" },
+            { name: "Jehanzaib Abbas", role: "Assistant Manager HR", industry: "Nimir Chemicals Pakistan", photo: "images/jehanzaib.jpg", linkedin: "https://www.linkedin.com/in/jehanzaib-abbas-b39222139/" },
+            { name: "Irfan Maqbool", role: "Dy. Manager Admin & HR", industry: "Balochistan Glass Limited", photo: "images/irfan.jpg", linkedin: "https://www.linkedin.com/in/irfan-maqbool-787b0a31/" },
+            { name: "Muhammad Ahtisham", role: "Assistant Manager HR / IR", industry: "Anwer Rashid Industries", photo: "images/ahtisham.jpg", linkedin: "https://www.linkedin.com/in/malik-ahtisham-b55993242/" },
+            { name: "Rida Zainab", role: "Executive Admin / HR", industry: "DreamBig Semiconductor Inc.", photo: "images/rida.jpg", linkedin: "#" }
         ];
 
         const formats = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG'];
@@ -485,15 +437,17 @@
         let currentIndex = 0;
         const total = teamMembers.length;
 
-        // ===== Auto-rotate =====
-        const AUTO_ROTATE_MS = 1200; // 1.2 seconds
+        // ===== Auto-rotate at 1.3 seconds =====
+        const AUTO_ROTATE_MS = 1300; // 1.3 seconds
         let autoRotateTimer = null;
         let isAutoRotating = true;
+        let isHovering = false; // Hover pause
 
         function startAutoRotate() {
             stopAutoRotate();
+            if (isHovering) return; // Don't start if hovering
             autoRotateTimer = setInterval(() => {
-                nextSlide(true);
+                if (!isHovering) nextSlide(true);
             }, AUTO_ROTATE_MS);
         }
 
@@ -516,7 +470,7 @@
                 btn.classList.add('paused');
                 btn.title = 'Pause';
                 dot.classList.remove('paused');
-                txt.textContent = 'Auto-rotating every 4s';
+                txt.textContent = 'Auto-rotating every 1.3s';
             } else {
                 stopAutoRotate();
                 btn.textContent = '▶';
@@ -545,20 +499,41 @@
                         <div class="click-hint">Click to view LinkedIn →</div>
                         <div class="linkedin-mini">in</div>
                     ` : ''}
+                    <div class="hover-pause">⏸ Paused (move away to resume)</div>
                     <div class="card-info">
                         <h3>${m.name}</h3>
-                        <p>${m.role}</p>
+                        <p class="role-line">${m.role}</p>
+                        <span class="industry-line">
+                            <span class="ico">🏢</span>
+                            <span>${m.industry}</span>
+                        </span>
                     </div>
                 `;
 
-                // Click on active card → open LinkedIn
-                card.addEventListener('click', (e) => {
+                card.addEventListener('click', () => {
                     if (i === currentIndex) {
-                        if (hasLinkedIn) {
-                            window.open(m.linkedin, '_blank');
-                        }
+                        if (hasLinkedIn) window.open(m.linkedin, '_blank');
                     } else {
                         goToSlide(i);
+                    }
+                });
+
+                // ===== HOVER PAUSE =====
+                card.addEventListener('mouseenter', () => {
+                    if (i === currentIndex) {
+                        isHovering = true;
+                        stopAutoRotate();
+                        card.classList.add('paused-show');
+                        updateTimerIndicator(true);
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    if (i === currentIndex) {
+                        isHovering = false;
+                        card.classList.remove('paused-show');
+                        if (isAutoRotating) startAutoRotate();
+                        updateTimerIndicator(false);
                     }
                 });
 
@@ -585,13 +560,11 @@
                 tryNext();
             });
 
-            // Build progress bars
             const pb = document.getElementById('progressBar');
             pb.innerHTML = '';
             for (let i = 0; i < total; i++) {
                 const bar = document.createElement('div');
                 bar.className = 'bar';
-                bar.dataset.idx = i;
                 bar.addEventListener('click', () => goToSlide(i));
                 pb.appendChild(bar);
             }
@@ -599,73 +572,72 @@
             updateCarousel();
         }
 
-        // ===== Update carousel positions =====
+        function updateTimerIndicator(hovering) {
+            const dot = document.getElementById('timerDot');
+            const txt = document.getElementById('timerText');
+            if (hovering) {
+                dot.classList.add('paused');
+                txt.textContent = '⏸ Paused (hovering)';
+            } else if (isAutoRotating) {
+                dot.classList.remove('paused');
+                txt.textContent = 'Auto-rotating every 1.3s';
+            }
+        }
+
         function updateCarousel() {
             const cards = document.querySelectorAll('.member-card');
 
             cards.forEach((card, i) => {
-                card.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next');
+                card.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next', 'paused-show');
 
-                if (i === currentIndex) {
-                    card.classList.add('active');
-                } else if (i === currentIndex - 1 || (currentIndex === 0 && i === total - 1)) {
-                    card.classList.add('prev');
-                } else if (i === currentIndex + 1 || (currentIndex === total - 1 && i === 0)) {
-                    card.classList.add('next');
-                } else if (i < currentIndex - 1) {
-                    card.classList.add('far-prev');
-                } else {
-                    card.classList.add('far-next');
-                }
+                if (i === currentIndex) card.classList.add('active');
+                else if (i === currentIndex - 1 || (currentIndex === 0 && i === total - 1)) card.classList.add('prev');
+                else if (i === currentIndex + 1 || (currentIndex === total - 1 && i === 0)) card.classList.add('next');
+                else if (i < currentIndex - 1) card.classList.add('far-prev');
+                else card.classList.add('far-next');
             });
 
-            // Update counter
+            // If hovering, re-apply paused-show on new active card
+            if (isHovering) {
+                const activeCard = document.querySelector('.member-card.active');
+                if (activeCard) activeCard.classList.add('paused-show');
+            }
+
             document.getElementById('counterText').textContent =
                 String(currentIndex + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
 
-            // Update progress bar
             document.querySelectorAll('.progress-bar .bar').forEach((bar, i) => {
                 bar.classList.toggle('active', i === currentIndex);
             });
         }
 
-        // ===== Navigation =====
         function nextSlide(auto = false) {
+            if (auto && isHovering) return;
             currentIndex = (currentIndex + 1) % total;
             updateCarousel();
-            if (auto && isAutoRotating) {
-                // Restart timer to avoid rapid clicks
-                startAutoRotate();
-            }
         }
 
         function prevSlide() {
             currentIndex = (currentIndex - 1 + total) % total;
             updateCarousel();
-            if (isAutoRotating) startAutoRotate();
+            if (isAutoRotating && !isHovering) startAutoRotate();
         }
 
         function goToSlide(i) {
             currentIndex = i;
             updateCarousel();
-            if (isAutoRotating) startAutoRotate();
+            if (isAutoRotating && !isHovering) startAutoRotate();
         }
 
-        // ===== Keyboard =====
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') nextSlide();
             if (e.key === 'ArrowLeft') prevSlide();
         });
 
-        // ===== Drag / Swipe =====
         const wrap = document.getElementById('carouselWrap');
         let startX = 0, isDown = false;
 
-        wrap.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.clientX;
-        });
-
+        wrap.addEventListener('mousedown', (e) => { isDown = true; startX = e.clientX; });
         wrap.addEventListener('mouseup', (e) => {
             if (!isDown) return;
             isDown = false;
@@ -673,21 +645,15 @@
             if (dx < -50) nextSlide();
             else if (dx > 50) prevSlide();
         });
-
         wrap.addEventListener('mouseleave', () => { isDown = false; });
 
-        // Touch
-        wrap.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-        }, { passive: true });
-
+        wrap.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
         wrap.addEventListener('touchend', (e) => {
             const dx = e.changedTouches[0].clientX - startX;
             if (dx < -50) nextSlide();
             else if (dx > 50) prevSlide();
         });
 
-        // Mouse wheel
         let wheelLock = false;
         wrap.addEventListener('wheel', (e) => {
             if (wheelLock) return;
@@ -699,10 +665,9 @@
             }
         }, { passive: true });
 
-        // Pause auto-rotate when tab is hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) stopAutoRotate();
-            else if (isAutoRotating) startAutoRotate();
+            else if (isAutoRotating && !isHovering) startAutoRotate();
         });
 
         // Init
