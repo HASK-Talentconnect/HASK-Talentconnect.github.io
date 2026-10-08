@@ -71,12 +71,7 @@
             font-size: 0.88rem;
         }
 
-        .navbar .btn-primary:hover {
-            background: #ffd166;
-            transform: scale(1.04);
-        }
-
-        /* ===== Auth Wrapper (compact) ===== */
+        /* ===== Auth Wrapper ===== */
         .auth-wrap {
             flex: 1;
             display: flex;
@@ -89,7 +84,7 @@
         .auth-card {
             background: white;
             border-radius: 12px;
-            padding: 28px 30px 26px;
+            padding: 26px 28px 24px;
             width: 100%;
             max-width: 420px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.08);
@@ -98,7 +93,7 @@
 
         .auth-logo {
             text-align: center;
-            font-size: 1.35rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: #1a2a6c;
             margin-bottom: 3px;
@@ -107,8 +102,8 @@
         .auth-sub {
             text-align: center;
             color: #888;
-            font-size: 0.82rem;
-            margin-bottom: 16px;
+            font-size: 0.8rem;
+            margin-bottom: 14px;
         }
 
         .tabs {
@@ -116,7 +111,7 @@
             background: #f0f2f8;
             border-radius: 50px;
             padding: 4px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .tab-btn {
@@ -124,11 +119,11 @@
             background: transparent;
             border: none;
             color: #666;
-            padding: 9px;
+            padding: 8px;
             cursor: pointer;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             transition: 0.2s;
             font-family: inherit;
         }
@@ -138,11 +133,58 @@
             color: white;
         }
 
-        .form-group { margin-bottom: 11px; }
+        /* ===== Role Selector (compact) ===== */
+        .role-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .login-roles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .login-role {
+            background: #fafbfc;
+            border: 1.5px solid #dfe3ec;
+            border-radius: 8px;
+            padding: 8px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-role:hover { border-color: #1a2a6c; }
+
+        .login-role.selected {
+            border-color: #1a2a6c;
+            background: #eef1f8;
+        }
+
+        .login-role .icon {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 2px;
+            line-height: 1;
+        }
+
+        .login-role span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* ===== Form ===== */
+        .form-group { margin-bottom: 10px; }
 
         .form-group label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             margin-bottom: 4px;
             color: #444;
             font-weight: 500;
@@ -283,7 +325,7 @@
         .message-box {
             padding: 9px 14px;
             border-radius: 8px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             margin-bottom: 10px;
             display: none;
             text-align: center;
@@ -312,17 +354,6 @@
             .navbar .menu { flex-wrap: wrap; justify-content: center; gap: 12px; }
             .auth-wrap { padding: 15px 12px; }
             .auth-card { padding: 22px 20px; }
-            .auth-logo { font-size: 1.2rem; }
-        }
-
-        @media (max-height: 700px) {
-            .auth-card { padding: 20px 25px; }
-            .auth-logo { font-size: 1.2rem; margin-bottom: 2px; }
-            .auth-sub { margin-bottom: 12px; }
-            .tabs { margin-bottom: 12px; }
-            .form-group { margin-bottom: 9px; }
-            .form-group input { padding: 9px 38px 9px 11px; font-size: 0.85rem; }
-            .btn-submit { padding: 10px; font-size: 0.88rem; }
         }
     </style>
 </head>
@@ -352,8 +383,25 @@
 
                 <div id="messageBox" class="message-box"></div>
 
-                <!-- LOGIN -->
+                <!-- ===== LOGIN ===== -->
                 <div id="login-form" class="form-section active">
+
+                    <label class="role-label">Login as:</label>
+                    <div class="login-roles">
+                        <div class="login-role selected" id="lrSeeker" onclick="selectLoginRole('seeker')">
+                            <span class="icon">👤</span>
+                            <span>Job Seeker</span>
+                        </div>
+                        <div class="login-role" id="lrEmployer" onclick="selectLoginRole('employer')">
+                            <span class="icon">🏢</span>
+                            <span>Employer</span>
+                        </div>
+                        <div class="login-role" id="lrAdmin" onclick="selectLoginRole('admin')">
+                            <span class="icon">🔒</span>
+                            <span>Admin</span>
+                        </div>
+                    </div>
+
                     <form onsubmit="handleLogin(event)">
                         <div class="form-group">
                             <label>Email Address</label>
@@ -375,7 +423,7 @@
                     </p>
                 </div>
 
-                <!-- SIGNUP -->
+                <!-- ===== SIGNUP ===== -->
                 <div id="signup-form" class="form-section">
                     <form onsubmit="handleSignupStart(event)">
                         <div class="form-group">
@@ -421,10 +469,10 @@
                     </p>
                 </div>
 
-                <!-- VERIFY -->
+                <!-- ===== VERIFY ===== -->
                 <div id="verify-form" class="form-section">
                     <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 5px; font-size: 1.05rem;">Verify Your Email</h3>
-                    <p style="text-align: center; color: #666; font-size: 0.82rem; margin-bottom: 14px;">
+                    <p style="text-align: center; color: #666; font-size: 0.8rem; margin-bottom: 12px;">
                         We sent a 6-digit code to<br>
                         <strong id="verifyEmail" style="color: #1a2a6c;"></strong>
                     </p>
@@ -484,17 +532,24 @@
         const EMAILJS_PUBLIC_KEY = "QYEECDuF-iOCcOaoU";
         const EMAIL_LIMIT = 200;
 
+        // Admin emails
+        const ADMIN_EMAILS = [
+            "hafeezmehar.pk007@gmail.com",
+            "hasktalentconnect@gmail.com"
+        ];
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         let selectedRole = 'seeker';
+        let selectedLoginRole = 'seeker';
         let pendingUser = null;
         let generatedCode = null;
         let codeExpiry = null;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const redirectTo = urlParams.get('redirect') || 'dashboard.html';
+        const redirectTo = urlParams.get('redirect') || '';
         const presetRole = urlParams.get('role') || '';
 
         if (presetRole === 'employer') {
@@ -543,15 +598,24 @@
             }
         };
 
+        // Login role (seeker/employer/admin)
+        window.selectLoginRole = function(role) {
+            selectedLoginRole = role;
+            ['lrSeeker', 'lrEmployer', 'lrAdmin'].forEach(id => {
+                document.getElementById(id).classList.remove('selected');
+            });
+            if (role === 'seeker') document.getElementById('lrSeeker').classList.add('selected');
+            else if (role === 'employer') document.getElementById('lrEmployer').classList.add('selected');
+            else if (role === 'admin') document.getElementById('lrAdmin').classList.add('selected');
+        };
+
+        // Signup role (seeker/employer only)
         window.selectRole = function(role) {
             selectedRole = role;
             document.getElementById('roleSeeker').classList.remove('selected');
             document.getElementById('roleEmployer').classList.remove('selected');
-            if (role === 'seeker') {
-                document.getElementById('roleSeeker').classList.add('selected');
-            } else {
-                document.getElementById('roleEmployer').classList.add('selected');
-            }
+            if (role === 'seeker') document.getElementById('roleSeeker').classList.add('selected');
+            else document.getElementById('roleEmployer').classList.add('selected');
         };
 
         function generateCode() {
@@ -707,7 +771,8 @@
                 showMessage('✅ Account created! Your ID: ' + userId, 'success');
                 sessionStorage.setItem('hask_logged_in', 'true');
                 setTimeout(() => {
-                    window.location.replace(redirectTo);
+                    const target = redirectTo || (pendingUser.role === 'employer' ? 'dashboard.html' : 'profile.html');
+                    window.location.replace(target);
                 }, 1500);
 
             } catch (err) {
@@ -746,6 +811,7 @@
             hideMessage();
         };
 
+        // ===== LOGIN =====
         window.handleLogin = async function(event) {
             event.preventDefault();
             hideMessage();
@@ -760,8 +826,12 @@
             try {
                 const cred = await signInWithEmailAndPassword(auth, email, password);
 
+                // Load user data
                 const userDoc = await getDoc(doc(db, "users", cred.user.uid));
-                if (userDoc.exists() && userDoc.data().status === 'blocked') {
+                let userData = userDoc.exists() ? userDoc.data() : { role: 'seeker', status: 'active' };
+
+                // Blocked check
+                if (userData.status === 'blocked') {
                     await signOut(auth);
                     showMessage('🚫 Your account has been blocked.', 'error');
                     btn.disabled = false;
@@ -769,10 +839,54 @@
                     return;
                 }
 
+                const actualRole = userData.role || 'seeker';
+                const isAdmin = ADMIN_EMAILS.includes(email);
+
+                // Verify selected login role matches actual role
+                if (selectedLoginRole === 'admin') {
+                    if (!isAdmin) {
+                        await signOut(auth);
+                        showMessage('🚫 This email is not registered as Admin.', 'error');
+                        btn.disabled = false;
+                        btn.textContent = 'Login to Your Account';
+                        return;
+                    }
+                } else if (selectedLoginRole === 'employer') {
+                    if (actualRole !== 'employer') {
+                        await signOut(auth);
+                        showMessage('🚫 You are not registered as an Employer.', 'error');
+                        btn.disabled = false;
+                        btn.textContent = 'Login to Your Account';
+                        return;
+                    }
+                } else if (selectedLoginRole === 'seeker') {
+                    if (actualRole === 'employer') {
+                        await signOut(auth);
+                        showMessage('🚫 You are not registered as a Job Seeker.', 'error');
+                        btn.disabled = false;
+                        btn.textContent = 'Login to Your Account';
+                        return;
+                    }
+                }
+
+                // Decide redirect
+                let target = redirectTo;
+                if (!target) {
+                    if (isAdmin && selectedLoginRole === 'admin') {
+                        target = 'admin.html';
+                    } else if (actualRole === 'employer') {
+                        target = 'dashboard.html';
+                    } else {
+                        target = 'profile.html';
+                    }
+                }
+
                 showMessage('✅ Login successful! Redirecting...', 'success');
                 sessionStorage.setItem('hask_logged_in', 'true');
+                if (isAdmin) sessionStorage.setItem('hask_is_admin', 'true');
+
                 setTimeout(() => {
-                    window.location.replace(redirectTo);
+                    window.location.replace(target);
                 }, 800);
 
             } catch (err) {
