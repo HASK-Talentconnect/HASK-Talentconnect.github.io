@@ -6,9 +6,79 @@
     <title>Our Team - HASK TalentConnect</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .team-page {
+        html, body { height: 100%; }
+
+        body {
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background: #f5f0e8;
+            color: #222;
+        }
+
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== Navbar (same as index) ===== */
+        .navbar {
+            background: #1a2a6c;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo {
+            color: #f9c74f;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar .menu a {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .navbar .menu a:hover { color: #f9c74f; }
+
+        .navbar .btn-primary {
+            background: #f9c74f;
+            color: #1a2a6c !important;
+            padding: 8px 22px;
+            border-radius: 22px;
+            font-weight: bold !important;
+            font-size: 0.88rem;
+        }
+
+        .navbar .btn-primary:hover {
+            background: #ffd166;
+            transform: scale(1.04);
+        }
+
+        /* ===== Team Page ===== */
+        .team-page {
+            flex: 1;
             display: flex;
             flex-direction: column;
             padding: 30px 20px 50px;
@@ -61,7 +131,6 @@
             perspective: 1400px;
         }
 
-        /* ===== Member Card (no blur, no grayscale) ===== */
         .member-card {
             position: absolute;
             top: 50%;
@@ -175,7 +244,6 @@
             align-items: center;
             justify-content: center;
             color: white;
-            text-decoration: none;
             font-size: 1rem;
             font-weight: bold;
             opacity: 0;
@@ -185,7 +253,6 @@
         }
 
         .member-card.active .linkedin-mini { opacity: 1; }
-        .linkedin-mini:hover { background: #0077b5; transform: scale(1.1); }
 
         .click-hint {
             position: absolute;
@@ -204,15 +271,7 @@
             pointer-events: none;
         }
 
-        .member-card.active .click-hint {
-            opacity: 1;
-            animation: fadeInOut 3s ease-in-out infinite;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
+        .member-card.active .click-hint { opacity: 0.95; }
 
         .carousel-nav {
             display: flex;
@@ -322,6 +381,17 @@
             50% { opacity: 0.4; transform: scale(0.8); }
         }
 
+        footer {
+            background: #0f1a4a;
+            color: white;
+            text-align: center;
+            padding: 22px 20px;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        footer p { opacity: 0.75; font-size: 0.85rem; margin: 0; }
+
         @media (max-width: 900px) {
             .team-header h1 { font-size: 1.9rem; }
             .carousel-track { height: 540px; }
@@ -332,6 +402,8 @@
         }
 
         @media (max-width: 600px) {
+            .navbar { padding: 12px 15px; flex-direction: column; gap: 10px; }
+            .navbar .menu { flex-wrap: wrap; justify-content: center; gap: 12px; }
             .team-page { padding: 20px 15px 40px; }
             .team-header h1 { font-size: 1.5rem; }
             .team-header .small-tag { font-size: 0.62rem; letter-spacing: 2px; }
@@ -352,46 +424,56 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">HASK TalentConnect</div>
-        <ul class="menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="jobs.html">Browse Jobs</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="login.html" class="btn-primary">Login</a></li>
-        </ul>
-    </nav>
+    <div class="page-wrapper">
 
-    <div class="team-page">
+        <!-- Navbar (updated) -->
+        <nav class="navbar">
+            <div class="logo">HASK TalentConnect</div>
+            <ul class="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="login.html" class="btn-primary">Login</a></li>
+            </ul>
+        </nav>
 
-        <div class="team-header">
-            <div class="small-tag">HASK TALENTCONNECT · 10 MEMBERS</div>
-            <h1>Our Core Team</h1>
-        </div>
+        <!-- Team Section -->
+        <div class="team-page">
 
-        <div class="carousel-wrap" id="carouselWrap">
-            <div class="carousel-track" id="carouselTrack"></div>
-        </div>
-
-        <div class="carousel-nav">
-            <div class="counter-text" id="counterText">01 / 10</div>
-
-            <div class="nav-controls">
-                <button class="nav-btn" onclick="prevSlide()" aria-label="Previous">←</button>
-                <div class="progress-bar" id="progressBar"></div>
-                <button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
+            <div class="team-header">
+                <div class="small-tag">HASK TALENTCONNECT · 10 MEMBERS</div>
+                <h1>Our Core Team</h1>
             </div>
 
-            <div class="timer-info">
-                <span class="timer-dot" id="timerDot"></span>
-                <span id="timerText">Auto-rotating every 1.3s</span>
-                <button class="nav-btn paused" id="pauseBtn" onclick="toggleAutoRotate()" style="width: 28px; height: 28px; font-size: 0.75rem; margin-left: 5px;" title="Pause/Resume">⏸</button>
+            <div class="carousel-wrap" id="carouselWrap">
+                <div class="carousel-track" id="carouselTrack"></div>
             </div>
 
-            <div class="drag-hint">Drag · Scroll · Arrows</div>
+            <div class="carousel-nav">
+                <div class="counter-text" id="counterText">01 / 10</div>
+
+                <div class="nav-controls">
+                    <button class="nav-btn" onclick="prevSlide()" aria-label="Previous">←</button>
+                    <div class="progress-bar" id="progressBar"></div>
+                    <button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
+                </div>
+
+                <div class="timer-info">
+                    <span class="timer-dot" id="timerDot"></span>
+                    <span id="timerText">Auto-rotating every 1.3s</span>
+                    <button class="nav-btn paused" id="pauseBtn" onclick="toggleAutoRotate()" style="width: 28px; height: 28px; font-size: 0.75rem; margin-left: 5px;" title="Pause/Resume">⏸</button>
+                </div>
+
+                <div class="drag-hint">Drag · Scroll · Arrows</div>
+            </div>
+
         </div>
 
     </div>
+
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
 
     <script>
         const teamMembers = [
@@ -421,7 +503,10 @@
             stopAutoRotate();
             if (isHovering) return;
             autoRotateTimer = setInterval(() => {
-                if (!isHovering) nextSlide(true);
+                if (!isHovering) {
+                    currentIndex = (currentIndex + 1) % total;
+                    updateCarousel();
+                }
             }, AUTO_ROTATE_MS);
         }
 
@@ -488,7 +573,6 @@
                     }
                 });
 
-                // ===== Silent Hover Pause =====
                 card.addEventListener('mouseenter', () => {
                     if (i === currentIndex) {
                         isHovering = true;
@@ -506,7 +590,6 @@
                 track.appendChild(card);
             });
 
-            // Smart image loading
             document.querySelectorAll('.member-card img').forEach(img => {
                 const photoBase = img.getAttribute('data-photo').replace(/\.[^.]+$/, '');
                 const name = img.getAttribute('data-name');
@@ -559,10 +642,10 @@
             });
         }
 
-        function nextSlide(auto = false) {
-            if (auto && isHovering) return;
+        function nextSlide() {
             currentIndex = (currentIndex + 1) % total;
             updateCarousel();
+            if (isAutoRotating && !isHovering) startAutoRotate();
         }
 
         function prevSlide() {
