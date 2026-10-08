@@ -107,7 +107,6 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
 
-    // Load user basic info
     try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
@@ -119,29 +118,20 @@ onAuthStateChanged(auth, async (user) => {
         userData = { name: user.displayName || 'User', email: user.email };
     }
 
-    // Load profile data
     await loadProfile();
 
-    // Populate dropdowns
     populateCountries('pNationality');
     populateCountries('pCountry');
 
-    // Render everything
     renderSidebarUser();
     updateProgress();
     renderProgress();
-
-    // Set defaults (fill forms)
     applyDefaults();
 
-    // Attach formatters
     attachCnicFormatter();
     attachCharCounters();
-
-    // Listeners
     attachListeners();
 
-    // Show first incomplete section
     showFirstIncompleteSection();
 });
 
@@ -165,7 +155,7 @@ function populateCountries(selectId) {
 }
 
 // ============================================
-// CNIC AUTO-FORMAT (35404-0836742-1)
+// CNIC AUTO-FORMAT
 // ============================================
 function attachCnicFormatter() {
     const cnicInput = document.getElementById('pCnic');
@@ -183,6 +173,55 @@ function attachCnicFormatter() {
         this.value = formatted;
     });
 }
+
+// ============================================
+// AREA OF INTEREST — Other handling
+// ============================================
+window.handleInterestChange = function() {
+    const val = document.getElementById('pInterest').value;
+    const otherField = document.getElementById('otherInterestField');
+    const otherInput = document.getElementById('pOtherInterest');
+
+    if (val === 'Other') {
+        otherField.style.display = 'flex';
+        otherInput.setAttribute('required', 'required');
+    } else {
+        otherField.style.display = 'none';
+        otherInput.removeAttribute('required');
+        otherInput.value = '';
+    }
+};
+
+// ============================================
+// PROFILE PICTURE
+// ============================================
+window.previewPicUrl = function() {
+    const url = document.getElementById('picUrl').value.trim();
+    const preview = document.getElementById('picPreview');
+
+    if (!url) {
+        preview.innerHTML = '📷';
+        return;
+    }
+
+    // Load and check
+    const img = new Image();
+    img.onload = () => {
+        preview.innerHTML = `<img src="${url}" alt="Profile">`;
+    };
+    img.onerror = () => {
+        preview.innerHTML = '❌';
+    };
+    img.src = url;
+};
+
+window.removePic = function() {
+    document.getElementById('picUrl').value = '';
+    document.getElementById('picPreview').innerHTML = '📷';
+    profileData.personal = profileData.personal || {};
+    profileData.personal.profilePic = '';
+    saveProfile().then(() => showMessage('✅ Picture removed', 'success'));
+};
 
 // ============================================
 // LOAD PROFILE FROM FIRESTORE
@@ -211,7 +250,7 @@ async function loadProfile() {
 }
 
 // ============================================
-// SAVE PROFILE TO FIRESTORE
+// SAVE PROFILE
 // ============================================
 async function saveProfile() {
     if (!currentUser) return;
@@ -243,12 +282,19 @@ function renderSidebarUser() {
     const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 
     nameEl.textContent = name;
-    avatarEl.textContent = initials;
     idEl.textContent = '🆔 ' + (userData.userId || '—');
+
+    // Avatar — use profile picture if exists
+    const pic = profileData.personal && profileData.personal.profilePic;
+    if (pic) {
+        avatarEl.innerHTML = `<img src="${pic}" alt="Avatar">`;
+    } else {
+        avatarEl.textContent = initials;
+    }
 }
 
 // ============================================
-// PROGRESS CALCULATION
+// PROGRESS
 // ============================================
 function updateProgress() {
     const p = profileData;
@@ -261,12 +307,10 @@ function updateProgress() {
         p.personal.domicile && p.personal.city);
 
     progressData.education = p.education && p.education.length > 0;
-
     progressData.experience = p.experience && (
         p.experience.has === false ||
         (p.experience.entries && p.experience.entries.length > 0)
     );
-
     progressData.skills = p.skills && p.skills.length > 0;
 
     progressData.self = !!(p.self &&
@@ -278,8 +322,7 @@ function updateProgress() {
         p.references.ref2Name && p.references.ref2Email);
 
     progressData.misc = !!(p.misc &&
-        p.misc.crime && p.misc.relatives &&
-        p.misc.disability && p.misc.source);
+        p.misc.crime && p.misc.disability && p.misc.source);
 
     progressData.compensation = !!(p.compensation &&
         p.compensation.basic !== undefined &&
@@ -352,7 +395,6 @@ function showFirstIncompleteSection() {
 // ATTACH LISTENERS
 // ============================================
 function attachListeners() {
-    // Sidebar menu clicks
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -361,7 +403,6 @@ function attachListeners() {
         });
     });
 
-    // Logout
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
@@ -382,13 +423,12 @@ function attachListeners() {
 // APPLY DEFAULTS
 // ============================================
 function applyDefaults() {
-    // Personal
     const p = profileData.personal || {};
     setVal('pTitle', p.title || '');
     setVal('pFullName', p.fullName || userData.name || '');
     setVal('pFatherName', p.fatherName || '');
     setVal('pNationality', p.nationality || 'Pakistan');
-    // Format CNIC when loading
+
     let cnicVal = p.cnic || '';
     if (cnicVal && cnicVal.length === 13 && !cnicVal.includes('-')) {
         cnicVal = cnicVal.slice(0, 5) + '-' + cnicVal.slice(5, 12) + '-' + cnicVal.slice(12, 13);
@@ -396,8 +436,24 @@ function applyDefaults() {
     setVal('pCnic', cnicVal);
     setVal('pDob', p.dob || '');
     setVal('pGender', p.gender || '');
-    setVal('pInterest', p.interest || '');
-    setVal('pOtherInterest', p.otherInterest || '');
+
+    // Area of Interest
+    if (p.interest) {
+        // If interest is not in standard list, it's a custom value
+        const standardOptions = ['IT & Software','Sales & Marketing','Accounting & Finance','HR & Admin','Engineering','Education','Healthcare','Construction','Transport','Security','Hospitality','Retail','Manufacturing','Textile','Telecom','Other'];
+        if (standardOptions.includes(p.interest)) {
+            setVal('pInterest', p.interest);
+            if (p.interest === 'Other') {
+                document.getElementById('otherInterestField').style.display = 'flex';
+                setVal('pOtherInterest', p.otherInterest || '');
+            }
+        } else {
+            // Custom value — add to list as new option
+            addCustomInterestOption(p.interest);
+            setVal('pInterest', p.interest);
+        }
+    }
+
     setVal('pDomicile', p.domicile || '');
     setVal('pAddress', p.address || '');
     setVal('pCountry', p.country || 'Pakistan');
@@ -407,6 +463,13 @@ function applyDefaults() {
     setVal('pLandline', p.landline || '');
     setVal('pCell', p.cell || '');
     setVal('pEmail', p.email || userData.email || '');
+
+    // Profile Pic
+    if (p.profilePic) {
+        setVal('picUrl', p.profilePic);
+        const preview = document.getElementById('picPreview');
+        preview.innerHTML = `<img src="${p.profilePic}" alt="Profile">`;
+    }
 
     document.getElementById('candidateId').textContent = userData.userId || '—';
 
@@ -425,7 +488,6 @@ function applyDefaults() {
     setVal('saStrengths', sa.strengths || '');
     setVal('saImprovements', sa.improvements || '');
     setVal('saSummary', sa.summary || '');
-    // Update char counters
     setTimeout(() => {
         ['saObjective', 'saStrengths', 'saImprovements', 'saSummary'].forEach((id, i) => {
             const el = document.getElementById(id);
@@ -455,7 +517,6 @@ function applyDefaults() {
     // Misc
     const m = profileData.misc || {};
     setVal('mCrime', m.crime || 'No');
-    setVal('mRelatives', m.relatives || 'No');
     setVal('mDisability', m.disability || 'No');
     setVal('mSource', m.source || 'Social Media');
     setVal('mNoticeNum', m.noticeNum || 1);
@@ -464,6 +525,16 @@ function applyDefaults() {
     setVal('mBlood', m.blood || '');
     setVal('mMarital', m.marital || '');
     setVal('mReligion', m.religion || '');
+
+    // Show details if crime/disability = Yes
+    if (m.crime === 'Yes') {
+        document.getElementById('crimeDetailsField').style.display = 'flex';
+        setVal('mCrimeDetails', m.crimeDetails || '');
+    }
+    if (m.disability === 'Yes') {
+        document.getElementById('disabilityDetailsField').style.display = 'flex';
+        setVal('mDisabilityDetails', m.disabilityDetails || '');
+    }
 
     // Compensation
     const c = profileData.compensation || {};
@@ -484,10 +555,30 @@ function applyDefaults() {
     setVal('workingDays', c.workingDays || 5);
     setVal('otherBenefit', c.otherBenefit || '');
 
-    // Render tables
     renderEducationTable();
     renderExperienceTable();
     renderSkillsTable();
+}
+
+function addCustomInterestOption(value) {
+    const sel = document.getElementById('pInterest');
+    if (!sel) return;
+
+    // Check if already exists
+    const exists = Array.from(sel.options).some(o => o.value === value);
+    if (exists) return;
+
+    // Add before "Other"
+    const otherOption = Array.from(sel.options).find(o => o.value === 'Other');
+    const newOpt = document.createElement('option');
+    newOpt.value = value;
+    newOpt.textContent = value;
+
+    if (otherOption) {
+        sel.insertBefore(newOpt, otherOption);
+    } else {
+        sel.appendChild(newOpt);
+    }
 }
 
 function setVal(id, value) {
@@ -501,6 +592,42 @@ function getVal(id) {
 }
 
 // ============================================
+// TOGGLE: Crime Details
+// ============================================
+window.toggleCrimeDetails = function() {
+    const val = document.getElementById('mCrime').value;
+    const field = document.getElementById('crimeDetailsField');
+    const input = document.getElementById('mCrimeDetails');
+
+    if (val === 'Yes') {
+        field.style.display = 'flex';
+        input.setAttribute('required', 'required');
+    } else {
+        field.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = '';
+    }
+};
+
+// ============================================
+// TOGGLE: Disability Details
+// ============================================
+window.toggleDisabilityDetails = function() {
+    const val = document.getElementById('mDisability').value;
+    const field = document.getElementById('disabilityDetailsField');
+    const input = document.getElementById('mDisabilityDetails');
+
+    if (val === 'Yes') {
+        field.style.display = 'flex';
+        input.setAttribute('required', 'required');
+    } else {
+        field.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = '';
+    }
+};
+
+// ============================================
 // SAVE: PERSONAL
 // ============================================
 window.savePersonal = async function(e) {
@@ -510,6 +637,26 @@ window.savePersonal = async function(e) {
     btn.textContent = 'Saving...';
 
     try {
+        // Handle interest
+        let interestValue = getVal('pInterest');
+        let otherInterest = '';
+
+        if (interestValue === 'Other') {
+            otherInterest = getVal('pOtherInterest');
+            if (!otherInterest) {
+                showMessage('❌ Please specify your area of interest.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Save & Continue →';
+                return;
+            }
+            // Save custom value to dropdown for future
+            addCustomInterestOption(otherInterest);
+            // Use custom value as the actual interest
+            interestValue = otherInterest;
+        }
+
+        const profilePic = getVal('picUrl');
+
         profileData.personal = {
             title: getVal('pTitle'),
             fullName: getVal('pFullName'),
@@ -518,8 +665,8 @@ window.savePersonal = async function(e) {
             cnic: getVal('pCnic').replace(/\D/g, ''),
             dob: getVal('pDob'),
             gender: getVal('pGender'),
-            interest: getVal('pInterest'),
-            otherInterest: getVal('pOtherInterest'),
+            interest: interestValue,
+            otherInterest: otherInterest,
             domicile: getVal('pDomicile'),
             address: getVal('pAddress'),
             country: getVal('pCountry'),
@@ -528,12 +675,14 @@ window.savePersonal = async function(e) {
             postalCode: getVal('pPostalCode'),
             landline: getVal('pLandline'),
             cell: getVal('pCell'),
-            email: getVal('pEmail')
+            email: getVal('pEmail'),
+            profilePic: profilePic
         };
 
         await saveProfile();
         updateProgress();
         renderProgress();
+        renderSidebarUser();
         showMessage('✅ Personal details saved!', 'success');
         setTimeout(() => showSection('education'), 500);
     } catch (err) {
@@ -613,641 +762,4 @@ window.saveReferences = async function(e) {
 };
 
 // ============================================
-// SAVE: MISCELLANEOUS
-// ============================================
-window.saveMisc = async function(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('.btn-save');
-    btn.disabled = true;
-    btn.textContent = 'Saving...';
-
-    try {
-        profileData.misc = {
-            crime: getVal('mCrime'),
-            relatives: getVal('mRelatives'),
-            disability: getVal('mDisability'),
-            source: getVal('mSource'),
-            noticeNum: getVal('mNoticeNum'),
-            noticeUnit: getVal('mNoticeUnit'),
-            linkedin: getVal('mLinkedin'),
-            blood: getVal('mBlood'),
-            marital: getVal('mMarital'),
-            religion: getVal('mReligion')
-        };
-        await saveProfile();
-        updateProgress();
-        renderProgress();
-        showMessage('✅ Miscellaneous saved!', 'success');
-        setTimeout(() => showSection('compensation'), 500);
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save & Continue →';
-    }
-};
-
-// ============================================
-// SAVE: COMPENSATION
-// ============================================
-window.saveCompensation = async function(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('.btn-save');
-    btn.disabled = true;
-    btn.textContent = 'Saving...';
-
-    try {
-        const getRadio = (name) => {
-            const el = document.querySelector(`input[name="${name}"]:checked`);
-            return el ? el.value : '';
-        };
-
-        profileData.compensation = {
-            basic: Number(getVal('cBasic')) || 0,
-            gross: Number(getVal('cGross')) || 0,
-            expected: Number(getVal('cExpected')) || 0,
-            bonus: getRadio('bonus'),
-            bonusType: getRadio('bonusType'),
-            bonusCount: Number(getVal('bonusCount')) || 0,
-            leave: getRadio('leave'),
-            medical: getRadio('medical'),
-            medAmount: Number(getVal('medAmount')) || 0,
-            transport: getRadio('transport'),
-            fuel: getRadio('fuel'),
-            fuelAmount: Number(getVal('fuelAmount')) || 0,
-            fuelLiters: Number(getVal('fuelLiters')) || 0,
-            accom: getRadio('accom'),
-            vehicle: getRadio('vehicle'),
-            vehicleDetail: getVal('vehicleDetail'),
-            buyback: getRadio('buyback'),
-            buybackYears: Number(getVal('buybackYears')) || 0,
-            mobile: getRadio('mobile'),
-            mobileAmount: Number(getVal('mobileAmount')) || 0,
-            opd: getRadio('opd'),
-            opdAmount: Number(getVal('opdAmount')) || 0,
-            health: getRadio('health'),
-            life: getRadio('life'),
-            pf: getRadio('pf'),
-            gratuity: getRadio('gratuity'),
-            gratuityType: getRadio('gratuityType'),
-            wppf: getRadio('wppf'),
-            leaveAnnual: Number(getVal('leaveAnnual')) || 0,
-            leaveCasual: Number(getVal('leaveCasual')) || 0,
-            leaveSick: Number(getVal('leaveSick')) || 0,
-            workingDays: Number(getVal('workingDays')) || 0,
-            otherBenefit: getVal('otherBenefit')
-        };
-        await saveProfile();
-        updateProgress();
-        renderProgress();
-        showMessage('✅ Compensation saved! Profile complete! 🎉', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save & Finish ✓';
-    }
-};
-
-// ============================================
-// EDUCATION TABLE
-// ============================================
-function renderEducationTable() {
-    const tbody = document.getElementById('educationTableBody');
-    const list = profileData.education || [];
-
-    if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="empty-row">No education added yet</td></tr>`;
-        return;
-    }
-
-    tbody.innerHTML = list.map((e, i) => `
-        <tr>
-            <td>${escapeHtml(e.level)}</td>
-            <td>${escapeHtml(e.institution)}</td>
-            <td>${escapeHtml(e.title)}</td>
-            <td>${escapeHtml(e.date)}</td>
-            <td>${escapeHtml(e.percentage || '-')}</td>
-            <td>
-                <button class="btn-edit" onclick="editEducation(${i})">✎</button>
-                <button class="btn-delete" onclick="deleteEducation(${i})">✕</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-window.openEducationModal = function() {
-    editingEduIndex = null;
-    document.getElementById('modalTitle').textContent = 'Add Education';
-    document.getElementById('modalBody').innerHTML = `
-        <form onsubmit="saveEducationEntry(event)">
-            <div class="form-grid">
-                <div class="field">
-                    <label>Degree Level <span class="req">*</span></label>
-                    <select id="eduLevel" required>
-                        <option value="">Select</option>
-                        <option value="Matriculation/O-Level">Matriculation/O-Level</option>
-                        <option value="Intermediate/A-Level">Intermediate/A-Level</option>
-                        <option value="Bachelor">Bachelor</option>
-                        <option value="Master">Master</option>
-                        <option value="MPhil">MPhil</option>
-                        <option value="PhD">PhD</option>
-                        <option value="Certification">Certification</option>
-                        <option value="Diploma">Diploma</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Institution <span class="req">*</span></label>
-                    <input type="text" id="eduInstitution" required>
-                </div>
-                <div class="field">
-                    <label>Degree Title <span class="req">*</span></label>
-                    <input type="text" id="eduTitle" required>
-                </div>
-                <div class="field">
-                    <label>Completion Date <span class="req">*</span></label>
-                    <input type="date" id="eduDate" required>
-                </div>
-                <div class="field">
-                    <label>Percentage / CGPA</label>
-                    <input type="text" id="eduPercentage">
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-save">Save</button>
-            </div>
-        </form>
-    `;
-    openModal();
-};
-
-window.editEducation = function(i) {
-    editingEduIndex = i;
-    const e = profileData.education[i];
-    document.getElementById('modalTitle').textContent = 'Edit Education';
-    document.getElementById('modalBody').innerHTML = `
-        <form onsubmit="saveEducationEntry(event)">
-            <div class="form-grid">
-                <div class="field">
-                    <label>Degree Level <span class="req">*</span></label>
-                    <select id="eduLevel" required>
-                        ${['Matriculation/O-Level','Intermediate/A-Level','Bachelor','Master','MPhil','PhD','Certification','Diploma'].map(l => 
-                            `<option value="${l}" ${e.level === l ? 'selected' : ''}>${l}</option>`
-                        ).join('')}
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Institution <span class="req">*</span></label>
-                    <input type="text" id="eduInstitution" value="${escapeAttr(e.institution)}" required>
-                </div>
-                <div class="field">
-                    <label>Degree Title <span class="req">*</span></label>
-                    <input type="text" id="eduTitle" value="${escapeAttr(e.title)}" required>
-                </div>
-                <div class="field">
-                    <label>Completion Date <span class="req">*</span></label>
-                    <input type="date" id="eduDate" value="${escapeAttr(e.date)}" required>
-                </div>
-                <div class="field">
-                    <label>Percentage / CGPA</label>
-                    <input type="text" id="eduPercentage" value="${escapeAttr(e.percentage)}">
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-save">Update</button>
-            </div>
-        </form>
-    `;
-    openModal();
-};
-
-window.saveEducationEntry = async function(e) {
-    e.preventDefault();
-    const entry = {
-        level: getVal('eduLevel'),
-        institution: getVal('eduInstitution'),
-        title: getVal('eduTitle'),
-        date: getVal('eduDate'),
-        percentage: getVal('eduPercentage')
-    };
-
-    if (editingEduIndex === null) {
-        profileData.education.push(entry);
-    } else {
-        profileData.education[editingEduIndex] = entry;
-    }
-
-    try {
-        await saveProfile();
-        renderEducationTable();
-        updateProgress();
-        renderProgress();
-        closeModal();
-        showMessage('✅ Education saved!', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
-};
-
-window.deleteEducation = async function(i) {
-    if (!confirm('Delete this education entry?')) return;
-    profileData.education.splice(i, 1);
-    try {
-        await saveProfile();
-        renderEducationTable();
-        updateProgress();
-        renderProgress();
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
-};
-
-// ============================================
-// EXPERIENCE TABLE
-// ============================================
-function renderExperienceTable() {
-    const tbody = document.getElementById('experienceTableBody');
-    const list = (profileData.experience && profileData.experience.entries) || [];
-
-    if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="empty-row">No experience added yet</td></tr>`;
-        return;
-    }
-
-    tbody.innerHTML = list.map((e, i) => `
-        <tr>
-            <td>${escapeHtml(e.employer)}</td>
-            <td>${escapeHtml(e.manager)}</td>
-            <td>${escapeHtml(e.business)}</td>
-            <td>${escapeHtml(e.title)}</td>
-            <td>${escapeHtml(e.joining)}</td>
-            <td>${escapeHtml(e.leaving || 'Present')}</td>
-            <td>
-                <button class="btn-edit" onclick="editExperience(${i})">✎</button>
-                <button class="btn-delete" onclick="deleteExperience(${i})">✕</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-window.toggleExperience = function(has) {
-    if (!profileData.experience) profileData.experience = { has: true, overall: 0, industry: 0, entries: [] };
-    profileData.experience.has = has;
-};
-
-window.openExperienceModal = function() {
-    editingExpIndex = null;
-    document.getElementById('modalTitle').textContent = 'Add Job Detail';
-    document.getElementById('modalBody').innerHTML = `
-        <form onsubmit="saveExperienceEntry(event)">
-            <div class="form-grid">
-                <div class="field">
-                    <label>Employer <span class="req">*</span></label>
-                    <input type="text" id="expEmployer" required>
-                </div>
-                <div class="field">
-                    <label>Manager's Name</label>
-                    <input type="text" id="expManager">
-                </div>
-                <div class="field">
-                    <label>Nature of Business <span class="req">*</span></label>
-                    <input type="text" id="expBusiness" required>
-                </div>
-                <div class="field">
-                    <label>Job Title <span class="req">*</span></label>
-                    <input type="text" id="expTitle" required>
-                </div>
-                <div class="field">
-                    <label>Joining Date <span class="req">*</span></label>
-                    <input type="date" id="expJoining" required>
-                </div>
-                <div class="field">
-                    <label>Leaving Date</label>
-                    <input type="date" id="expLeaving">
-                </div>
-                <div class="field">
-                    <label>Contact Employer?</label>
-                    <select id="expContact">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-save">Save</button>
-            </div>
-        </form>
-    `;
-    openModal();
-};
-
-window.editExperience = function(i) {
-    editingExpIndex = i;
-    const e = profileData.experience.entries[i];
-    document.getElementById('modalTitle').textContent = 'Edit Job Detail';
-    document.getElementById('modalBody').innerHTML = `
-        <form onsubmit="saveExperienceEntry(event)">
-            <div class="form-grid">
-                <div class="field">
-                    <label>Employer <span class="req">*</span></label>
-                    <input type="text" id="expEmployer" value="${escapeAttr(e.employer)}" required>
-                </div>
-                <div class="field">
-                    <label>Manager's Name</label>
-                    <input type="text" id="expManager" value="${escapeAttr(e.manager)}">
-                </div>
-                <div class="field">
-                    <label>Nature of Business <span class="req">*</span></label>
-                    <input type="text" id="expBusiness" value="${escapeAttr(e.business)}" required>
-                </div>
-                <div class="field">
-                    <label>Job Title <span class="req">*</span></label>
-                    <input type="text" id="expTitle" value="${escapeAttr(e.title)}" required>
-                </div>
-                <div class="field">
-                    <label>Joining Date <span class="req">*</span></label>
-                    <input type="date" id="expJoining" value="${escapeAttr(e.joining)}" required>
-                </div>
-                <div class="field">
-                    <label>Leaving Date</label>
-                    <input type="date" id="expLeaving" value="${escapeAttr(e.leaving)}">
-                </div>
-                <div class="field">
-                    <label>Contact Employer?</label>
-                    <select id="expContact">
-                        <option value="Yes" ${e.contact === 'Yes' ? 'selected' : ''}>Yes</option>
-                        <option value="No" ${e.contact === 'No' ? 'selected' : ''}>No</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-save">Update</button>
-            </div>
-        </form>
-    `;
-    openModal();
-};
-
-window.saveExperienceEntry = async function(e) {
-    e.preventDefault();
-    const entry = {
-        employer: getVal('expEmployer'),
-        manager: getVal('expManager'),
-        business: getVal('expBusiness'),
-        title: getVal('expTitle'),
-        joining: getVal('expJoining'),
-        leaving: getVal('expLeaving'),
-        contact: getVal('expContact')
-    };
-
-    if (!profileData.experience) profileData.experience = { has: true, overall: 0, industry: 0, entries: [] };
-    if (!profileData.experience.entries) profileData.experience.entries = [];
-
-    if (editingExpIndex === null) {
-        profileData.experience.entries.push(entry);
-    } else {
-        profileData.experience.entries[editingExpIndex] = entry;
-    }
-
-    profileData.experience.overall = Number(getVal('overallExp')) || 0;
-    profileData.experience.industry = Number(getVal('industryExp')) || 0;
-
-    try {
-        await saveProfile();
-        renderExperienceTable();
-        updateProgress();
-        renderProgress();
-        closeModal();
-        showMessage('✅ Experience saved!', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
-};
-
-window.deleteExperience = async function(i) {
-    if (!confirm('Delete this experience entry?')) return;
-    profileData.experience.entries.splice(i, 1);
-    try {
-        await saveProfile();
-        renderExperienceTable();
-        updateProgress();
-        renderProgress();
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
-};
-
-// ============================================
-// SKILLS TABLE
-// ============================================
-function renderSkillsTable() {
-    const tbody = document.getElementById('skillsTableBody');
-    const list = profileData.skills || [];
-
-    if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="empty-row">No skills added yet</td></tr>`;
-        return;
-    }
-
-    tbody.innerHTML = list.map((s, i) => `
-        <tr>
-            <td>${escapeHtml(s.name)}</td>
-            <td>${escapeHtml(s.level)}</td>
-            <td>${escapeHtml(s.description)}</td>
-            <td>
-                <button class="btn-edit" onclick="editSkill(${i})">✎</button>
-                <button class="btn-delete" onclick="deleteSkill(${i})">✕</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-window.openSkillModal = function() {
-    editingSkillIndex = null;
-    document.getElementById('modalTitle').textContent = 'Add Skill';
-    document.getElementById('modalBody').innerHTML = `
-        <form onsubmit="saveSkillEntry(event)">
-            <div class="form-grid">
-                <div class="field">
-                    <label>Skill Name <span class="req">*</span></label>
-                    <input type="text" id="skillName" required>
-                </div>
-                <div class="field">
-                    <label>Skill Level <span class="req">*</span></label>
-                    <select id="skillLevel" required>
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Expert" selected>Expert</option>
-                    </select>
-                </div>
-                <div class="field full">
-                    <label>Description</label>
-                    <input type="text" id="skillDesc">
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-save">Save</button>
-            </div>
-        </form>
-    `;
-    openModal();
-};
-
-window.editSkill = function(i) {
-    editingSkillIndex = i;
-    const s = profileData.skills[i];
-    document.getElementById('modalTitle').textContent = 'Edit Skill';
-    document.getElementById('modalBody').innerHTML = `
-        <form onsubmit="saveSkillEntry(event)">
-            <div class="form-grid">
-                <div class="field">
-                    <label>Skill Name <span class="req">*</span></label>
-                    <input type="text" id="skillName" value="${escapeAttr(s.name)}" required>
-                </div>
-                <div class="field">
-                    <label>Skill Level <span class="req">*</span></label>
-                    <select id="skillLevel" required>
-                        <option value="Beginner" ${s.level === 'Beginner' ? 'selected' : ''}>Beginner</option>
-                        <option value="Intermediate" ${s.level === 'Intermediate' ? 'selected' : ''}>Intermediate</option>
-                        <option value="Expert" ${s.level === 'Expert' ? 'selected' : ''}>Expert</option>
-                    </select>
-                </div>
-                <div class="field full">
-                    <label>Description</label>
-                    <input type="text" id="skillDesc" value="${escapeAttr(s.description)}">
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-save">Update</button>
-            </div>
-        </form>
-    `;
-    openModal();
-};
-
-window.saveSkillEntry = async function(e) {
-    e.preventDefault();
-    const entry = {
-        name: getVal('skillName'),
-        level: getVal('skillLevel'),
-        description: getVal('skillDesc')
-    };
-
-    if (editingSkillIndex === null) {
-        profileData.skills.push(entry);
-    } else {
-        profileData.skills[editingSkillIndex] = entry;
-    }
-
-    try {
-        await saveProfile();
-        renderSkillsTable();
-        updateProgress();
-        renderProgress();
-        closeModal();
-        showMessage('✅ Skill saved!', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
-};
-
-window.deleteSkill = async function(i) {
-    if (!confirm('Delete this skill?')) return;
-    profileData.skills.splice(i, 1);
-    try {
-        await saveProfile();
-        renderSkillsTable();
-        updateProgress();
-        renderProgress();
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
-};
-
-// ============================================
-// MODAL CONTROL
-// ============================================
-function openModal() {
-    document.getElementById('modalOverlay').classList.add('show');
-}
-
-window.closeModal = function() {
-    document.getElementById('modalOverlay').classList.remove('show');
-};
-
-// ============================================
-// TOGGLES
-// ============================================
-window.toggleBonus = function(show) {};
-window.toggleMed = function(show) {
-    const el = document.getElementById('medAmount');
-    if (el) el.disabled = !show;
-};
-window.toggleFuel = function(show) {
-    ['fuelAmount', 'fuelLiters'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.disabled = !show;
-    });
-};
-window.toggleVehicle = function(show) {
-    const row = document.getElementById('vehicleDetailsRow');
-    if (row) row.style.display = show ? 'flex' : 'none';
-};
-window.toggleMobile = function(show) {
-    const el = document.getElementById('mobileAmount');
-    if (el) el.disabled = !show;
-};
-
-// ============================================
-// CHARACTER COUNTERS
-// ============================================
-function attachCharCounters() {
-    const map = [
-        ['saObjective', 'c1', 500],
-        ['saStrengths', 'c2', 500],
-        ['saImprovements', 'c3', 500],
-        ['saSummary', 'c4', 800]
-    ];
-    map.forEach(([inputId, countId]) => {
-        const input = document.getElementById(inputId);
-        const counter = document.getElementById(countId);
-        if (input && counter) {
-            input.addEventListener('input', () => {
-                counter.textContent = input.value.length;
-            });
-        }
-    });
-}
-
-// ============================================
-// HELPERS
-// ============================================
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"']/g, c => ({
-        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-    })[c]);
-}
-
-function escapeAttr(str) {
-    if (!str) return '';
-    return String(str).replace(/["'&<>]/g, c => ({
-        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-    })[c]);
-}
-
-function showMessage(text, type = 'info') {
-    const box = document.getElementById('messageBox');
-    if (!box) return;
-    box.textContent = text;
-    box.className = 'message-box show ' + type;
-    setTimeout(() => {
-        box.classList.remove('show');
-    }, 4000);
-}
+// S
