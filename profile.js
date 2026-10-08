@@ -13,8 +13,7 @@ import {
     getFirestore, 
     doc, 
     getDoc, 
-    setDoc, 
-    updateDoc 
+    setDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -29,6 +28,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// ============================================
+// COUNTRIES LIST (A to Z)
+// ============================================
+const COUNTRIES = [
+    "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan",
+    "Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
+    "Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi",
+    "Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia",
+    "Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic",
+    "Denmark","Djibouti","Dominica","Dominican Republic",
+    "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
+    "Fiji","Finland","France",
+    "Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana",
+    "Haiti","Honduras","Hungary",
+    "Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast",
+    "Jamaica","Japan","Jordan",
+    "Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan",
+    "Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
+    "Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius",
+    "Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
+    "Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway",
+    "Oman",
+    "Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
+    "Qatar",
+    "Romania","Russia","Rwanda",
+    "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino",
+    "Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia",
+    "Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan",
+    "Suriname","Sweden","Switzerland","Syria",
+    "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey",
+    "Turkmenistan","Tuvalu",
+    "Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan",
+    "Vanuatu","Vatican City","Venezuela","Vietnam",
+    "Yemen",
+    "Zambia","Zimbabwe"
+];
 
 // ============================================
 // GLOBAL STATE
@@ -56,7 +92,6 @@ let progressData = {
     compensation: false
 };
 
-// Modal editing indices
 let editingEduIndex = null;
 let editingExpIndex = null;
 let editingSkillIndex = null;
@@ -87,23 +122,67 @@ onAuthStateChanged(auth, async (user) => {
     // Load profile data
     await loadProfile();
 
+    // Populate dropdowns
+    populateCountries('pNationality');
+    populateCountries('pCountry');
+
     // Render everything
     renderSidebarUser();
-    renderSidebarChecks();
+    updateProgress();
     renderProgress();
 
-    // Set defaults
+    // Set defaults (fill forms)
     applyDefaults();
+
+    // Attach formatters
+    attachCnicFormatter();
+    attachCharCounters();
 
     // Listeners
     attachListeners();
 
-    // Character counters
-    attachCharCounters();
-
-    // Show first incomplete section or first section
+    // Show first incomplete section
     showFirstIncompleteSection();
 });
+
+// ============================================
+// POPULATE COUNTRIES
+// ============================================
+function populateCountries(selectId) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+
+    sel.innerHTML = '<option value="Pakistan">Pakistan</option>';
+
+    COUNTRIES.forEach(c => {
+        if (c !== 'Pakistan') {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            sel.appendChild(opt);
+        }
+    });
+}
+
+// ============================================
+// CNIC AUTO-FORMAT (35404-0836742-1)
+// ============================================
+function attachCnicFormatter() {
+    const cnicInput = document.getElementById('pCnic');
+    if (!cnicInput) return;
+
+    cnicInput.addEventListener('input', function() {
+        let digits = this.value.replace(/\D/g, '');
+        digits = digits.slice(0, 13);
+
+        let formatted = '';
+        if (digits.length > 0) formatted = digits.slice(0, 5);
+        if (digits.length > 5) formatted += '-' + digits.slice(5, 12);
+        if (digits.length > 12) formatted += '-' + digits.slice(12, 13);
+
+        this.value = formatted;
+    });
+}
 
 // ============================================
 // LOAD PROFILE FROM FIRESTORE
@@ -125,7 +204,6 @@ async function loadProfile() {
                 misc: data.misc || null,
                 compensation: data.compensation || null
             };
-            updateProgress();
         }
     } catch (e) {
         console.warn("Profile load error:", e);
@@ -175,7 +253,6 @@ function renderSidebarUser() {
 function updateProgress() {
     const p = profileData;
 
-    // Personal: check all required fields
     progressData.personal = !!(p.personal &&
         p.personal.fullName && p.personal.fatherName &&
         p.personal.cnic && p.personal.dob &&
@@ -183,34 +260,27 @@ function updateProgress() {
         p.personal.email && p.personal.address &&
         p.personal.domicile && p.personal.city);
 
-    // Education: at least 1 entry
     progressData.education = p.education && p.education.length > 0;
 
-    // Experience: if "no" experience, still counts as complete; else at least 1 entry
     progressData.experience = p.experience && (
         p.experience.has === false ||
         (p.experience.entries && p.experience.entries.length > 0)
     );
 
-    // Skills: at least 1 skill
     progressData.skills = p.skills && p.skills.length > 0;
 
-    // Self Assessment
     progressData.self = !!(p.self &&
         p.self.objective && p.self.strengths &&
         p.self.improvements && p.self.summary);
 
-    // References
     progressData.references = !!(p.references &&
         p.references.ref1Name && p.references.ref1Email &&
         p.references.ref2Name && p.references.ref2Email);
 
-    // Misc
     progressData.misc = !!(p.misc &&
         p.misc.crime && p.misc.relatives &&
         p.misc.disability && p.misc.source);
 
-    // Compensation
     progressData.compensation = !!(p.compensation &&
         p.compensation.basic !== undefined &&
         p.compensation.gross !== undefined &&
@@ -226,10 +296,10 @@ function renderProgress() {
     document.getElementById('progressPercent').textContent = percent + '%';
     document.getElementById('progressBarFill').style.width = percent + '%';
 
-    // Show green checkmarks
     sections.forEach(s => {
         const item = document.querySelector(`.menu-item[data-section="${s}"]`);
         const checkBox = document.getElementById('check-' + s);
+        if (!item || !checkBox) return;
         if (progressData[s]) {
             item.classList.add('completed');
             checkBox.textContent = '✅';
@@ -240,27 +310,18 @@ function renderProgress() {
     });
 }
 
-function renderSidebarChecks() {
-    updateProgress();
-    renderProgress();
-}
-
 // ============================================
 // SECTION NAVIGATION
 // ============================================
 function showSection(sectionName) {
-    // Hide all sections
     document.querySelectorAll('.profile-section').forEach(s => s.classList.remove('active'));
-    // Show target
     const target = document.getElementById('section-' + sectionName);
     if (target) target.classList.add('active');
 
-    // Update menu active state
     document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
     const menuItem = document.querySelector(`.menu-item[data-section="${sectionName}"]`);
     if (menuItem) menuItem.classList.add('active');
 
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -301,21 +362,24 @@ function attachListeners() {
     });
 
     // Logout
-    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        if (!confirm('Logout from your account?')) return;
-        try {
-            sessionStorage.removeItem('hask_logged_in');
-            await signOut(auth);
-            window.location.replace('login.html');
-        } catch (err) {
-            alert('Error: ' + err.message);
-        }
-    });
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!confirm('Logout from your account?')) return;
+            try {
+                sessionStorage.removeItem('hask_logged_in');
+                await signOut(auth);
+                window.location.replace('login.html');
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        });
+    }
 }
 
 // ============================================
-// APPLY DEFAULTS (fill forms from data)
+// APPLY DEFAULTS
 // ============================================
 function applyDefaults() {
     // Personal
@@ -324,7 +388,12 @@ function applyDefaults() {
     setVal('pFullName', p.fullName || userData.name || '');
     setVal('pFatherName', p.fatherName || '');
     setVal('pNationality', p.nationality || 'Pakistan');
-    setVal('pCnic', p.cnic || '');
+    // Format CNIC when loading
+    let cnicVal = p.cnic || '';
+    if (cnicVal && cnicVal.length === 13 && !cnicVal.includes('-')) {
+        cnicVal = cnicVal.slice(0, 5) + '-' + cnicVal.slice(5, 12) + '-' + cnicVal.slice(12, 13);
+    }
+    setVal('pCnic', cnicVal);
     setVal('pDob', p.dob || '');
     setVal('pGender', p.gender || '');
     setVal('pInterest', p.interest || '');
@@ -339,7 +408,6 @@ function applyDefaults() {
     setVal('pCell', p.cell || '');
     setVal('pEmail', p.email || userData.email || '');
 
-    // Candidate ID
     document.getElementById('candidateId').textContent = userData.userId || '—';
 
     // Experience
@@ -347,7 +415,8 @@ function applyDefaults() {
     setVal('overallExp', exp.overall || 0);
     setVal('industryExp', exp.industry || 0);
     if (exp.has === false) {
-        document.querySelector('input[name="hasExp"][value="no"]').checked = true;
+        const noRadio = document.querySelector('input[name="hasExp"][value="no"]');
+        if (noRadio) noRadio.checked = true;
     }
 
     // Self
@@ -356,6 +425,14 @@ function applyDefaults() {
     setVal('saStrengths', sa.strengths || '');
     setVal('saImprovements', sa.improvements || '');
     setVal('saSummary', sa.summary || '');
+    // Update char counters
+    setTimeout(() => {
+        ['saObjective', 'saStrengths', 'saImprovements', 'saSummary'].forEach((id, i) => {
+            const el = document.getElementById(id);
+            const counter = document.getElementById('c' + (i + 1));
+            if (el && counter) counter.textContent = el.value.length;
+        });
+    }, 100);
 
     // References
     const r = profileData.references || {};
@@ -438,7 +515,7 @@ window.savePersonal = async function(e) {
             fullName: getVal('pFullName'),
             fatherName: getVal('pFatherName'),
             nationality: getVal('pNationality'),
-            cnic: getVal('pCnic'),
+            cnic: getVal('pCnic').replace(/\D/g, ''),
             dob: getVal('pDob'),
             gender: getVal('pGender'),
             interest: getVal('pInterest'),
@@ -468,7 +545,7 @@ window.savePersonal = async function(e) {
 };
 
 // ============================================
-// SAVE: SELF ASSESSMENT
+// SAVE: SELF
 // ============================================
 window.saveSelf = async function(e) {
     e.preventDefault();
@@ -816,8 +893,8 @@ function renderExperienceTable() {
 }
 
 window.toggleExperience = function(has) {
+    if (!profileData.experience) profileData.experience = { has: true, overall: 0, industry: 0, entries: [] };
     profileData.experience.has = has;
-    // save silently later
 };
 
 window.openExperienceModal = function() {
@@ -1105,11 +1182,9 @@ window.closeModal = function() {
 };
 
 // ============================================
-// TOGGLES (Compensation)
+// TOGGLES
 // ============================================
-window.toggleBonus = function(show) {
-    // no special UI, kept for future
-};
+window.toggleBonus = function(show) {};
 window.toggleMed = function(show) {
     const el = document.getElementById('medAmount');
     if (el) el.disabled = !show;
@@ -1139,7 +1214,7 @@ function attachCharCounters() {
         ['saImprovements', 'c3', 500],
         ['saSummary', 'c4', 800]
     ];
-    map.forEach(([inputId, countId, max]) => {
+    map.forEach(([inputId, countId]) => {
         const input = document.getElementById(inputId);
         const counter = document.getElementById(countId);
         if (input && counter) {
@@ -1175,11 +1250,4 @@ function showMessage(text, type = 'info') {
     setTimeout(() => {
         box.classList.remove('show');
     }, 4000);
-}
-
-// ============================================
-// PAGE VISIT COUNTER (bonus)
-// ============================================
-if (!sessionStorage.getItem('hask_profile_visit')) {
-    sessionStorage.setItem('hask_profile_visit', '1');
 }
