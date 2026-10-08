@@ -5,10 +5,295 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HASK TalentConnect - Find Jobs in Pakistan</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== Page-specific ===== */
+        .page-banner {
+            background: #1a2a6c;
+            color: white;
+            padding: 40px 30px 45px;
+            text-align: center;
+        }
+
+        .page-banner h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .page-banner p {
+            opacity: 0.9;
+            font-size: 0.98rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 22px;
+            max-width: 1300px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+
+        /* ===== Filter Sidebar ===== */
+        .filters {
+            background: white;
+            border-radius: 12px;
+            padding: 22px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            height: fit-content;
+            position: sticky;
+            top: 85px;
+        }
+
+        .filters h3 {
+            color: #1a2a6c;
+            font-size: 1rem;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eef1f5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group { margin-bottom: 16px; }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #dfe3ec;
+            background: #fafbfc;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            outline: none;
+            font-family: inherit;
+            color: #333;
+            transition: 0.2s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            border-color: #1a2a6c;
+            background: white;
+        }
+
+        .btn-clear {
+            width: 100%;
+            padding: 10px;
+            background: #f0f2f8;
+            color: #1a2a6c;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.86rem;
+            transition: 0.2s;
+            margin-top: 6px;
+        }
+
+        .btn-clear:hover { background: #dc3545; color: white; }
+
+        /* ===== Jobs Panel ===== */
+        .jobs-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .jobs-panel-head {
+            padding: 18px 22px;
+            border-bottom: 1px solid #eef1f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .jobs-panel-head h2 {
+            color: #1a2a6c;
+            font-size: 1.15rem;
+        }
+
+        .jobs-panel-head .count {
+            background: #e8f4fd;
+            color: #0277bd;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        /* Search */
+        .search-row {
+            padding: 14px 22px;
+            background: #fafbfc;
+            border-bottom: 1px solid #eef1f5;
+        }
+
+        .search-row input {
+            width: 100%;
+            padding: 11px 16px;
+            border: 1.5px solid #dfe3ec;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            outline: none;
+            font-family: inherit;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .search-row input:focus { border-color: #1a2a6c; }
+
+        /* Table */
+        .table-wrap { overflow-x: auto; }
+
+        .jobs-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .jobs-table thead {
+            background: #29b6f6;
+            color: white;
+        }
+
+        .jobs-table th {
+            padding: 13px 14px;
+            text-align: left;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .jobs-table tbody tr {
+            border-bottom: 1px solid #eef1f5;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .jobs-table tbody tr:hover { background: #f7faff; }
+
+        .jobs-table td {
+            padding: 15px 14px;
+            font-size: 0.9rem;
+            vertical-align: middle;
+            color: #333;
+        }
+
+        .jobs-table .job-id {
+            color: #29b6f6;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+
+        .jobs-table .job-title {
+            color: #1a2a6c;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .jobs-table .job-title small {
+            display: block;
+            color: #888;
+            font-weight: 400;
+            font-size: 0.75rem;
+            margin-top: 3px;
+        }
+
+        .jobs-table .company-cell { color: #444; font-weight: 500; }
+
+        .jobs-table .category-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e8f4fd;
+            color: #0277bd;
+            border-radius: 12px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .jobs-table .apply-btn {
+            background: #29b6f6;
+            color: white;
+            padding: 7px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .jobs-table .apply-btn:hover { background: #0288d1; }
+
+        /* Empty / Loading */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-state .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e0e4ef;
+            border-top-color: #1a2a6c;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== Mobile ===== */
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .filters { position: static; }
+        }
+
+        @media (max-width: 600px) {
+            .page-banner { padding: 30px 15px; }
+            .page-banner h1 { font-size: 1.4rem; }
+            .page-banner p { font-size: 0.88rem; }
+            .main-grid { padding: 0 12px; }
+            .filters { padding: 18px; }
+            .jobs-panel-head h2 { font-size: 1rem; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Navbar -->
+    <!-- ===== Navbar (same on all pages) ===== -->
     <nav class="navbar">
         <div class="logo">HASK TalentConnect</div>
         <ul class="menu">
@@ -20,131 +305,115 @@
         </ul>
     </nav>
 
-    <!-- Hero -->
-    <section class="hero">
+    <!-- ===== Page Banner ===== -->
+    <div class="page-banner">
         <h1>Find Your Dream Job in Pakistan</h1>
         <p>Thousands of opportunities from top employers across the country</p>
-        <div class="hero-search">
-            <input type="text" id="heroSearch" placeholder="Job title, skills, or company...">
-            <button onclick="searchJobs()">Search Jobs</button>
-        </div>
-    </section>
+    </div>
 
-    <div class="container">
+    <!-- ===== Main Grid ===== -->
+    <div class="main-grid">
 
-        <!-- Stats -->
-        <div class="stats-row">
-            <div class="stat-box">
-                <div class="num" id="statJobs">0</div>
-                <div class="lbl">Active Jobs</div>
-            </div>
-            <div class="stat-box">
-                <div class="num" id="statCompanies">0</div>
-                <div class="lbl">Companies</div>
-            </div>
-            <div class="stat-box">
-                <div class="num" id="statSeekers">0</div>
-                <div class="lbl">Job Seekers</div>
-            </div>
-            <div class="stat-box">
-                <div class="num">100%</div>
-                <div class="lbl">Free to Use</div>
-            </div>
-        </div>
+        <!-- Filters Sidebar -->
+        <aside class="filters">
+            <h3>🔧 Filters</h3>
 
-        <!-- Categories -->
-        <h2 class="section-title">Browse by Category</h2>
-        <div class="categories">
-            <div class="category-card" onclick="goCategory('it')">
-                <div class="icon">💻</div>
-                <div class="name">IT & Software</div>
+            <div class="filter-group">
+                <label>Company</label>
+                <select id="filterCompany">
+                    <option value="">All Companies</option>
+                </select>
             </div>
-            <div class="category-card" onclick="goCategory('sales')">
-                <div class="icon">📊</div>
-                <div class="name">Sales & Marketing</div>
-            </div>
-            <div class="category-card" onclick="goCategory('finance')">
-                <div class="icon">💰</div>
-                <div class="name">Accounting</div>
-            </div>
-            <div class="category-card" onclick="goCategory('hr')">
-                <div class="icon">👔</div>
-                <div class="name">HR & Admin</div>
-            </div>
-            <div class="category-card" onclick="goCategory('engineering')">
-                <div class="icon">🏗️</div>
-                <div class="name">Engineering</div>
-            </div>
-            <div class="category-card" onclick="goCategory('education')">
-                <div class="icon">📚</div>
-                <div class="name">Education</div>
-            </div>
-            <div class="category-card" onclick="goCategory('healthcare')">
-                <div class="icon">🏥</div>
-                <div class="name">Healthcare</div>
-            </div>
-            <div class="category-card" onclick="goCategory('construction')">
-                <div class="icon">🔨</div>
-                <div class="name">Construction</div>
-            </div>
-            <div class="category-card" onclick="goCategory('transport')">
-                <div class="icon">🚚</div>
-                <div class="name">Transport & Driver</div>
-            </div>
-            <div class="category-card" onclick="goCategory('security')">
-                <div class="icon">🛡️</div>
-                <div class="name">Security</div>
-            </div>
-            <div class="category-card" onclick="goCategory('hospitality')">
-                <div class="icon">🍽️</div>
-                <div class="name">Hospitality</div>
-            </div>
-            <div class="category-card" onclick="goCategory('other')">
-                <div class="icon">✨</div>
-                <div class="name">Other Jobs</div>
-            </div>
-        </div>
 
-        <!-- Latest Jobs -->
-        <h2 class="section-title">
-            Latest Jobs
-            <a href="jobs.html">View All →</a>
-        </h2>
-        <div class="jobs-table-wrap">
-            <table class="jobs-table">
-                <thead>
-                    <tr>
-                        <th>Job-ID</th>
-                        <th>Position Title</th>
-                        <th>Employer</th>
-                        <th>Category</th>
-                        <th>Location</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="latestJobsBody">
-                    <tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="filter-group">
+                <label>Location</label>
+                <select id="filterLocation">
+                    <option value="">All Locations</option>
+                    <option value="Sheikhupura">Sheikhupura</option>
+                    <option value="Lahore">Lahore</option>
+                    <option value="Karachi">Karachi</option>
+                    <option value="Islamabad">Islamabad</option>
+                    <option value="Rawalpindi">Rawalpindi</option>
+                    <option value="Faisalabad">Faisalabad</option>
+                    <option value="Multan">Multan</option>
+                    <option value="Peshawar">Peshawar</option>
+                    <option value="Gujranwala">Gujranwala</option>
+                    <option value="Remote">Remote</option>
+                </select>
+            </div>
 
-        <!-- For Employers -->
-        <div class="info-banner">
-            <h3>🏢 Are You an Employer?</h3>
-            <p>Post your job openings and find the right talent for your company</p>
-            <a href="login.html?role=employer" class="btn-primary">Post a Job</a>
-        </div>
+            <div class="filter-group">
+                <label>Category</label>
+                <select id="filterCategory">
+                    <option value="">All Categories</option>
+                    <option value="it">💻 IT & Software</option>
+                    <option value="sales">📊 Sales & Marketing</option>
+                    <option value="finance">💰 Accounting & Finance</option>
+                    <option value="hr">👔 HR & Admin</option>
+                    <option value="engineering">🏗️ Engineering</option>
+                    <option value="education">📚 Education</option>
+                    <option value="healthcare">🏥 Healthcare</option>
+                    <option value="construction">🔨 Construction</option>
+                    <option value="transport">🚚 Transport & Driver</option>
+                    <option value="security">🛡️ Security</option>
+                    <option value="hospitality">🍽️ Hospitality</option>
+                    <option value="retail">🛒 Retail</option>
+                    <option value="manufacturing">🏭 Manufacturing</option>
+                    <option value="textile">🧵 Textile</option>
+                    <option value="telecom">📱 Telecom</option>
+                    <option value="other">✨ Other</option>
+                </select>
+            </div>
 
-        <!-- For Job Seekers -->
-        <div class="info-banner">
-            <h3>👤 Looking for a Job?</h3>
-            <p>Create your free account and apply to unlimited jobs</p>
-            <a href="login.html" class="btn-primary">Create Free Account</a>
-        </div>
+            <div class="filter-group">
+                <label>Job Type</label>
+                <select id="filterType">
+                    <option value="">All Types</option>
+                    <option value="full-time">Full Time</option>
+                    <option value="part-time">Part Time</option>
+                    <option value="contract">Contract</option>
+                    <option value="daily-wages">Daily Wages</option>
+                    <option value="internship">Internship</option>
+                    <option value="work-from-home">Work from Home</option>
+                </select>
+            </div>
+
+            <button class="btn-clear" onclick="clearFilters()">Clear All Filters</button>
+        </aside>
+
+        <!-- Jobs Panel -->
+        <main class="jobs-panel">
+            <div class="jobs-panel-head">
+                <h2>Current Openings</h2>
+                <span class="count" id="jobsCount">Loading...</span>
+            </div>
+
+            <div class="search-row">
+                <input type="text" id="searchInput" placeholder="🔍 Search job title or company...">
+            </div>
+
+            <div class="table-wrap">
+                <table class="jobs-table">
+                    <thead>
+                        <tr>
+                            <th>Job-ID</th>
+                            <th>Position Title</th>
+                            <th>Employer</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsBody">
+                        <tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
 
     </div>
 
-    <!-- Footer -->
+    <!-- ===== Footer (same on all pages) ===== -->
     <footer>
         <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
     </footer>
@@ -165,51 +434,75 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ===== Load stats & latest jobs =====
-        async function loadHome() {
+        let allJobs = [];
+
+        async function loadJobs() {
             try {
-                // Users count
-                const usersSnap = await getDocs(collection(db, "users"));
-                let seekers = 0;
-                usersSnap.forEach(d => { if (d.data().role !== 'employer') seekers++; });
-                document.getElementById('statSeekers').textContent = seekers;
+                const snap = await getDocs(collection(db, "jobs"));
+                allJobs = [];
+                snap.forEach(d => allJobs.push({ id: d.id, ...d.data() }));
 
-                // Jobs
-                const jobsSnap = await getDocs(collection(db, "jobs"));
-                const jobs = [];
-                jobsSnap.forEach(d => jobs.push({ id: d.id, ...d.data() }));
+                // Populate companies
+                const companies = [...new Set(allJobs.map(j => j.company).filter(Boolean))].sort();
+                const compSelect = document.getElementById('filterCompany');
+                companies.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    compSelect.appendChild(opt);
+                });
 
-                document.getElementById('statJobs').textContent = jobs.length;
-
-                // Companies
-                const companies = [...new Set(jobs.map(j => j.company).filter(Boolean))];
-                document.getElementById('statCompanies').textContent = companies.length;
-
-                // Latest 5 jobs
-                jobs.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-                const latest = jobs.slice(0, 5);
-                renderLatestJobs(latest);
-
+                renderJobs();
             } catch (err) {
                 console.error(err);
+                document.getElementById('jobsBody').innerHTML = `
+                    <tr><td colspan="6" class="empty-state">
+                        <span class="icon">⚠️</span>
+                        <p>Error loading jobs</p>
+                    </td></tr>
+                `;
             }
         }
 
-        function renderLatestJobs(jobs) {
-            const tbody = document.getElementById('latestJobsBody');
-            if (jobs.length === 0) {
+        function renderJobs() {
+            const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const companyFilter = document.getElementById('filterCompany').value;
+            const locFilter = document.getElementById('filterLocation').value;
+            const catFilter = document.getElementById('filterCategory').value;
+            const typeFilter = document.getElementById('filterType').value;
+
+            let filtered = allJobs.filter(j => {
+                const matchSearch = !search ||
+                    (j.title || '').toLowerCase().includes(search) ||
+                    (j.company || '').toLowerCase().includes(search);
+                const matchCompany = !companyFilter || j.company === companyFilter;
+                const matchLoc = !locFilter || j.location === locFilter;
+                const matchCat = !catFilter || j.category === catFilter;
+                const matchType = !typeFilter || j.type === typeFilter;
+                return matchSearch && matchCompany && matchLoc && matchCat && matchType;
+            });
+
+            filtered.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+            document.getElementById('jobsCount').textContent =
+                `${filtered.length} job${filtered.length !== 1 ? 's' : ''}`;
+
+            const tbody = document.getElementById('jobsBody');
+
+            if (filtered.length === 0) {
                 tbody.innerHTML = `
                     <tr><td colspan="6" class="empty-state">
                         <span class="icon">📭</span>
-                        <p>No jobs posted yet. Check back soon!</p>
+                        <p style="font-weight: 600; color: #1a2a6c; margin-bottom: 8px;">No jobs found</p>
+                        <p style="font-size: 0.88rem;">Try adjusting your filters or search terms</p>
                     </td></tr>
                 `;
                 return;
             }
 
-            tbody.innerHTML = jobs.map(job => `
+            tbody.innerHTML = filtered.map(job => `
                 <tr onclick="window.location.href='job-details.html?job=${job.id}'">
-                    <td class="job-id">#${(job.jobId || job.id.slice(0,6)).toUpperCase()}</td>
+                    <td class="job-id">#${escapeHtml(job.jobId || job.id.slice(0, 6).toUpperCase())}</td>
                     <td class="job-title">
                         ${escapeHtml(job.title || 'Untitled')}
                         <small>Click for more information...</small>
@@ -217,7 +510,11 @@
                     <td class="company-cell">${escapeHtml(job.company || '-')}</td>
                     <td><span class="category-badge">${formatCat(job.category)}</span></td>
                     <td>${escapeHtml(job.location || 'Pakistan')}</td>
-                    <td><button class="apply-btn" onclick="event.stopPropagation(); window.location.href='job-details.html?job=${job.id}'">Apply</button></td>
+                    <td>
+                        <button class="apply-btn" onclick="event.stopPropagation(); window.location.href='job-details.html?job=${job.id}'">
+                            Apply
+                        </button>
+                    </td>
                 </tr>
             `).join('');
         }
@@ -231,28 +528,44 @@
 
         function formatCat(c) {
             if (!c) return 'Other';
-            return c.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const map = {
+                'it': 'IT & Software',
+                'sales': 'Sales & Marketing',
+                'finance': 'Accounting & Finance',
+                'hr': 'HR & Admin',
+                'engineering': 'Engineering',
+                'education': 'Education',
+                'healthcare': 'Healthcare',
+                'construction': 'Construction',
+                'transport': 'Transport & Driver',
+                'security': 'Security',
+                'hospitality': 'Hospitality',
+                'retail': 'Retail',
+                'manufacturing': 'Manufacturing',
+                'textile': 'Textile',
+                'telecom': 'Telecom',
+                'other': 'Other'
+            };
+            return map[c] || c.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         }
 
-        window.searchJobs = function() {
-            const q = document.getElementById('heroSearch').value.trim();
-            if (q) {
-                window.location.href = 'jobs.html?q=' + encodeURIComponent(q);
-            } else {
-                window.location.href = 'jobs.html';
+        window.clearFilters = function() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterCompany').value = '';
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterType').value = '';
+            renderJobs();
+        };
+
+        ['searchInput', 'filterCompany', 'filterLocation', 'filterCategory', 'filterType'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', renderJobs);
             }
-        };
-
-        window.goCategory = function(cat) {
-            window.location.href = 'jobs.html?category=' + cat;
-        };
-
-        // Enter key for search
-        document.getElementById('heroSearch').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchJobs();
         });
 
-        loadHome();
+        loadJobs();
     </script>
 
 </body>
