@@ -9,14 +9,14 @@
 </head>
 <body>
 
-    <!-- ===== Navbar (same as other pages) ===== -->
+    <!-- ===== Job Seeker Navbar ===== -->
     <nav class="navbar">
         <div class="logo">HASK TalentConnect</div>
         <ul class="menu">
             <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="team.html">Team</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="dashboard.html">Job Dashboard</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="applied-jobs.html">Applied Jobs</a></li>
             <li><a href="#" id="logoutBtn" class="btn-primary">Logout</a></li>
         </ul>
     </nav>
@@ -27,14 +27,12 @@
         <!-- ===== Sidebar ===== -->
         <aside class="profile-sidebar">
 
-            <!-- Profile Card -->
             <div class="sidebar-profile">
                 <div class="sidebar-avatar" id="sidebarAvatar">?</div>
                 <div class="sidebar-name" id="sidebarName">Loading...</div>
                 <div class="sidebar-id" id="sidebarId">—</div>
             </div>
 
-            <!-- Progress -->
             <div class="progress-section">
                 <div class="progress-label">
                     <span>Profile Completion</span>
@@ -45,7 +43,6 @@
                 </div>
             </div>
 
-            <!-- Menu -->
             <ul class="sidebar-menu" id="sidebarMenu">
                 <li>
                     <a href="#" class="menu-item" data-section="personal">
@@ -97,7 +94,6 @@
                 </li>
             </ul>
 
-            <!-- Applying For -->
             <div class="applying-for">
                 <label>Applying for:</label>
                 <select id="applyingFor">
@@ -106,6 +102,15 @@
                     <option value="contract">Contract</option>
                     <option value="internship">Internship</option>
                     <option value="daily-wages">Daily Wages</option>
+                    <option value="work-from-home">Work from Home</option>
+                    <option value="remote">Remote</option>
+                    <option value="freelance">Freelance</option>
+                    <option value="temporary">Temporary</option>
+                    <option value="shift-based">Shift Based</option>
+                    <option value="consultant">Consultant</option>
+                    <option value="trainee">Trainee</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="other">Other</option>
                 </select>
             </div>
 
@@ -151,12 +156,12 @@
                             <label>Nationality <span class="req">*</span></label>
                             <select id="pNationality" required>
                                 <option value="Pakistan">Pakistan</option>
-                                <option value="Other">Other</option>
+                                <!-- Countries added by JS -->
                             </select>
                         </div>
                         <div class="field">
                             <label>CNIC # <span class="req">*</span></label>
-                            <input type="text" id="pCnic" placeholder="35202-1234567-1" required>
+                            <input type="text" id="pCnic" placeholder="35404-0836742-1" maxlength="15" required>
                         </div>
                         <div class="field">
                             <label>Date of Birth <span class="req">*</span></label>
@@ -186,6 +191,10 @@
                                 <option value="Transport">Transport</option>
                                 <option value="Security">Security</option>
                                 <option value="Hospitality">Hospitality</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Textile">Textile</option>
+                                <option value="Telecom">Telecom</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
@@ -772,7 +781,7 @@
 
     </div>
 
-    <!-- ===== Modal for Education/Experience/Skill entry ===== -->
+    <!-- ===== Modal ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -783,7 +792,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
     </footer>
