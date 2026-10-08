@@ -135,13 +135,15 @@
                 <!-- ===== Profile Picture ===== -->
                 <div class="profile-pic-section">
                     <div class="profile-pic-preview" id="picPreview">📷</div>
-                    <div class="profile-pic-controls">
-                        <label class="pic-label">Profile Picture (Optional)</label>
-                        <input type="url" id="picUrl" placeholder="Paste image URL (https://...)" oninput="previewPicUrl()">
-                        <div class="pic-actions">
-                            <button type="button" class="btn-pic-remove" onclick="removePic()">🗑️ Remove Picture</button>
-                        </div>
-                        <small class="pic-hint">Paste a direct image link (jpg, png, webp)</small>
+                    <input type="file" id="picFile" accept="image/*" onchange="handlePicUpload(event)" style="display:none;">
+                    <div class="pic-controls">
+                        <button type="button" class="btn-pic-upload" onclick="document.getElementById('picFile').click()">
+                            📷 Upload Picture
+                        </button>
+                        <button type="button" class="btn-pic-remove" onclick="removePic()">
+                            🗑️ Remove
+                        </button>
+                        <small class="pic-hint">JPG, PNG, or WEBP — Max 5MB</small>
                     </div>
                 </div>
 
@@ -602,13 +604,19 @@
                         </div>
                         <div class="field">
                             <label>Religion</label>
-                            <select id="mReligion">
+                            <select id="mReligion" onchange="toggleReligionOther()">
                                 <option value="">Select</option>
                                 <option value="Islam">Islam</option>
                                 <option value="Christianity">Christianity</option>
                                 <option value="Hinduism">Hinduism</option>
+                                <option value="Sikhism">Sikhism</option>
+                                <option value="Buddhism">Buddhism</option>
                                 <option value="Other">Other</option>
                             </select>
+                        </div>
+                        <div class="field full" id="religionOtherField" style="display:none;">
+                            <label>Please specify your religion <span class="req">*</span></label>
+                            <input type="text" id="mReligionOther" placeholder="Enter your religion" maxlength="50">
                         </div>
                     </div>
 
