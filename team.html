@@ -61,6 +61,7 @@
             perspective: 1400px;
         }
 
+        /* ===== Member Card (no blur, no grayscale) ===== */
         .member-card {
             position: absolute;
             top: 50%;
@@ -73,9 +74,8 @@
             background: #2a2a2a;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            opacity: 0.4;
+            opacity: 0.55;
             pointer-events: none;
-            filter: grayscale(1) brightness(0.6);
         }
 
         .member-card.active {
@@ -83,7 +83,6 @@
             opacity: 1;
             z-index: 10;
             pointer-events: auto;
-            filter: grayscale(0) brightness(1);
             box-shadow: 0 30px 80px rgba(0,0,0,0.35);
             cursor: pointer;
         }
@@ -94,16 +93,14 @@
 
         .member-card.prev {
             transform: translate(-125%, -50%) scale(0.72);
-            opacity: 0.5;
+            opacity: 0.7;
             z-index: 5;
-            filter: grayscale(1) brightness(0.55);
         }
 
         .member-card.next {
             transform: translate(25%, -50%) scale(0.72);
-            opacity: 0.5;
+            opacity: 0.7;
             z-index: 5;
-            filter: grayscale(1) brightness(0.55);
         }
 
         .member-card.far-prev {
@@ -216,28 +213,6 @@
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
         }
-
-        /* Hover pause indicator */
-        .member-card.active .hover-pause {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            opacity: 0;
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
-            z-index: 6;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .member-card.active.paused-show .hover-pause { opacity: 1; }
 
         .carousel-nav {
             display: flex;
@@ -413,7 +388,7 @@
                 <button class="nav-btn paused" id="pauseBtn" onclick="toggleAutoRotate()" style="width: 28px; height: 28px; font-size: 0.75rem; margin-left: 5px;" title="Pause/Resume">⏸</button>
             </div>
 
-            <div class="drag-hint">Drag · Scroll · Arrows · Hover to Pause</div>
+            <div class="drag-hint">Drag · Scroll · Arrows</div>
         </div>
 
     </div>
@@ -437,15 +412,14 @@
         let currentIndex = 0;
         const total = teamMembers.length;
 
-        // ===== Auto-rotate at 1.3 seconds =====
-        const AUTO_ROTATE_MS = 1300; // 1.3 seconds
+        const AUTO_ROTATE_MS = 1300;
         let autoRotateTimer = null;
         let isAutoRotating = true;
-        let isHovering = false; // Hover pause
+        let isHovering = false;
 
         function startAutoRotate() {
             stopAutoRotate();
-            if (isHovering) return; // Don't start if hovering
+            if (isHovering) return;
             autoRotateTimer = setInterval(() => {
                 if (!isHovering) nextSlide(true);
             }, AUTO_ROTATE_MS);
@@ -468,20 +442,17 @@
                 startAutoRotate();
                 btn.textContent = '⏸';
                 btn.classList.add('paused');
-                btn.title = 'Pause';
                 dot.classList.remove('paused');
                 txt.textContent = 'Auto-rotating every 1.3s';
             } else {
                 stopAutoRotate();
                 btn.textContent = '▶';
                 btn.classList.remove('paused');
-                btn.title = 'Resume';
                 dot.classList.add('paused');
                 txt.textContent = 'Auto-rotate paused';
             }
         }
 
-        // ===== Build cards =====
         function buildCards() {
             const track = document.getElementById('carouselTrack');
             track.innerHTML = '';
@@ -499,7 +470,6 @@
                         <div class="click-hint">Click to view LinkedIn →</div>
                         <div class="linkedin-mini">in</div>
                     ` : ''}
-                    <div class="hover-pause">⏸ Paused (move away to resume)</div>
                     <div class="card-info">
                         <h3>${m.name}</h3>
                         <p class="role-line">${m.role}</p>
@@ -518,22 +488,18 @@
                     }
                 });
 
-                // ===== HOVER PAUSE =====
+                // ===== Silent Hover Pause =====
                 card.addEventListener('mouseenter', () => {
                     if (i === currentIndex) {
                         isHovering = true;
                         stopAutoRotate();
-                        card.classList.add('paused-show');
-                        updateTimerIndicator(true);
                     }
                 });
 
                 card.addEventListener('mouseleave', () => {
                     if (i === currentIndex) {
                         isHovering = false;
-                        card.classList.remove('paused-show');
                         if (isAutoRotating) startAutoRotate();
-                        updateTimerIndicator(false);
                     }
                 });
 
@@ -572,23 +538,11 @@
             updateCarousel();
         }
 
-        function updateTimerIndicator(hovering) {
-            const dot = document.getElementById('timerDot');
-            const txt = document.getElementById('timerText');
-            if (hovering) {
-                dot.classList.add('paused');
-                txt.textContent = '⏸ Paused (hovering)';
-            } else if (isAutoRotating) {
-                dot.classList.remove('paused');
-                txt.textContent = 'Auto-rotating every 1.3s';
-            }
-        }
-
         function updateCarousel() {
             const cards = document.querySelectorAll('.member-card');
 
             cards.forEach((card, i) => {
-                card.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next', 'paused-show');
+                card.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next');
 
                 if (i === currentIndex) card.classList.add('active');
                 else if (i === currentIndex - 1 || (currentIndex === 0 && i === total - 1)) card.classList.add('prev');
@@ -596,12 +550,6 @@
                 else if (i < currentIndex - 1) card.classList.add('far-prev');
                 else card.classList.add('far-next');
             });
-
-            // If hovering, re-apply paused-show on new active card
-            if (isHovering) {
-                const activeCard = document.querySelector('.member-card.active');
-                if (activeCard) activeCard.classList.add('paused-show');
-            }
 
             document.getElementById('counterText').textContent =
                 String(currentIndex + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
@@ -670,7 +618,6 @@
             else if (isAutoRotating && !isHovering) startAutoRotate();
         });
 
-        // Init
         buildCards();
         startAutoRotate();
     </script>
