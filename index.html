@@ -6,46 +6,63 @@
     <title>HASK TalentConnect - Find Jobs in Pakistan</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ===== Page-specific ===== */
+        /* ===== Page Layout ===== */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== Page Banner ===== */
         .page-banner {
             background: #1a2a6c;
             color: white;
-            padding: 40px 30px 45px;
+            padding: 35px 30px 38px;
             text-align: center;
         }
 
         .page-banner h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 1.9rem;
+            margin-bottom: 6px;
             letter-spacing: -0.3px;
         }
 
         .page-banner p {
             opacity: 0.9;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
         }
 
-        .main-grid {
+        /* ===== Full-Width Layout ===== */
+        .main-layout {
+            flex: 1;
             display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 22px;
-            max-width: 1300px;
-            margin: 25px auto;
-            padding: 0 20px;
+            grid-template-columns: 300px 1fr;
+            gap: 0;
+            width: 100%;
         }
 
-        /* ===== Filter Sidebar ===== */
-        .filters {
+        /* ===== Filters Sidebar (Full Left) ===== */
+        .filters-sidebar {
             background: white;
-            border-radius: 12px;
+            border-right: 1px solid #eef1f5;
             padding: 22px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            height: fit-content;
             position: sticky;
-            top: 85px;
+            top: 0;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
         }
 
-        .filters h3 {
+        .filters-sidebar h3 {
             color: #1a2a6c;
             font-size: 1rem;
             margin-bottom: 18px;
@@ -67,7 +84,8 @@
         }
 
         .filter-group select,
-        .filter-group input {
+        .filter-group input[type="text"],
+        .filter-group input[type="number"] {
             width: 100%;
             padding: 9px 12px;
             border: 1.5px solid #dfe3ec;
@@ -84,6 +102,56 @@
         .filter-group input:focus {
             border-color: #1a2a6c;
             background: white;
+        }
+
+        .filter-group select:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .filter-hint {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* Salary Range */
+        .salary-range-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .salary-slider-wrap {
+            margin-top: 8px;
+        }
+
+        .salary-slider-wrap input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: #1a2a6c;
+        }
+
+        .salary-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .salary-summary {
+            background: #e8f4fd;
+            color: #0277bd;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 8px;
         }
 
         .btn-clear {
@@ -103,8 +171,14 @@
 
         .btn-clear:hover { background: #dc3545; color: white; }
 
-        /* ===== Jobs Panel ===== */
+        /* ===== Jobs Panel (Wide) ===== */
         .jobs-panel {
+            background: #f5f7fa;
+            padding: 20px 22px;
+            min-width: 0;
+        }
+
+        .jobs-panel-inner {
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -135,15 +209,20 @@
             font-weight: 600;
         }
 
-        /* Search */
+        /* Search + Per Page */
         .search-row {
             padding: 14px 22px;
             background: #fafbfc;
             border-bottom: 1px solid #eef1f5;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .search-row input {
-            width: 100%;
+            flex: 1;
+            min-width: 200px;
             padding: 11px 16px;
             border: 1.5px solid #dfe3ec;
             border-radius: 8px;
@@ -156,13 +235,37 @@
 
         .search-row input:focus { border-color: #1a2a6c; }
 
-        /* Table */
+        .per-page-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .per-page-wrap label {
+            font-size: 0.82rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .per-page-wrap select {
+            padding: 10px 12px;
+            border: 1.5px solid #dfe3ec;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            outline: none;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* ===== Table ===== */
         .table-wrap { overflow-x: auto; }
 
         .jobs-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px;
         }
 
         .jobs-table thead {
@@ -217,6 +320,13 @@
 
         .jobs-table .company-cell { color: #444; font-weight: 500; }
 
+        .jobs-table .salary-cell {
+            color: #1a7a3e;
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
         .jobs-table .category-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -244,7 +354,62 @@
 
         .jobs-table .apply-btn:hover { background: #0288d1; }
 
-        /* Empty / Loading */
+        /* ===== Pagination ===== */
+        .pagination-wrap {
+            padding: 14px 22px;
+            background: #fafbfc;
+            border-top: 1px solid #eef1f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pagination-info {
+            color: #666;
+            font-size: 0.82rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .page-btn {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border: 1.5px solid #dfe3ec;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            color: #333;
+            transition: 0.2s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #1a2a6c;
+            color: white;
+            border-color: #1a2a6c;
+        }
+
+        .page-btn.active {
+            background: #1a2a6c;
+            color: white;
+            border-color: #1a2a6c;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== Empty / Loading ===== */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -275,145 +440,186 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ===== Mobile ===== */
+        /* ===== Footer (Tail End) ===== */
+        footer {
+            background: #0f1a4a;
+            color: white;
+            text-align: center;
+            padding: 22px 20px;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        footer p {
+            opacity: 0.75;
+            font-size: 0.85rem;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1000px) {
+            .main-layout { grid-template-columns: 260px 1fr; }
+            .filters-sidebar { padding: 18px 15px; }
+        }
+
         @media (max-width: 900px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .filters { position: static; }
+            .main-layout { grid-template-columns: 1fr; }
+            .filters-sidebar {
+                position: static;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #eef1f5;
+            }
         }
 
         @media (max-width: 600px) {
-            .page-banner { padding: 30px 15px; }
-            .page-banner h1 { font-size: 1.4rem; }
-            .page-banner p { font-size: 0.88rem; }
-            .main-grid { padding: 0 12px; }
-            .filters { padding: 18px; }
+            .page-banner { padding: 25px 15px; }
+            .page-banner h1 { font-size: 1.3rem; }
+            .page-banner p { font-size: 0.85rem; }
+            .jobs-panel { padding: 12px; }
+            .jobs-panel-head { padding: 14px 16px; }
             .jobs-panel-head h2 { font-size: 1rem; }
+            .search-row { padding: 12px 16px; }
+            .pagination-wrap { padding: 12px 16px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== Navbar (same on all pages) ===== -->
-    <nav class="navbar">
-        <div class="logo">HASK TalentConnect</div>
-        <ul class="menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="jobs.html">Browse Jobs</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="team.html">Team</a></li>
-            <li><a href="login.html" class="btn-primary">Login</a></li>
-        </ul>
-    </nav>
+    <div class="page-wrapper">
 
-    <!-- ===== Page Banner ===== -->
-    <div class="page-banner">
-        <h1>Find Your Dream Job in Pakistan</h1>
-        <p>Thousands of opportunities from top employers across the country</p>
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="logo">HASK TalentConnect</div>
+            <ul class="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="jobs.html">Browse Jobs</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="login.html" class="btn-primary">Login</a></li>
+            </ul>
+        </nav>
+
+        <!-- Page Banner -->
+        <div class="page-banner">
+            <h1>Find Your Dream Job in Pakistan</h1>
+            <p>Thousands of opportunities from top employers across the country</p>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+
+            <!-- ===== Filters Sidebar (Full Left) ===== -->
+            <aside class="filters-sidebar">
+                <h3>🔧 Filters</h3>
+
+                <div class="filter-group">
+                    <label>Company</label>
+                    <select id="filterCompany" disabled>
+                        <option value="">Loading...</option>
+                    </select>
+                    <div class="filter-hint">Only registered companies</div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Location</label>
+                    <select id="filterLocation" disabled>
+                        <option value="">Loading...</option>
+                    </select>
+                    <div class="filter-hint">Based on active jobs</div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="filterCategory" disabled>
+                        <option value="">Loading...</option>
+                    </select>
+                    <div class="filter-hint">Only categories with jobs</div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Job Type</label>
+                    <select id="filterType" disabled>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+
+                <!-- Salary Range -->
+                <div class="filter-group">
+                    <label>💰 Salary Range (PKR)</label>
+                    <div class="salary-range-row">
+                        <input type="number" id="salaryMin" placeholder="Min" min="0" step="1000">
+                        <input type="number" id="salaryMax" placeholder="Max" min="0" step="1000">
+                    </div>
+                    <div class="salary-slider-wrap">
+                        <input type="range" id="salarySlider" min="0" max="500000" step="5000" value="500000">
+                        <div class="salary-labels">
+                            <span>0</span>
+                            <span>500K+</span>
+                        </div>
+                    </div>
+                    <div class="salary-summary" id="salarySummary">Any salary</div>
+                </div>
+
+                <button class="btn-clear" onclick="clearFilters()">Clear All Filters</button>
+            </aside>
+
+            <!-- ===== Jobs Panel (Wide) ===== -->
+            <main class="jobs-panel">
+                <div class="jobs-panel-inner">
+
+                    <div class="jobs-panel-head">
+                        <h2>Current Openings</h2>
+                        <span class="count" id="jobsCount">Loading...</span>
+                    </div>
+
+                    <!-- Search + Per Page -->
+                    <div class="search-row">
+                        <input type="text" id="searchInput" placeholder="🔍 Search job title, company, or keyword...">
+                        <div class="per-page-wrap">
+                            <label>Show:</label>
+                            <select id="perPageSelect">
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-wrap">
+                        <table class="jobs-table">
+                            <thead>
+                                <tr>
+                                    <th>Job-ID</th>
+                                    <th>Position Title</th>
+                                    <th>Employer</th>
+                                    <th>Category</th>
+                                    <th>Location</th>
+                                    <th>Salary</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jobsBody">
+                                <tr><td colspan="7" class="loading"><div class="spinner"></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-wrap">
+                        <div class="pagination-info" id="paginationInfo">Loading...</div>
+                        <div class="pagination-controls" id="paginationControls"></div>
+                    </div>
+
+                </div>
+            </main>
+
+        </div>
+
     </div>
 
-    <!-- ===== Main Grid ===== -->
-    <div class="main-grid">
-
-        <!-- Filters Sidebar -->
-        <aside class="filters">
-            <h3>🔧 Filters</h3>
-
-            <div class="filter-group">
-                <label>Company</label>
-                <select id="filterCompany">
-                    <option value="">All Companies</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label>Location</label>
-                <select id="filterLocation">
-                    <option value="">All Locations</option>
-                    <option value="Sheikhupura">Sheikhupura</option>
-                    <option value="Lahore">Lahore</option>
-                    <option value="Karachi">Karachi</option>
-                    <option value="Islamabad">Islamabad</option>
-                    <option value="Rawalpindi">Rawalpindi</option>
-                    <option value="Faisalabad">Faisalabad</option>
-                    <option value="Multan">Multan</option>
-                    <option value="Peshawar">Peshawar</option>
-                    <option value="Gujranwala">Gujranwala</option>
-                    <option value="Remote">Remote</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label>Category</label>
-                <select id="filterCategory">
-                    <option value="">All Categories</option>
-                    <option value="it">💻 IT & Software</option>
-                    <option value="sales">📊 Sales & Marketing</option>
-                    <option value="finance">💰 Accounting & Finance</option>
-                    <option value="hr">👔 HR & Admin</option>
-                    <option value="engineering">🏗️ Engineering</option>
-                    <option value="education">📚 Education</option>
-                    <option value="healthcare">🏥 Healthcare</option>
-                    <option value="construction">🔨 Construction</option>
-                    <option value="transport">🚚 Transport & Driver</option>
-                    <option value="security">🛡️ Security</option>
-                    <option value="hospitality">🍽️ Hospitality</option>
-                    <option value="retail">🛒 Retail</option>
-                    <option value="manufacturing">🏭 Manufacturing</option>
-                    <option value="textile">🧵 Textile</option>
-                    <option value="telecom">📱 Telecom</option>
-                    <option value="other">✨ Other</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label>Job Type</label>
-                <select id="filterType">
-                    <option value="">All Types</option>
-                    <option value="full-time">Full Time</option>
-                    <option value="part-time">Part Time</option>
-                    <option value="contract">Contract</option>
-                    <option value="daily-wages">Daily Wages</option>
-                    <option value="internship">Internship</option>
-                    <option value="work-from-home">Work from Home</option>
-                </select>
-            </div>
-
-            <button class="btn-clear" onclick="clearFilters()">Clear All Filters</button>
-        </aside>
-
-        <!-- Jobs Panel -->
-        <main class="jobs-panel">
-            <div class="jobs-panel-head">
-                <h2>Current Openings</h2>
-                <span class="count" id="jobsCount">Loading...</span>
-            </div>
-
-            <div class="search-row">
-                <input type="text" id="searchInput" placeholder="🔍 Search job title or company...">
-            </div>
-
-            <div class="table-wrap">
-                <table class="jobs-table">
-                    <thead>
-                        <tr>
-                            <th>Job-ID</th>
-                            <th>Position Title</th>
-                            <th>Employer</th>
-                            <th>Category</th>
-                            <th>Location</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="jobsBody">
-                        <tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
-
-    </div>
-
-    <!-- ===== Footer (same on all pages) ===== -->
+    <!-- ===== Footer (Tail End) ===== -->
     <footer>
         <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
     </footer>
@@ -435,28 +641,43 @@
         const db = getFirestore(app);
 
         let allJobs = [];
+        let filteredJobs = [];
+        let currentPage = 1;
+        let perPage = 10;
 
-        async function loadJobs() {
+        const CATEGORY_MAP = {
+            'it': 'IT & Software',
+            'sales': 'Sales & Marketing',
+            'finance': 'Accounting & Finance',
+            'hr': 'HR & Admin',
+            'engineering': 'Engineering',
+            'education': 'Education',
+            'healthcare': 'Healthcare',
+            'construction': 'Construction',
+            'transport': 'Transport & Driver',
+            'security': 'Security',
+            'hospitality': 'Hospitality',
+            'retail': 'Retail',
+            'manufacturing': 'Manufacturing',
+            'textile': 'Textile',
+            'telecom': 'Telecom',
+            'other': 'Other'
+        };
+
+        // ===== Load Data =====
+        async function loadData() {
             try {
-                const snap = await getDocs(collection(db, "jobs"));
+                const jobsSnap = await getDocs(collection(db, "jobs"));
                 allJobs = [];
-                snap.forEach(d => allJobs.push({ id: d.id, ...d.data() }));
+                jobsSnap.forEach(d => allJobs.push({ id: d.id, ...d.data() }));
 
-                // Populate companies
-                const companies = [...new Set(allJobs.map(j => j.company).filter(Boolean))].sort();
-                const compSelect = document.getElementById('filterCompany');
-                companies.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c;
-                    opt.textContent = c;
-                    compSelect.appendChild(opt);
-                });
+                buildFilters();
+                applyFilters();
 
-                renderJobs();
             } catch (err) {
                 console.error(err);
                 document.getElementById('jobsBody').innerHTML = `
-                    <tr><td colspan="6" class="empty-state">
+                    <tr><td colspan="7" class="empty-state">
                         <span class="icon">⚠️</span>
                         <p>Error loading jobs</p>
                     </td></tr>
@@ -464,59 +685,239 @@
             }
         }
 
-        function renderJobs() {
+        // ===== Build Filters =====
+        function buildFilters() {
+            const companySet = new Set();
+            allJobs.forEach(j => { if (j.company) companySet.add(j.company.trim()); });
+            populateSelect('filterCompany', [...companySet].sort(), 'All Companies');
+
+            const locationSet = new Set();
+            allJobs.forEach(j => { if (j.location) locationSet.add(j.location.trim()); });
+            populateSelect('filterLocation', [...locationSet].sort(), 'All Locations');
+
+            const categorySet = new Set();
+            allJobs.forEach(j => { if (j.category) categorySet.add(j.category); });
+            const categories = [...categorySet].sort((a, b) => {
+                return (CATEGORY_MAP[a] || a).localeCompare(CATEGORY_MAP[b] || b);
+            });
+            populateSelectWithLabels('filterCategory', categories, 'All Categories', CATEGORY_MAP);
+
+            const typeSet = new Set();
+            allJobs.forEach(j => { if (j.type) typeSet.add(j.type); });
+            const types = [...typeSet].sort();
+            const typeMap = {
+                'full-time': 'Full Time',
+                'part-time': 'Part Time',
+                'contract': 'Contract',
+                'daily-wages': 'Daily Wages',
+                'internship': 'Internship',
+                'work-from-home': 'Work from Home'
+            };
+            populateSelectWithLabels('filterType', types, 'All Types', typeMap);
+        }
+
+        function populateSelect(id, values, allText) {
+            const sel = document.getElementById(id);
+            sel.innerHTML = `<option value="">${allText}</option>`;
+            if (values.length === 0) {
+                sel.innerHTML += `<option value="" disabled>No data</option>`;
+                sel.disabled = true;
+                return;
+            }
+            values.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = v;
+                sel.appendChild(opt);
+            });
+            sel.disabled = false;
+        }
+
+        function populateSelectWithLabels(id, values, allText, labelMap) {
+            const sel = document.getElementById(id);
+            sel.innerHTML = `<option value="">${allText}</option>`;
+            if (values.length === 0) {
+                sel.innerHTML += `<option value="" disabled>No data</option>`;
+                sel.disabled = true;
+                return;
+            }
+            values.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = labelMap[v] || v;
+                sel.appendChild(opt);
+            });
+            sel.disabled = false;
+        }
+
+        // ===== Apply Filters =====
+        function applyFilters() {
             const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
             const companyFilter = document.getElementById('filterCompany').value;
             const locFilter = document.getElementById('filterLocation').value;
             const catFilter = document.getElementById('filterCategory').value;
             const typeFilter = document.getElementById('filterType').value;
+            const salaryMin = Number(document.getElementById('salaryMin').value) || 0;
+            const salaryMax = Number(document.getElementById('salaryMax').value) || 0;
 
-            let filtered = allJobs.filter(j => {
+            filteredJobs = allJobs.filter(j => {
                 const matchSearch = !search ||
                     (j.title || '').toLowerCase().includes(search) ||
-                    (j.company || '').toLowerCase().includes(search);
+                    (j.company || '').toLowerCase().includes(search) ||
+                    (j.description || '').toLowerCase().includes(search);
                 const matchCompany = !companyFilter || j.company === companyFilter;
                 const matchLoc = !locFilter || j.location === locFilter;
                 const matchCat = !catFilter || j.category === catFilter;
                 const matchType = !typeFilter || j.type === typeFilter;
-                return matchSearch && matchCompany && matchLoc && matchCat && matchType;
+
+                // Salary match
+                let matchSalary = true;
+                const jMin = Number(j.salaryMin) || 0;
+                const jMax = Number(j.salaryMax) || Number.MAX_SAFE_INTEGER;
+                if (salaryMin > 0 && jMax < salaryMin) matchSalary = false;
+                if (salaryMax > 0 && jMin > salaryMax) matchSalary = false;
+
+                return matchSearch && matchCompany && matchLoc && matchCat && matchType && matchSalary;
             });
 
-            filtered.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+            filteredJobs.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+            currentPage = 1;
+            renderPage();
+        }
+
+        // ===== Render Page =====
+        function renderPage() {
+            const total = filteredJobs.length;
+            const totalPages = Math.max(1, Math.ceil(total / perPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageJobs = filteredJobs.slice(start, end);
 
             document.getElementById('jobsCount').textContent =
-                `${filtered.length} job${filtered.length !== 1 ? 's' : ''}`;
+                `${total} job${total !== 1 ? 's' : ''}`;
 
             const tbody = document.getElementById('jobsBody');
 
-            if (filtered.length === 0) {
+            if (total === 0) {
                 tbody.innerHTML = `
-                    <tr><td colspan="6" class="empty-state">
+                    <tr><td colspan="7" class="empty-state">
                         <span class="icon">📭</span>
                         <p style="font-weight: 600; color: #1a2a6c; margin-bottom: 8px;">No jobs found</p>
                         <p style="font-size: 0.88rem;">Try adjusting your filters or search terms</p>
                     </td></tr>
                 `;
-                return;
+            } else {
+                tbody.innerHTML = pageJobs.map(job => `
+                    <tr onclick="window.location.href='job-details.html?job=${job.id}'">
+                        <td class="job-id">#${escapeHtml(job.jobId || job.id.slice(0, 6).toUpperCase())}</td>
+                        <td class="job-title">
+                            ${escapeHtml(job.title || 'Untitled')}
+                            <small>Click for more information...</small>
+                        </td>
+                        <td class="company-cell">${escapeHtml(job.company || '-')}</td>
+                        <td><span class="category-badge">${escapeHtml(CATEGORY_MAP[job.category] || job.category || 'Other')}</span></td>
+                        <td>${escapeHtml(job.location || 'Pakistan')}</td>
+                        <td class="salary-cell">${escapeHtml(formatSalary(job))}</td>
+                        <td>
+                            <button class="apply-btn" onclick="event.stopPropagation(); window.location.href='job-details.html?job=${job.id}'">
+                                Apply
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
             }
 
-            tbody.innerHTML = filtered.map(job => `
-                <tr onclick="window.location.href='job-details.html?job=${job.id}'">
-                    <td class="job-id">#${escapeHtml(job.jobId || job.id.slice(0, 6).toUpperCase())}</td>
-                    <td class="job-title">
-                        ${escapeHtml(job.title || 'Untitled')}
-                        <small>Click for more information...</small>
-                    </td>
-                    <td class="company-cell">${escapeHtml(job.company || '-')}</td>
-                    <td><span class="category-badge">${formatCat(job.category)}</span></td>
-                    <td>${escapeHtml(job.location || 'Pakistan')}</td>
-                    <td>
-                        <button class="apply-btn" onclick="event.stopPropagation(); window.location.href='job-details.html?job=${job.id}'">
-                            Apply
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+            // Pagination info
+            const showingFrom = total === 0 ? 0 : start + 1;
+            const showingTo = Math.min(end, total);
+            document.getElementById('paginationInfo').textContent =
+                total === 0 ? 'No jobs to show' : `Showing ${showingFrom}-${showingTo} of ${total} jobs`;
+
+            renderPagination(totalPages);
+        }
+
+        // ===== Pagination =====
+        function renderPagination(totalPages) {
+            const controls = document.getElementById('paginationControls');
+            controls.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Prev
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.textContent = '‹ Prev';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => { currentPage--; renderPage(); };
+            controls.appendChild(prevBtn);
+
+            // Page numbers (with smart ellipsis)
+            const pages = getPageNumbers(currentPage, totalPages);
+            pages.forEach(p => {
+                if (p === '...') {
+                    const span = document.createElement('span');
+                    span.textContent = '...';
+                    span.style.padding = '0 6px';
+                    span.style.color = '#888';
+                    controls.appendChild(span);
+                } else {
+                    const btn = document.createElement('button');
+                    btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+                    btn.textContent = p;
+                    btn.onclick = () => { currentPage = p; renderPage(); };
+                    controls.appendChild(btn);
+                }
+            });
+
+            // Next
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.textContent = 'Next ›';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => { currentPage++; renderPage(); };
+            controls.appendChild(nextBtn);
+        }
+
+        function getPageNumbers(current, total) {
+            const delta = 2;
+            const range = [];
+            const rangeWithDots = [];
+            let l;
+
+            for (let i = 1; i <= total; i++) {
+                if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
+                    range.push(i);
+                }
+            }
+
+            range.forEach(i => {
+                if (l) {
+                    if (i - l === 2) {
+                        rangeWithDots.push(l + 1);
+                    } else if (i - l !== 1) {
+                        rangeWithDots.push('...');
+                    }
+                }
+                rangeWithDots.push(i);
+                l = i;
+            });
+
+            return rangeWithDots;
+        }
+
+        // ===== Helpers =====
+        function formatSalary(job) {
+            if (job.salary) return job.salary;
+            const min = Number(job.salaryMin) || 0;
+            const max = Number(job.salaryMax) || 0;
+            const period = job.salaryPeriod || 'Monthly';
+            if (min && max) return `${min.toLocaleString()}-${max.toLocaleString()} ${period}`;
+            if (min) return `From ${min.toLocaleString()} ${period}`;
+            if (max) return `Up to ${max.toLocaleString()} ${period}`;
+            return 'Negotiable';
         }
 
         function escapeHtml(str) {
@@ -526,46 +927,69 @@
             })[c]);
         }
 
-        function formatCat(c) {
-            if (!c) return 'Other';
-            const map = {
-                'it': 'IT & Software',
-                'sales': 'Sales & Marketing',
-                'finance': 'Accounting & Finance',
-                'hr': 'HR & Admin',
-                'engineering': 'Engineering',
-                'education': 'Education',
-                'healthcare': 'Healthcare',
-                'construction': 'Construction',
-                'transport': 'Transport & Driver',
-                'security': 'Security',
-                'hospitality': 'Hospitality',
-                'retail': 'Retail',
-                'manufacturing': 'Manufacturing',
-                'textile': 'Textile',
-                'telecom': 'Telecom',
-                'other': 'Other'
-            };
-            return map[c] || c.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        // ===== Salary Slider =====
+        const salarySlider = document.getElementById('salarySlider');
+        const salarySummary = document.getElementById('salarySummary');
+        const salaryMinInput = document.getElementById('salaryMin');
+        const salaryMaxInput = document.getElementById('salaryMax');
+
+        function updateSalarySummary() {
+            const min = Number(salaryMinInput.value) || 0;
+            const max = Number(salaryMaxInput.value) || 0;
+            if (min && max) salarySummary.textContent = `${min.toLocaleString()} - ${max.toLocaleString()} PKR`;
+            else if (min) salarySummary.textContent = `From ${min.toLocaleString()} PKR`;
+            else if (max) salarySummary.textContent = `Up to ${max.toLocaleString()} PKR`;
+            else salarySummary.textContent = 'Any salary';
         }
 
+        salarySlider.addEventListener('input', () => {
+            salaryMaxInput.value = salarySlider.value;
+            updateSalarySummary();
+            applyFilters();
+        });
+
+        salaryMinInput.addEventListener('input', () => {
+            updateSalarySummary();
+            applyFilters();
+        });
+
+        salaryMaxInput.addEventListener('input', () => {
+            salarySlider.value = salaryMaxInput.value;
+            updateSalarySummary();
+            applyFilters();
+        });
+
+        // ===== Clear Filters =====
         window.clearFilters = function() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('filterCompany').value = '';
-            document.getElementById('filterLocation').value = '';
-            document.getElementById('filterCategory').value = '';
-            document.getElementById('filterType').value = '';
-            renderJobs();
+            ['filterCompany', 'filterLocation', 'filterCategory', 'filterType'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.disabled) el.value = '';
+            });
+            salaryMinInput.value = '';
+            salaryMaxInput.value = '';
+            salarySlider.value = salarySlider.max;
+            updateSalarySummary();
+            applyFilters();
         };
 
+        // ===== Event Listeners =====
         ['searchInput', 'filterCompany', 'filterLocation', 'filterCategory', 'filterType'].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', renderJobs);
+                el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', applyFilters);
             }
         });
 
-        loadJobs();
+        document.getElementById('perPageSelect').addEventListener('change', (e) => {
+            perPage = Number(e.target.value);
+            currentPage = 1;
+            renderPage();
+        });
+
+        // ===== Init =====
+        updateSalarySummary();
+        loadData();
     </script>
 
 </body>
