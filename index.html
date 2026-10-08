@@ -46,7 +46,7 @@
             width: 100%;
         }
 
-        /* ===== Filters Sidebar (Full Left) ===== */
+        /* ===== Filters Sidebar ===== */
         .filters-sidebar {
             background: white;
             border-right: 1px solid #eef1f5;
@@ -79,7 +79,7 @@
 
         .filters-sidebar h3 .reset-link:hover { text-decoration: underline; }
 
-        .filter-group { margin-bottom: 16px; }
+        .filter-group { margin-bottom: 18px; }
 
         .filter-group label {
             display: block;
@@ -90,7 +90,6 @@
         }
 
         .filter-group select,
-        .filter-group input[type="text"],
         .filter-group input[type="number"] {
             width: 100%;
             padding: 9px 12px;
@@ -102,25 +101,18 @@
             font-family: inherit;
             color: #333;
             transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .filter-group select:hover,
+        .filter-group input[type="number"]:hover {
+            border-color: #1a2a6c;
         }
 
         .filter-group select:focus,
         .filter-group input:focus {
             border-color: #1a2a6c;
             background: white;
-        }
-
-        .filter-group select:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-            background: #f5f5f5;
-        }
-
-        .filter-hint {
-            font-size: 0.7rem;
-            color: #999;
-            margin-top: 4px;
-            font-style: italic;
         }
 
         /* Salary Range */
@@ -444,7 +436,6 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Footer (Tail End) */
         footer {
             background: #0f1a4a;
             color: white;
@@ -507,7 +498,7 @@
 
         <div class="main-layout">
 
-            <!-- Filters Sidebar (Full Left) -->
+            <!-- Filters Sidebar -->
             <aside class="filters-sidebar">
                 <h3>
                     🔧 Filters
@@ -516,40 +507,36 @@
 
                 <div class="filter-group">
                     <label>🏢 Company</label>
-                    <select id="filterCompany" disabled>
-                        <option value="">Loading...</option>
+                    <select id="filterCompany">
+                        <option value="">All Companies</option>
                     </select>
-                    <div class="filter-hint">Registered companies only</div>
                 </div>
 
                 <div class="filter-group">
                     <label>🗺️ Province</label>
-                    <select id="filterProvince" disabled>
-                        <option value="">Loading...</option>
+                    <select id="filterProvince">
+                        <option value="">All Provinces</option>
                     </select>
-                    <div class="filter-hint">Where companies are located</div>
                 </div>
 
                 <div class="filter-group">
                     <label>📍 City / District</label>
-                    <select id="filterCity" disabled>
-                        <option value="">Loading...</option>
+                    <select id="filterCity">
+                        <option value="">All Cities</option>
                     </select>
-                    <div class="filter-hint">Cities from registered companies</div>
                 </div>
 
                 <div class="filter-group">
                     <label>📂 Category</label>
-                    <select id="filterCategory" disabled>
-                        <option value="">Loading...</option>
+                    <select id="filterCategory">
+                        <option value="">All Categories</option>
                     </select>
-                    <div class="filter-hint">Only categories with jobs</div>
                 </div>
 
                 <div class="filter-group">
                     <label>💼 Job Type</label>
-                    <select id="filterType" disabled>
-                        <option value="">Loading...</option>
+                    <select id="filterType">
+                        <option value="">All Types</option>
                     </select>
                 </div>
 
@@ -652,7 +639,6 @@
         let currentPage = 1;
         let perPage = 10;
 
-        // ===== Category Display Names =====
         const CATEGORY_MAP = {
             'it': 'IT & Software',
             'sales': 'Sales & Marketing',
@@ -684,12 +670,12 @@
         // ===== Load Data =====
         async function loadData() {
             try {
-                // Load jobs
+                // Jobs
                 const jobsSnap = await getDocs(collection(db, "jobs"));
                 allJobs = [];
                 jobsSnap.forEach(d => allJobs.push({ id: d.id, ...d.data() }));
 
-                // Load users (employers)
+                // Users (employers)
                 try {
                     const usersSnap = await getDocs(collection(db, "users"));
                     allUsers = [];
@@ -713,16 +699,15 @@
             }
         }
 
-        // ===== Build Filters (with NO duplication) =====
+        // ===== Build Filters (no disabled, no hints) =====
         function buildFilters() {
-            // ===== 1. COMPANIES (from registered employers) =====
+            // 1. Companies (from registered employers)
             const companySet = new Set();
             allUsers.forEach(u => {
                 if (u.role === 'employer' && u.company && u.company.trim()) {
                     companySet.add(u.company.trim());
                 }
             });
-            // Fallback: if no registered employers, use jobs
             if (companySet.size === 0) {
                 allJobs.forEach(j => {
                     if (j.company) companySet.add(j.company.trim());
@@ -730,7 +715,7 @@
             }
             populateSelect('filterCompany', [...companySet].sort(), 'All Companies');
 
-            // ===== 2. PROVINCES (from registered employers) =====
+            // 2. Provinces
             const provinceSet = new Set();
             allUsers.forEach(u => {
                 if (u.role === 'employer' && u.province && u.province.trim()) {
@@ -739,7 +724,7 @@
             });
             populateSelect('filterProvince', [...provinceSet].sort(), 'All Provinces');
 
-            // ===== 3. CITIES (from registered employers + jobs) =====
+            // 3. Cities
             const citySet = new Set();
             allUsers.forEach(u => {
                 if (u.role === 'employer' && u.city && u.city.trim()) {
@@ -753,7 +738,7 @@
             });
             populateSelect('filterCity', [...citySet].sort(), 'All Cities');
 
-            // ===== 4. CATEGORIES (from jobs) =====
+            // 4. Categories
             const categorySet = new Set();
             allJobs.forEach(j => {
                 if (j.category) categorySet.add(j.category);
@@ -763,7 +748,7 @@
             });
             populateSelectWithLabels('filterCategory', categories, 'All Categories', CATEGORY_MAP);
 
-            // ===== 5. JOB TYPES (from jobs) =====
+            // 5. Job Types
             const typeSet = new Set();
             allJobs.forEach(j => {
                 if (j.type) typeSet.add(j.type);
@@ -777,35 +762,23 @@
         function populateSelect(id, values, allText) {
             const sel = document.getElementById(id);
             sel.innerHTML = `<option value="">${allText}</option>`;
-            if (values.length === 0) {
-                sel.innerHTML += `<option value="" disabled>No data yet</option>`;
-                sel.disabled = true;
-                return;
-            }
             values.forEach(v => {
                 const opt = document.createElement('option');
                 opt.value = v;
                 opt.textContent = v;
                 sel.appendChild(opt);
             });
-            sel.disabled = false;
         }
 
         function populateSelectWithLabels(id, values, allText, labelMap) {
             const sel = document.getElementById(id);
             sel.innerHTML = `<option value="">${allText}</option>`;
-            if (values.length === 0) {
-                sel.innerHTML += `<option value="" disabled>No data yet</option>`;
-                sel.disabled = true;
-                return;
-            }
             values.forEach(v => {
                 const opt = document.createElement('option');
                 opt.value = v;
                 opt.textContent = labelMap[v] || v;
                 sel.appendChild(opt);
             });
-            sel.disabled = false;
         }
 
         // ===== Apply Filters =====
@@ -829,14 +802,12 @@
                 const matchCat = !catFilter || j.category === catFilter;
                 const matchType = !typeFilter || j.type === typeFilter;
 
-                // Province match: find employer by job's employerId
                 let matchProvince = true;
                 if (provinceFilter) {
                     const emp = allUsers.find(u => u.uid === j.employerId);
                     matchProvince = emp && emp.province === provinceFilter;
                 }
 
-                // Salary match
                 let matchSalary = true;
                 const jMin = Number(j.salaryMin) || 0;
                 const jMax = Number(j.salaryMax) || Number.MAX_SAFE_INTEGER;
@@ -853,7 +824,6 @@
             renderPage();
         }
 
-        // ===== Render Page =====
         function renderPage() {
             const total = filteredJobs.length;
             const totalPages = Math.max(1, Math.ceil(total / perPage));
@@ -873,7 +843,7 @@
                     <tr><td colspan="7" class="empty-state">
                         <span class="icon">📭</span>
                         <p style="font-weight: 600; color: #1a2a6c; margin-bottom: 8px;">No jobs found</p>
-                        <p style="font-size: 0.88rem;">Try adjusting your filters or search terms</p>
+                        <p style="font-size: 0.88rem;">Check back soon for new opportunities</p>
                     </td></tr>
                 `;
             } else {
@@ -984,7 +954,7 @@
             })[c]);
         }
 
-        // ===== Salary Slider =====
+        // ===== Salary =====
         const salarySlider = document.getElementById('salarySlider');
         const salarySummary = document.getElementById('salarySummary');
         const salaryMinInput = document.getElementById('salaryMin');
@@ -1016,12 +986,11 @@
             applyFilters();
         });
 
-        // ===== Clear Filters =====
         window.clearFilters = function() {
             document.getElementById('searchInput').value = '';
             ['filterCompany', 'filterProvince', 'filterCity', 'filterCategory', 'filterType'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el && !el.disabled) el.value = '';
+                if (el) el.value = '';
             });
             salaryMinInput.value = '';
             salaryMaxInput.value = '';
@@ -1041,7 +1010,6 @@
             renderPage();
         });
 
-        // ===== Init =====
         updateSalarySummary();
         loadData();
     </script>
