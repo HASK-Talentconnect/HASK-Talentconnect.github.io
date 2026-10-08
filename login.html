@@ -24,7 +24,7 @@
             flex-direction: column;
         }
 
-        /* ===== Navbar (same as index) ===== */
+        /* ===== Navbar ===== */
         .navbar {
             background: #1a2a6c;
             padding: 12px 30px;
@@ -76,58 +76,39 @@
             transform: scale(1.04);
         }
 
-        /* ===== Page Banner ===== */
-        .page-banner {
-            background: #1a2a6c;
-            color: white;
-            padding: 35px 30px 40px;
-            text-align: center;
-        }
-
-        .page-banner h1 {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
-        }
-
-        .page-banner p {
-            opacity: 0.9;
-            font-size: 0.95rem;
-        }
-
-        /* ===== Auth Wrapper ===== */
+        /* ===== Auth Wrapper (compact) ===== */
         .auth-wrap {
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 40px 20px 60px;
+            align-items: center;
+            padding: 25px 15px;
             background: #f5f7fa;
         }
 
         .auth-card {
             background: white;
             border-radius: 12px;
-            padding: 35px 30px;
+            padding: 28px 30px 26px;
             width: 100%;
-            max-width: 440px;
+            max-width: 420px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.08);
             border: 1px solid #eef1f5;
         }
 
         .auth-logo {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: bold;
             color: #1a2a6c;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .auth-sub {
             text-align: center;
             color: #888;
-            font-size: 0.88rem;
-            margin-bottom: 22px;
+            font-size: 0.82rem;
+            margin-bottom: 16px;
         }
 
         .tabs {
@@ -135,7 +116,7 @@
             background: #f0f2f8;
             border-radius: 50px;
             padding: 4px;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
         }
 
         .tab-btn {
@@ -143,11 +124,11 @@
             background: transparent;
             border: none;
             color: #666;
-            padding: 10px;
+            padding: 9px;
             cursor: pointer;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             transition: 0.2s;
             font-family: inherit;
         }
@@ -157,12 +138,12 @@
             color: white;
         }
 
-        .form-group { margin-bottom: 14px; }
+        .form-group { margin-bottom: 11px; }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
             color: #444;
             font-weight: 500;
         }
@@ -171,19 +152,19 @@
 
         .form-group input {
             width: 100%;
-            padding: 12px 42px 12px 14px;
+            padding: 10px 40px 10px 12px;
             border: 1.5px solid #dfe3ec;
             background: #fafbfc;
             border-radius: 8px;
             color: #222;
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             outline: none;
             transition: 0.2s;
             font-family: inherit;
             box-sizing: border-box;
         }
 
-        .form-group input::placeholder { color: #aaa; }
+        .form-group input::placeholder { color: #aaa; font-size: 0.82rem; }
 
         .form-group input:focus {
             border-color: #1a2a6c;
@@ -192,13 +173,13 @@
 
         .toggle-pw {
             position: absolute;
-            right: 10px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             padding: 4px;
             color: #888;
         }
@@ -207,14 +188,14 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .role-option {
             background: #fafbfc;
             border: 2px solid #dfe3ec;
             border-radius: 8px;
-            padding: 10px 6px;
+            padding: 8px 6px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
@@ -228,29 +209,29 @@
         }
 
         .role-option .icon {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             display: block;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .role-option span {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #333;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 13px;
+            padding: 11px;
             background: #1a2a6c;
             border: none;
             border-radius: 8px;
             color: white;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
-            margin-top: 6px;
+            margin-top: 4px;
             font-family: inherit;
         }
 
@@ -265,10 +246,10 @@
             display: block;
             text-align: right;
             color: #29b6f6;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-decoration: none;
-            margin-top: -6px;
-            margin-bottom: 10px;
+            margin-top: -4px;
+            margin-bottom: 8px;
             font-weight: 500;
         }
 
@@ -276,8 +257,8 @@
 
         .auth-footer {
             text-align: center;
-            margin-top: 18px;
-            font-size: 0.85rem;
+            margin-top: 12px;
+            font-size: 0.8rem;
             color: #666;
         }
 
@@ -292,18 +273,18 @@
 
         .code-input {
             text-align: center;
-            font-size: 1.6rem;
-            letter-spacing: 8px;
+            font-size: 1.5rem;
+            letter-spacing: 6px;
             font-family: monospace;
             font-weight: bold;
-            padding: 12px !important;
+            padding: 10px !important;
         }
 
         .message-box {
-            padding: 12px 16px;
+            padding: 9px 14px;
             border-radius: 8px;
-            font-size: 0.88rem;
-            margin-bottom: 15px;
+            font-size: 0.82rem;
+            margin-bottom: 10px;
             display: none;
             text-align: center;
             font-weight: 500;
@@ -319,20 +300,29 @@
             background: #0f1a4a;
             color: white;
             text-align: center;
-            padding: 22px 20px;
+            padding: 18px 20px;
             margin-top: auto;
             flex-shrink: 0;
         }
 
-        footer p { opacity: 0.75; font-size: 0.85rem; margin: 0; }
+        footer p { opacity: 0.75; font-size: 0.82rem; margin: 0; }
 
         @media (max-width: 600px) {
             .navbar { padding: 12px 15px; flex-direction: column; gap: 10px; }
             .navbar .menu { flex-wrap: wrap; justify-content: center; gap: 12px; }
-            .page-banner { padding: 25px 15px; }
-            .page-banner h1 { font-size: 1.4rem; }
-            .auth-wrap { padding: 25px 15px 40px; }
-            .auth-card { padding: 25px 20px; }
+            .auth-wrap { padding: 15px 12px; }
+            .auth-card { padding: 22px 20px; }
+            .auth-logo { font-size: 1.2rem; }
+        }
+
+        @media (max-height: 700px) {
+            .auth-card { padding: 20px 25px; }
+            .auth-logo { font-size: 1.2rem; margin-bottom: 2px; }
+            .auth-sub { margin-bottom: 12px; }
+            .tabs { margin-bottom: 12px; }
+            .form-group { margin-bottom: 9px; }
+            .form-group input { padding: 9px 38px 9px 11px; font-size: 0.85rem; }
+            .btn-submit { padding: 10px; font-size: 0.88rem; }
         }
     </style>
 </head>
@@ -340,7 +330,6 @@
 
     <div class="page-wrapper">
 
-        <!-- Navbar (same as index) -->
         <nav class="navbar">
             <div class="logo">HASK TalentConnect</div>
             <ul class="menu">
@@ -351,13 +340,6 @@
             </ul>
         </nav>
 
-        <!-- Page Banner -->
-        <div class="page-banner">
-            <h1>Welcome to HASK TalentConnect</h1>
-            <p>Login or create your free account to get started</p>
-        </div>
-
-        <!-- Auth Card -->
         <div class="auth-wrap">
             <div class="auth-card">
                 <div class="auth-logo">HASK TalentConnect</div>
@@ -370,7 +352,7 @@
 
                 <div id="messageBox" class="message-box"></div>
 
-                <!-- ===== LOGIN ===== -->
+                <!-- LOGIN -->
                 <div id="login-form" class="form-section active">
                     <form onsubmit="handleLogin(event)">
                         <div class="form-group">
@@ -393,7 +375,7 @@
                     </p>
                 </div>
 
-                <!-- ===== SIGNUP ===== -->
+                <!-- SIGNUP -->
                 <div id="signup-form" class="form-section">
                     <form onsubmit="handleSignupStart(event)">
                         <div class="form-group">
@@ -439,10 +421,10 @@
                     </p>
                 </div>
 
-                <!-- ===== VERIFY ===== -->
+                <!-- VERIFY -->
                 <div id="verify-form" class="form-section">
-                    <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 6px; font-size: 1.15rem;">Verify Your Email</h3>
-                    <p style="text-align: center; color: #666; font-size: 0.85rem; margin-bottom: 18px;">
+                    <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 5px; font-size: 1.05rem;">Verify Your Email</h3>
+                    <p style="text-align: center; color: #666; font-size: 0.82rem; margin-bottom: 14px;">
                         We sent a 6-digit code to<br>
                         <strong id="verifyEmail" style="color: #1a2a6c;"></strong>
                     </p>
@@ -465,7 +447,6 @@
 
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
     </footer>
