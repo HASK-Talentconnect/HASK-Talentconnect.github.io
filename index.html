@@ -6,10 +6,7 @@
     <title>HASK TalentConnect - Find Jobs in Pakistan</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ===== Page Layout ===== */
-        html, body {
-            height: 100%;
-        }
+        html, body { height: 100%; }
 
         body {
             display: flex;
@@ -23,7 +20,6 @@
             flex-direction: column;
         }
 
-        /* ===== Page Banner ===== */
         .page-banner {
             background: #1a2a6c;
             color: white;
@@ -42,7 +38,6 @@
             font-size: 0.95rem;
         }
 
-        /* ===== Full-Width Layout ===== */
         .main-layout {
             flex: 1;
             display: grid;
@@ -70,8 +65,19 @@
             border-bottom: 2px solid #eef1f5;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 8px;
         }
+
+        .filters-sidebar h3 .reset-link {
+            font-size: 0.72rem;
+            color: #dc3545;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .filters-sidebar h3 .reset-link:hover { text-decoration: underline; }
 
         .filter-group { margin-bottom: 16px; }
 
@@ -171,7 +177,7 @@
 
         .btn-clear:hover { background: #dc3545; color: white; }
 
-        /* ===== Jobs Panel (Wide) ===== */
+        /* ===== Jobs Panel ===== */
         .jobs-panel {
             background: #f5f7fa;
             padding: 20px 22px;
@@ -209,7 +215,6 @@
             font-weight: 600;
         }
 
-        /* Search + Per Page */
         .search-row {
             padding: 14px 22px;
             background: #fafbfc;
@@ -260,7 +265,6 @@
             color: #333;
         }
 
-        /* ===== Table ===== */
         .table-wrap { overflow-x: auto; }
 
         .jobs-table {
@@ -354,7 +358,7 @@
 
         .jobs-table .apply-btn:hover { background: #0288d1; }
 
-        /* ===== Pagination ===== */
+        /* Pagination */
         .pagination-wrap {
             padding: 14px 22px;
             background: #fafbfc;
@@ -375,6 +379,7 @@
             display: flex;
             gap: 5px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .page-btn {
@@ -409,7 +414,6 @@
             cursor: not-allowed;
         }
 
-        /* ===== Empty / Loading ===== */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -440,7 +444,7 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ===== Footer (Tail End) ===== */
+        /* Footer (Tail End) */
         footer {
             background: #0f1a4a;
             color: white;
@@ -455,7 +459,6 @@
             font-size: 0.85rem;
         }
 
-        /* ===== Responsive ===== */
         @media (max-width: 1000px) {
             .main-layout { grid-template-columns: 260px 1fr; }
             .filters-sidebar { padding: 18px 15px; }
@@ -487,7 +490,6 @@
 
     <div class="page-wrapper">
 
-        <!-- Navbar -->
         <nav class="navbar">
             <div class="logo">HASK TalentConnect</div>
             <ul class="menu">
@@ -499,37 +501,46 @@
             </ul>
         </nav>
 
-        <!-- Page Banner -->
         <div class="page-banner">
             <h1>Find Your Dream Job in Pakistan</h1>
             <p>Thousands of opportunities from top employers across the country</p>
         </div>
 
-        <!-- Main Layout -->
         <div class="main-layout">
 
-            <!-- ===== Filters Sidebar (Full Left) ===== -->
+            <!-- Filters Sidebar (Full Left) -->
             <aside class="filters-sidebar">
-                <h3>🔧 Filters</h3>
+                <h3>
+                    🔧 Filters
+                    <a href="#" class="reset-link" onclick="clearFilters(); return false;">Reset</a>
+                </h3>
 
                 <div class="filter-group">
-                    <label>Company</label>
+                    <label>🏢 Company</label>
                     <select id="filterCompany" disabled>
                         <option value="">Loading...</option>
                     </select>
-                    <div class="filter-hint">Only registered companies</div>
+                    <div class="filter-hint">Registered companies only</div>
                 </div>
 
                 <div class="filter-group">
-                    <label>Location</label>
-                    <select id="filterLocation" disabled>
+                    <label>🗺️ Province</label>
+                    <select id="filterProvince" disabled>
                         <option value="">Loading...</option>
                     </select>
-                    <div class="filter-hint">Based on active jobs</div>
+                    <div class="filter-hint">Where companies are located</div>
                 </div>
 
                 <div class="filter-group">
-                    <label>Category</label>
+                    <label>📍 City / District</label>
+                    <select id="filterCity" disabled>
+                        <option value="">Loading...</option>
+                    </select>
+                    <div class="filter-hint">Cities from registered companies</div>
+                </div>
+
+                <div class="filter-group">
+                    <label>📂 Category</label>
                     <select id="filterCategory" disabled>
                         <option value="">Loading...</option>
                     </select>
@@ -537,7 +548,7 @@
                 </div>
 
                 <div class="filter-group">
-                    <label>Job Type</label>
+                    <label>💼 Job Type</label>
                     <select id="filterType" disabled>
                         <option value="">Loading...</option>
                     </select>
@@ -563,7 +574,7 @@
                 <button class="btn-clear" onclick="clearFilters()">Clear All Filters</button>
             </aside>
 
-            <!-- ===== Jobs Panel (Wide) ===== -->
+            <!-- Jobs Panel -->
             <main class="jobs-panel">
                 <div class="jobs-panel-inner">
 
@@ -572,7 +583,6 @@
                         <span class="count" id="jobsCount">Loading...</span>
                     </div>
 
-                    <!-- Search + Per Page -->
                     <div class="search-row">
                         <input type="text" id="searchInput" placeholder="🔍 Search job title, company, or keyword...">
                         <div class="per-page-wrap">
@@ -586,7 +596,6 @@
                         </div>
                     </div>
 
-                    <!-- Table -->
                     <div class="table-wrap">
                         <table class="jobs-table">
                             <thead>
@@ -606,7 +615,6 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
                     <div class="pagination-wrap">
                         <div class="pagination-info" id="paginationInfo">Loading...</div>
                         <div class="pagination-controls" id="paginationControls"></div>
@@ -619,7 +627,6 @@
 
     </div>
 
-    <!-- ===== Footer (Tail End) ===== -->
     <footer>
         <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
     </footer>
@@ -641,10 +648,12 @@
         const db = getFirestore(app);
 
         let allJobs = [];
+        let allUsers = [];
         let filteredJobs = [];
         let currentPage = 1;
         let perPage = 10;
 
+        // ===== Category Display Names =====
         const CATEGORY_MAP = {
             'it': 'IT & Software',
             'sales': 'Sales & Marketing',
@@ -664,12 +673,32 @@
             'other': 'Other'
         };
 
+        const TYPE_MAP = {
+            'full-time': 'Full Time',
+            'part-time': 'Part Time',
+            'contract': 'Contract',
+            'daily-wages': 'Daily Wages',
+            'internship': 'Internship',
+            'work-from-home': 'Work from Home'
+        };
+
         // ===== Load Data =====
         async function loadData() {
             try {
+                // Load jobs
                 const jobsSnap = await getDocs(collection(db, "jobs"));
                 allJobs = [];
                 jobsSnap.forEach(d => allJobs.push({ id: d.id, ...d.data() }));
+
+                // Load users (employers)
+                try {
+                    const usersSnap = await getDocs(collection(db, "users"));
+                    allUsers = [];
+                    usersSnap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.warn('users fetch failed:', e.message);
+                    allUsers = [];
+                }
 
                 buildFilters();
                 applyFilters();
@@ -685,42 +714,72 @@
             }
         }
 
-        // ===== Build Filters =====
+        // ===== Build Filters (with NO duplication) =====
         function buildFilters() {
+            // ===== 1. COMPANIES (from registered employers) =====
             const companySet = new Set();
-            allJobs.forEach(j => { if (j.company) companySet.add(j.company.trim()); });
+            allUsers.forEach(u => {
+                if (u.role === 'employer' && u.company && u.company.trim()) {
+                    companySet.add(u.company.trim());
+                }
+            });
+            // Fallback: if no registered employers, use jobs
+            if (companySet.size === 0) {
+                allJobs.forEach(j => {
+                    if (j.company) companySet.add(j.company.trim());
+                });
+            }
             populateSelect('filterCompany', [...companySet].sort(), 'All Companies');
 
-            const locationSet = new Set();
-            allJobs.forEach(j => { if (j.location) locationSet.add(j.location.trim()); });
-            populateSelect('filterLocation', [...locationSet].sort(), 'All Locations');
+            // ===== 2. PROVINCES (from registered employers) =====
+            const provinceSet = new Set();
+            allUsers.forEach(u => {
+                if (u.role === 'employer' && u.province && u.province.trim()) {
+                    provinceSet.add(u.province.trim());
+                }
+            });
+            populateSelect('filterProvince', [...provinceSet].sort(), 'All Provinces');
 
+            // ===== 3. CITIES (from registered employers + jobs) =====
+            const citySet = new Set();
+            allUsers.forEach(u => {
+                if (u.role === 'employer' && u.city && u.city.trim()) {
+                    citySet.add(u.city.trim());
+                }
+            });
+            allJobs.forEach(j => {
+                if (j.location && j.location.trim()) {
+                    citySet.add(j.location.trim());
+                }
+            });
+            populateSelect('filterCity', [...citySet].sort(), 'All Cities');
+
+            // ===== 4. CATEGORIES (from jobs) =====
             const categorySet = new Set();
-            allJobs.forEach(j => { if (j.category) categorySet.add(j.category); });
+            allJobs.forEach(j => {
+                if (j.category) categorySet.add(j.category);
+            });
             const categories = [...categorySet].sort((a, b) => {
                 return (CATEGORY_MAP[a] || a).localeCompare(CATEGORY_MAP[b] || b);
             });
             populateSelectWithLabels('filterCategory', categories, 'All Categories', CATEGORY_MAP);
 
+            // ===== 5. JOB TYPES (from jobs) =====
             const typeSet = new Set();
-            allJobs.forEach(j => { if (j.type) typeSet.add(j.type); });
-            const types = [...typeSet].sort();
-            const typeMap = {
-                'full-time': 'Full Time',
-                'part-time': 'Part Time',
-                'contract': 'Contract',
-                'daily-wages': 'Daily Wages',
-                'internship': 'Internship',
-                'work-from-home': 'Work from Home'
-            };
-            populateSelectWithLabels('filterType', types, 'All Types', typeMap);
+            allJobs.forEach(j => {
+                if (j.type) typeSet.add(j.type);
+            });
+            const types = [...typeSet].sort((a, b) => {
+                return (TYPE_MAP[a] || a).localeCompare(TYPE_MAP[b] || b);
+            });
+            populateSelectWithLabels('filterType', types, 'All Types', TYPE_MAP);
         }
 
         function populateSelect(id, values, allText) {
             const sel = document.getElementById(id);
             sel.innerHTML = `<option value="">${allText}</option>`;
             if (values.length === 0) {
-                sel.innerHTML += `<option value="" disabled>No data</option>`;
+                sel.innerHTML += `<option value="" disabled>No data yet</option>`;
                 sel.disabled = true;
                 return;
             }
@@ -737,7 +796,7 @@
             const sel = document.getElementById(id);
             sel.innerHTML = `<option value="">${allText}</option>`;
             if (values.length === 0) {
-                sel.innerHTML += `<option value="" disabled>No data</option>`;
+                sel.innerHTML += `<option value="" disabled>No data yet</option>`;
                 sel.disabled = true;
                 return;
             }
@@ -754,7 +813,8 @@
         function applyFilters() {
             const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
             const companyFilter = document.getElementById('filterCompany').value;
-            const locFilter = document.getElementById('filterLocation').value;
+            const provinceFilter = document.getElementById('filterProvince').value;
+            const cityFilter = document.getElementById('filterCity').value;
             const catFilter = document.getElementById('filterCategory').value;
             const typeFilter = document.getElementById('filterType').value;
             const salaryMin = Number(document.getElementById('salaryMin').value) || 0;
@@ -766,9 +826,16 @@
                     (j.company || '').toLowerCase().includes(search) ||
                     (j.description || '').toLowerCase().includes(search);
                 const matchCompany = !companyFilter || j.company === companyFilter;
-                const matchLoc = !locFilter || j.location === locFilter;
+                const matchCity = !cityFilter || j.location === cityFilter;
                 const matchCat = !catFilter || j.category === catFilter;
                 const matchType = !typeFilter || j.type === typeFilter;
+
+                // Province match: find employer by job's employerId
+                let matchProvince = true;
+                if (provinceFilter) {
+                    const emp = allUsers.find(u => u.uid === j.employerId);
+                    matchProvince = emp && emp.province === provinceFilter;
+                }
 
                 // Salary match
                 let matchSalary = true;
@@ -777,7 +844,8 @@
                 if (salaryMin > 0 && jMax < salaryMin) matchSalary = false;
                 if (salaryMax > 0 && jMin > salaryMax) matchSalary = false;
 
-                return matchSearch && matchCompany && matchLoc && matchCat && matchType && matchSalary;
+                return matchSearch && matchCompany && matchCity && matchCat &&
+                       matchType && matchProvince && matchSalary;
             });
 
             filteredJobs.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
@@ -830,7 +898,6 @@
                 `).join('');
             }
 
-            // Pagination info
             const showingFrom = total === 0 ? 0 : start + 1;
             const showingTo = Math.min(end, total);
             document.getElementById('paginationInfo').textContent =
@@ -839,14 +906,11 @@
             renderPagination(totalPages);
         }
 
-        // ===== Pagination =====
         function renderPagination(totalPages) {
             const controls = document.getElementById('paginationControls');
             controls.innerHTML = '';
-
             if (totalPages <= 1) return;
 
-            // Prev
             const prevBtn = document.createElement('button');
             prevBtn.className = 'page-btn';
             prevBtn.textContent = '‹ Prev';
@@ -854,7 +918,6 @@
             prevBtn.onclick = () => { currentPage--; renderPage(); };
             controls.appendChild(prevBtn);
 
-            // Page numbers (with smart ellipsis)
             const pages = getPageNumbers(currentPage, totalPages);
             pages.forEach(p => {
                 if (p === '...') {
@@ -872,7 +935,6 @@
                 }
             });
 
-            // Next
             const nextBtn = document.createElement('button');
             nextBtn.className = 'page-btn';
             nextBtn.textContent = 'Next ›';
@@ -895,11 +957,8 @@
 
             range.forEach(i => {
                 if (l) {
-                    if (i - l === 2) {
-                        rangeWithDots.push(l + 1);
-                    } else if (i - l !== 1) {
-                        rangeWithDots.push('...');
-                    }
+                    if (i - l === 2) rangeWithDots.push(l + 1);
+                    else if (i - l !== 1) rangeWithDots.push('...');
                 }
                 rangeWithDots.push(i);
                 l = i;
@@ -908,7 +967,6 @@
             return rangeWithDots;
         }
 
-        // ===== Helpers =====
         function formatSalary(job) {
             if (job.salary) return job.salary;
             const min = Number(job.salaryMin) || 0;
@@ -962,7 +1020,7 @@
         // ===== Clear Filters =====
         window.clearFilters = function() {
             document.getElementById('searchInput').value = '';
-            ['filterCompany', 'filterLocation', 'filterCategory', 'filterType'].forEach(id => {
+            ['filterCompany', 'filterProvince', 'filterCity', 'filterCategory', 'filterType'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el && !el.disabled) el.value = '';
             });
@@ -973,12 +1031,9 @@
             applyFilters();
         };
 
-        // ===== Event Listeners =====
-        ['searchInput', 'filterCompany', 'filterLocation', 'filterCategory', 'filterType'].forEach(id => {
+        ['searchInput', 'filterCompany', 'filterProvince', 'filterCity', 'filterCategory', 'filterType'].forEach(id => {
             const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', applyFilters);
-            }
+            if (el) el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', applyFilters);
         });
 
         document.getElementById('perPageSelect').addEventListener('change', (e) => {
