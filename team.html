@@ -3,156 +3,560 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Core Team - HASK</title>
+    <title>Our Team - HASK TalentConnect</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== Team Carousel Styles ===== */
+
+        .team-page {
+            min-height: 100vh;
+            background: #f5f0e8;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px 60px;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .team-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .team-header .small-tag {
+            color: #888;
+            font-size: 0.72rem;
+            letter-spacing: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .team-header h1 {
+            font-size: 2.2rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Carousel */
+        .carousel-wrap {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 520px;
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .carousel-wrap:active { cursor: grabbing; }
+
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+        }
+
+        /* Member Card */
+        .member-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            width: 280px;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #2a2a2a;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(1) brightness(0.6);
+        }
+
+        .member-card.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            z-index: 10;
+            pointer-events: auto;
+            filter: grayscale(0) brightness(1);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.3);
+        }
+
+        .member-card.prev {
+            transform: translate(-130%, -50%) scale(0.75);
+            opacity: 0.5;
+            z-index: 5;
+            filter: grayscale(1) brightness(0.55);
+        }
+
+        .member-card.next {
+            transform: translate(30%, -50%) scale(0.75);
+            opacity: 0.5;
+            z-index: 5;
+            filter: grayscale(1) brightness(0.55);
+        }
+
+        .member-card.far-prev {
+            transform: translate(-200%, -50%) scale(0.6);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .member-card.far-next {
+            transform: translate(100%, -50%) scale(0.6);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .member-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .member-card .card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 22px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+        }
+
+        .member-card .card-info h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        .member-card .card-info p {
+            font-size: 0.82rem;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        /* Navigation */
+        .carousel-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .counter-text {
+            color: #888;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1.5px solid #1a1a1a;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.25s;
+            color: #1a1a1a;
+            font-size: 1.1rem;
+        }
+
+        .nav-btn:hover {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .progress-bar .bar {
+            width: 40px;
+            height: 2px;
+            background: #ccc;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .progress-bar .bar.active {
+            background: #1a1a1a;
+            width: 60px;
+        }
+
+        .drag-hint {
+            color: #aaa;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        /* LinkedIn overlay */
+        .linkedin-mini {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 34px;
+            height: 34px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .member-card.active .linkedin-mini {
+            opacity: 1;
+        }
+
+        .linkedin-mini:hover {
+            background: #0077b5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .team-page { padding: 20px 15px 40px; }
+            .team-header h1 { font-size: 1.6rem; }
+            .carousel-track { height: 380px; }
+            .member-card {
+                width: 220px;
+                height: 320px;
+            }
+            .member-card .card-info { padding: 18px 16px; }
+            .member-card .card-info h3 { font-size: 1rem; }
+            .member-card .card-info p { font-size: 0.75rem; }
+            .nav-btn { width: 42px; height: 42px; }
+            .progress-bar .bar { width: 28px; }
+            .progress-bar .bar.active { width: 45px; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav>
-        <div class="logo">HASK</div>
-        <ul>
+    <nav class="navbar">
+        <div class="logo">HASK TalentConnect</div>
+        <ul class="menu">
             <li><a href="index.html">Home</a></li>
+            <li><a href="jobs.html">Browse Jobs</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="team.html">Core Team</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="login.html" class="btn-login">TalentConnect Login</a></li>
+            <li><a href="login.html" class="btn-primary">Login</a></li>
         </ul>
     </nav>
 
-    <!-- Team Section -->
-    <section class="section">
-        <h2>Our Core Team</h2>
-        <p class="subtitle">Meet the dedicated professionals leading HASK</p>
+    <div class="team-page">
 
-        <div class="team-grid">
-
-            <!-- 1. Hafeez Ur Rehman -->
-            <div class="team-card">
-                <img data-name="hafeez" data-full="Hafeez Ur Rehman" alt="Hafeez Ur Rehman">
-                <h3>Hafeez Ur Rehman</h3>
-                <p class="role">Manager Admin & HR</p>
-                <p class="company">National Feed Limited Sheikhupura</p>
-                <a href="https://www.linkedin.com/in/hafeez-ur-rehman-chrp-%C2%AE-7186a62b0/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 2. Shahrukh Irfan -->
-            <div class="team-card">
-                <img data-name="shahrukh" data-full="Shahrukh Irfan" alt="Shahrukh Irfan">
-                <h3>Shahrukh Irfan</h3>
-                <p class="role">Senior Manager HR & Admin</p>
-                <p class="company">Shahzad Textile Mills Ltd. (Socks Div.)</p>
-                <a href="https://www.linkedin.com/in/shahrukh-irfan-5a527750/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 3. Humayun Akhtar -->
-            <div class="team-card">
-                <img data-name="humayun" data-full="Humayun Akhtar" alt="Humayun Akhtar">
-                <h3>Humayun Akhtar</h3>
-                <p class="role">Unit Head HR</p>
-                <p class="company">National Bank of Pakistan, Sheikhupura</p>
-                <a href="https://www.linkedin.com/in/humayunakhtar21/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 4. Muhammad Usman -->
-            <div class="team-card">
-                <img data-name="usman" data-full="Muhammad Usman" alt="Muhammad Usman">
-                <h3>Muhammad Usman</h3>
-                <p class="role">Assistant Manager HR</p>
-                <p class="company">Millat Tractors Ltd.</p>
-                <a href="https://www.linkedin.com/in/muhammad-usman-chrp-93bb82113/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 5. Zeeshan Ali -->
-            <div class="team-card">
-                <img data-name="zeeshan" data-full="Zeeshan Ali" alt="Zeeshan Ali">
-                <h3>Zeeshan Ali</h3>
-                <p class="role">Deputy Manager HR</p>
-                <p class="company">Clive Shoes</p>
-                <a href="https://www.linkedin.com/in/zeeshan-ali-chrp/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 6. Ikram Hafeez Choudhry -->
-            <div class="team-card">
-                <img data-name="ikram" data-full="Ikram Hafeez" alt="Ikram Hafeez Choudhry">
-                <h3>Ikram Hafeez Choudhry</h3>
-                <p class="role">Team Lead HR</p>
-                <p class="company">Fatima Fertilizer Limited, Sheikhupura</p>
-                <a href="https://www.linkedin.com/in/ikraam-hafeez-495766191/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 7. Jehanzaib Abbas -->
-            <div class="team-card">
-                <img data-name="jehanzaib" data-full="Jehanzaib Abbas" alt="Jehanzaib Abbas">
-                <h3>Jehanzaib Abbas</h3>
-                <p class="role">Deputy Manager HR</p>
-                <p class="company">Akbari Chemical Pvt Ltd</p>
-                <a href="https://www.linkedin.com/in/jehanzaib-abbas-b39222139/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 8. Irfan Maqbool -->
-            <div class="team-card">
-                <img data-name="irfan" data-full="Irfan Maqbool" alt="Irfan Maqbool">
-                <h3>Irfan Maqbool</h3>
-                <p class="role">Dy. Manager Admin & HR</p>
-                <p class="company">Balochistan Glass Limited</p>
-                <a href="https://www.linkedin.com/in/irfan-maqbool-787b0a31/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 9. Muhammad Ahtisham Arshad -->
-            <div class="team-card">
-                <img data-name="ahtisham" data-full="Muhammad Ahtisham" alt="Muhammad Ahtisham Arshad">
-                <h3>Muhammad Ahtisham Arshad</h3>
-                <p class="role">Assistant Manager HR / IR</p>
-                <p class="company">Anwer Rashid Industries</p>
-                <a href="https://www.linkedin.com/in/malik-ahtisham-b55993242/" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
-            <!-- 10. Rida Zainab -->
-            <div class="team-card">
-                <img data-name="rida" data-full="Rida Zainab" alt="Rida Zainab">
-                <h3>Rida Zainab</h3>
-                <p class="role">Executive Admin/HR</p>
-                <p class="company">DreamBig Semiconductor Inc.</p>
-                <a href="#" target="_blank" class="linkedin-btn">LinkedIn</a>
-            </div>
-
+        <!-- Header -->
+        <div class="team-header">
+            <div class="small-tag">HASK TALENTCONNECT · 10 MEMBERS</div>
+            <h1>Our Core Team</h1>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 HASK - Human Resource & Administration Sheikhupura. All rights reserved.</p>
-    </footer>
+        <!-- Carousel -->
+        <div class="carousel-wrap" id="carouselWrap">
+            <div class="carousel-track" id="carouselTrack">
+                <!-- Cards injected by JS -->
+            </div>
+        </div>
 
-    <!-- Smart Image Loader -->
+        <!-- Navigation -->
+        <div class="carousel-nav">
+            <div class="counter-text" id="counterText">01 / 10</div>
+
+            <div class="nav-controls">
+                <button class="nav-btn" onclick="prevSlide()" aria-label="Previous">←</button>
+                <div class="progress-bar" id="progressBar"></div>
+                <button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
+            </div>
+
+            <div class="drag-hint">Drag · Scroll · Arrows</div>
+        </div>
+
+    </div>
+
     <script>
+        // ===== Team Members Data =====
+        const teamMembers = [
+            {
+                name: "Hafeez Ur Rehman",
+                role: "Manager Admin & HR",
+                company: "National Feed Limited Sheikhupura",
+                photo: "images/hafeez.jpg",
+                linkedin: "https://www.linkedin.com/in/hafeez-ur-rehman-chrp-%C2%AE-7186a62b0/"
+            },
+            {
+                name: "Shahrukh Irfan",
+                role: "Senior Manager HR & Admin",
+                company: "Shahzad Textile Mills Ltd.",
+                photo: "images/shahrukh.jpg",
+                linkedin: "https://www.linkedin.com/in/shahrukh-irfan-5a527750/"
+            },
+            {
+                name: "Humayun Akhtar",
+                role: "Unit Head HR",
+                company: "National Bank of Pakistan",
+                photo: "images/humayun.jpg",
+                linkedin: "https://www.linkedin.com/in/humayunakhtar21/"
+            },
+            {
+                name: "Muhammad Usman",
+                role: "Assistant Manager HR",
+                company: "Millat Tractors Ltd.",
+                photo: "images/usman.jpg",
+                linkedin: "https://www.linkedin.com/in/muhammad-usman-chrp-93bb82113/"
+            },
+            {
+                name: "Zeeshan Ali",
+                role: "Deputy Manager HR",
+                company: "Clive Shoes",
+                photo: "images/zeeshan.jpg",
+                linkedin: "https://www.linkedin.com/in/zeeshan-ali-chrp/"
+            },
+            {
+                name: "Ikram Hafeez Choudhry",
+                role: "Team Lead HR",
+                company: "Fatima Fertilizer Limited",
+                photo: "images/ikram.jpg",
+                linkedin: "https://www.linkedin.com/in/ikraam-hafeez-495766191/"
+            },
+            {
+                name: "Jehanzaib Abbas",
+                role: "Assistant Manager HR",
+                company: "Nimir Chemicals Pakistan",
+                photo: "images/jehanzaib.jpg",
+                linkedin: "https://www.linkedin.com/in/jehanzaib-abbas-b39222139/"
+            },
+            {
+                name: "Irfan Maqbool",
+                role: "Dy. Manager Admin & HR",
+                company: "Balochistan Glass Limited",
+                photo: "images/irfan.jpg",
+                linkedin: "https://www.linkedin.com/in/irfan-maqbool-787b0a31/"
+            },
+            {
+                name: "Muhammad Ahtisham",
+                role: "Assistant Manager HR / IR",
+                company: "Anwer Rashid Industries",
+                photo: "images/ahtisham.jpg",
+                linkedin: "https://www.linkedin.com/in/malik-ahtisham-b55993242/"
+            },
+            {
+                name: "Rida Zainab",
+                role: "Executive Admin / HR",
+                company: "DreamBig Semiconductor Inc.",
+                photo: "images/rida.jpg",
+                linkedin: "#"
+            }
+        ];
+
         const formats = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG'];
 
-        document.querySelectorAll('.team-card img').forEach(img => {
-            const name = img.getAttribute('data-name');
-            const fullName = img.getAttribute('data-full');
-            let formatIndex = 0;
+        let currentIndex = 0;
+        const total = teamMembers.length;
 
-            function tryNextFormat() {
-                if (formatIndex >= formats.length) {
-                    img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(fullName) + '&background=1a2a6c&color=fff&size=200';
-                    return;
+        // ===== Build cards =====
+        function buildCards() {
+            const track = document.getElementById('carouselTrack');
+            track.innerHTML = '';
+
+            teamMembers.forEach((m, i) => {
+                const card = document.createElement('div');
+                card.className = 'member-card';
+                card.dataset.index = i;
+
+                const initials = m.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+                card.innerHTML = `
+                    <img data-photo="${m.photo}" data-initials="${initials}" data-name="${m.name}" alt="${m.name}">
+                    ${m.linkedin !== '#' ? `
+                        <a href="${m.linkedin}" target="_blank" class="linkedin-mini" onclick="event.stopPropagation()" title="LinkedIn">
+                            in
+                        </a>
+                    ` : ''}
+                    <div class="card-info">
+                        <h3>${m.name}</h3>
+                        <p>${m.role}</p>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (i !== currentIndex) goToSlide(i);
+                });
+
+                track.appendChild(card);
+            });
+
+            // Smart image loading
+            document.querySelectorAll('.member-card img').forEach(img => {
+                const photoBase = img.getAttribute('data-photo').replace(/\.[^.]+$/, '');
+                const initials = img.getAttribute('data-initials');
+                const name = img.getAttribute('data-name');
+                let fmtIndex = 0;
+
+                function tryNext() {
+                    if (fmtIndex >= formats.length) {
+                        img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=333&color=fff&size=400';
+                        return;
+                    }
+                    const testUrl = photoBase + '.' + formats[fmtIndex];
+                    const tester = new Image();
+                    tester.onload = () => { img.src = testUrl; };
+                    tester.onerror = () => { fmtIndex++; tryNext(); };
+                    tester.src = testUrl;
                 }
-                const testUrl = 'images/' + name + '.' + formats[formatIndex];
-                const testImg = new Image();
-                testImg.onload = function() {
-                    img.src = testUrl;
-                };
-                testImg.onerror = function() {
-                    formatIndex++;
-                    tryNextFormat();
-                };
-                testImg.src = testUrl;
+                tryNext();
+            });
+
+            // Build progress bars
+            const pb = document.getElementById('progressBar');
+            pb.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.dataset.idx = i;
+                bar.style.cursor = 'pointer';
+                bar.addEventListener('click', () => goToSlide(i));
+                pb.appendChild(bar);
             }
 
-            tryNextFormat();
+            updateCarousel();
+        }
+
+        // ===== Update carousel positions =====
+        function updateCarousel() {
+            const cards = document.querySelectorAll('.member-card');
+
+            cards.forEach((card, i) => {
+                card.classList.remove('active', 'prev', 'next', 'far-prev', 'far-next');
+
+                if (i === currentIndex) {
+                    card.classList.add('active');
+                } else if (i === currentIndex - 1 || (currentIndex === 0 && i === total - 1)) {
+                    card.classList.add('prev');
+                } else if (i === currentIndex + 1 || (currentIndex === total - 1 && i === 0)) {
+                    card.classList.add('next');
+                } else if (i < currentIndex - 1) {
+                    card.classList.add('far-prev');
+                } else {
+                    card.classList.add('far-next');
+                }
+            });
+
+            // Update counter
+            document.getElementById('counterText').textContent =
+                String(currentIndex + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+
+            // Update progress bar
+            document.querySelectorAll('.progress-bar .bar').forEach((bar, i) => {
+                bar.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        // ===== Navigation =====
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % total;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + total) % total;
+            updateCarousel();
+        }
+
+        function goToSlide(i) {
+            currentIndex = i;
+            updateCarousel();
+        }
+
+        // ===== Keyboard =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
         });
+
+        // ===== Drag / Swipe =====
+        const wrap = document.getElementById('carouselWrap');
+        let startX = 0, isDown = false, moved = false;
+
+        wrap.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.clientX;
+            moved = false;
+        });
+
+        wrap.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 50) moved = true;
+        });
+
+        wrap.addEventListener('mouseup', (e) => {
+            if (!isDown) return;
+            isDown = false;
+            const dx = e.clientX - startX;
+            if (dx < -50) nextSlide();
+            else if (dx > 50) prevSlide();
+        });
+
+        wrap.addEventListener('mouseleave', () => { isDown = false; });
+
+        // Touch
+        wrap.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        }, { passive: true });
+
+        wrap.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - startX;
+            if (dx < -50) nextSlide();
+            else if (dx > 50) prevSlide();
+        });
+
+        // Mouse wheel
+        let wheelLock = false;
+        wrap.addEventListener('wheel', (e) => {
+            if (wheelLock) return;
+            if (Math.abs(e.deltaX) > 30 || Math.abs(e.deltaY) > 30) {
+                wheelLock = true;
+                if (e.deltaX > 30 || e.deltaY > 30) nextSlide();
+                else prevSlide();
+                setTimeout(() => { wheelLock = false; }, 600);
+            }
+        }, { passive: true });
+
+        // Init
+        buildCards();
     </script>
 
 </body>
