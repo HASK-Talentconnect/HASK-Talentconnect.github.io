@@ -12,12 +12,68 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #222;
         }
 
         .page-wrapper {
             flex: 1;
             display: flex;
             flex-direction: column;
+        }
+
+        /* ===== Navbar (Same on all pages) ===== */
+        .navbar {
+            background: #1a2a6c;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo {
+            color: #f9c74f;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar .menu a {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .navbar .menu a:hover { color: #f9c74f; }
+
+        .navbar .btn-primary {
+            background: #f9c74f;
+            color: #1a2a6c !important;
+            padding: 8px 22px;
+            border-radius: 22px;
+            font-weight: bold !important;
+            font-size: 0.88rem;
+        }
+
+        .navbar .btn-primary:hover {
+            background: #ffd166;
+            transform: scale(1.04);
         }
 
         .page-banner {
@@ -46,7 +102,6 @@
             width: 100%;
         }
 
-        /* ===== Filters Sidebar ===== */
         .filters-sidebar {
             background: white;
             border-right: 1px solid #eef1f5;
@@ -102,12 +157,11 @@
             color: #333;
             transition: 0.2s;
             cursor: pointer;
+            box-sizing: border-box;
         }
 
         .filter-group select:hover,
-        .filter-group input[type="number"]:hover {
-            border-color: #1a2a6c;
-        }
+        .filter-group input[type="number"]:hover { border-color: #1a2a6c; }
 
         .filter-group select:focus,
         .filter-group input:focus {
@@ -115,7 +169,6 @@
             background: white;
         }
 
-        /* Salary Range */
         .salary-range-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -123,9 +176,7 @@
             margin-bottom: 6px;
         }
 
-        .salary-slider-wrap {
-            margin-top: 8px;
-        }
+        .salary-slider-wrap { margin-top: 8px; }
 
         .salary-slider-wrap input[type="range"] {
             width: 100%;
@@ -169,7 +220,6 @@
 
         .btn-clear:hover { background: #dc3545; color: white; }
 
-        /* ===== Jobs Panel ===== */
         .jobs-panel {
             background: #f5f7fa;
             padding: 20px 22px;
@@ -193,10 +243,7 @@
             gap: 10px;
         }
 
-        .jobs-panel-head h2 {
-            color: #1a2a6c;
-            font-size: 1.15rem;
-        }
+        .jobs-panel-head h2 { color: #1a2a6c; font-size: 1.15rem; }
 
         .jobs-panel-head .count {
             background: #e8f4fd;
@@ -259,15 +306,9 @@
 
         .table-wrap { overflow-x: auto; }
 
-        .jobs-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .jobs-table { width: 100%; border-collapse: collapse; }
 
-        .jobs-table thead {
-            background: #29b6f6;
-            color: white;
-        }
+        .jobs-table thead { background: #29b6f6; color: white; }
 
         .jobs-table th {
             padding: 13px 14px;
@@ -350,7 +391,6 @@
 
         .jobs-table .apply-btn:hover { background: #0288d1; }
 
-        /* Pagination */
         .pagination-wrap {
             padding: 14px 22px;
             background: #fafbfc;
@@ -362,10 +402,7 @@
             gap: 10px;
         }
 
-        .pagination-info {
-            color: #666;
-            font-size: 0.82rem;
-        }
+        .pagination-info { color: #666; font-size: 0.82rem; }
 
         .pagination-controls {
             display: flex;
@@ -401,10 +438,7 @@
             border-color: #1a2a6c;
         }
 
-        .page-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
         .empty-state {
             text-align: center;
@@ -418,11 +452,7 @@
             display: block;
         }
 
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-        }
+        .loading { text-align: center; padding: 50px; color: #666; }
 
         .spinner {
             display: inline-block;
@@ -445,14 +475,10 @@
             flex-shrink: 0;
         }
 
-        footer p {
-            opacity: 0.75;
-            font-size: 0.85rem;
-        }
+        footer p { opacity: 0.75; font-size: 0.85rem; margin: 0; }
 
         @media (max-width: 1000px) {
             .main-layout { grid-template-columns: 260px 1fr; }
-            .filters-sidebar { padding: 18px 15px; }
         }
 
         @media (max-width: 900px) {
@@ -466,14 +492,11 @@
         }
 
         @media (max-width: 600px) {
+            .navbar { padding: 12px 15px; flex-direction: column; gap: 10px; }
+            .navbar .menu { flex-wrap: wrap; justify-content: center; gap: 12px; }
             .page-banner { padding: 25px 15px; }
             .page-banner h1 { font-size: 1.3rem; }
-            .page-banner p { font-size: 0.85rem; }
             .jobs-panel { padding: 12px; }
-            .jobs-panel-head { padding: 14px 16px; }
-            .jobs-panel-head h2 { font-size: 1rem; }
-            .search-row { padding: 12px 16px; }
-            .pagination-wrap { padding: 12px 16px; }
         }
     </style>
 </head>
@@ -481,6 +504,7 @@
 
     <div class="page-wrapper">
 
+        <!-- Navbar -->
         <nav class="navbar">
             <div class="logo">HASK TalentConnect</div>
             <ul class="menu">
@@ -498,7 +522,6 @@
 
         <div class="main-layout">
 
-            <!-- Filters Sidebar -->
             <aside class="filters-sidebar">
                 <h3>
                     🔧 Filters
@@ -540,7 +563,6 @@
                     </select>
                 </div>
 
-                <!-- Salary Range -->
                 <div class="filter-group">
                     <label>💰 Salary Range (PKR)</label>
                     <div class="salary-range-row">
@@ -560,7 +582,6 @@
                 <button class="btn-clear" onclick="clearFilters()">Clear All Filters</button>
             </aside>
 
-            <!-- Jobs Panel -->
             <main class="jobs-panel">
                 <div class="jobs-panel-inner">
 
@@ -640,122 +661,81 @@
         let perPage = 10;
 
         const CATEGORY_MAP = {
-            'it': 'IT & Software',
-            'sales': 'Sales & Marketing',
-            'finance': 'Accounting & Finance',
-            'hr': 'HR & Admin',
-            'engineering': 'Engineering',
-            'education': 'Education',
-            'healthcare': 'Healthcare',
-            'construction': 'Construction',
-            'transport': 'Transport & Driver',
-            'security': 'Security',
-            'hospitality': 'Hospitality',
-            'retail': 'Retail',
-            'manufacturing': 'Manufacturing',
-            'textile': 'Textile',
-            'telecom': 'Telecom',
-            'other': 'Other'
+            'it': 'IT & Software', 'sales': 'Sales & Marketing',
+            'finance': 'Accounting & Finance', 'hr': 'HR & Admin',
+            'engineering': 'Engineering', 'education': 'Education',
+            'healthcare': 'Healthcare', 'construction': 'Construction',
+            'transport': 'Transport & Driver', 'security': 'Security',
+            'hospitality': 'Hospitality', 'retail': 'Retail',
+            'manufacturing': 'Manufacturing', 'textile': 'Textile',
+            'telecom': 'Telecom', 'other': 'Other'
         };
 
         const TYPE_MAP = {
-            'full-time': 'Full Time',
-            'part-time': 'Part Time',
-            'contract': 'Contract',
-            'daily-wages': 'Daily Wages',
-            'internship': 'Internship',
-            'work-from-home': 'Work from Home'
+            'full-time': 'Full Time', 'part-time': 'Part Time',
+            'contract': 'Contract', 'daily-wages': 'Daily Wages',
+            'internship': 'Internship', 'work-from-home': 'Work from Home'
         };
 
-        // ===== Load Data =====
         async function loadData() {
             try {
-                // Jobs
                 const jobsSnap = await getDocs(collection(db, "jobs"));
                 allJobs = [];
                 jobsSnap.forEach(d => allJobs.push({ id: d.id, ...d.data() }));
 
-                // Users (employers)
                 try {
                     const usersSnap = await getDocs(collection(db, "users"));
                     allUsers = [];
                     usersSnap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
                 } catch (e) {
-                    console.warn('users fetch failed:', e.message);
                     allUsers = [];
                 }
 
                 buildFilters();
                 applyFilters();
-
             } catch (err) {
                 console.error(err);
                 document.getElementById('jobsBody').innerHTML = `
                     <tr><td colspan="7" class="empty-state">
-                        <span class="icon">⚠️</span>
-                        <p>Error loading jobs</p>
+                        <span class="icon">⚠️</span><p>Error loading jobs</p>
                     </td></tr>
                 `;
             }
         }
 
-        // ===== Build Filters (no disabled, no hints) =====
         function buildFilters() {
-            // 1. Companies (from registered employers)
             const companySet = new Set();
             allUsers.forEach(u => {
-                if (u.role === 'employer' && u.company && u.company.trim()) {
-                    companySet.add(u.company.trim());
-                }
+                if (u.role === 'employer' && u.company && u.company.trim()) companySet.add(u.company.trim());
             });
             if (companySet.size === 0) {
-                allJobs.forEach(j => {
-                    if (j.company) companySet.add(j.company.trim());
-                });
+                allJobs.forEach(j => { if (j.company) companySet.add(j.company.trim()); });
             }
             populateSelect('filterCompany', [...companySet].sort(), 'All Companies');
 
-            // 2. Provinces
             const provinceSet = new Set();
             allUsers.forEach(u => {
-                if (u.role === 'employer' && u.province && u.province.trim()) {
-                    provinceSet.add(u.province.trim());
-                }
+                if (u.role === 'employer' && u.province && u.province.trim()) provinceSet.add(u.province.trim());
             });
             populateSelect('filterProvince', [...provinceSet].sort(), 'All Provinces');
 
-            // 3. Cities
             const citySet = new Set();
             allUsers.forEach(u => {
-                if (u.role === 'employer' && u.city && u.city.trim()) {
-                    citySet.add(u.city.trim());
-                }
+                if (u.role === 'employer' && u.city && u.city.trim()) citySet.add(u.city.trim());
             });
-            allJobs.forEach(j => {
-                if (j.location && j.location.trim()) {
-                    citySet.add(j.location.trim());
-                }
-            });
+            allJobs.forEach(j => { if (j.location) citySet.add(j.location.trim()); });
             populateSelect('filterCity', [...citySet].sort(), 'All Cities');
 
-            // 4. Categories
             const categorySet = new Set();
-            allJobs.forEach(j => {
-                if (j.category) categorySet.add(j.category);
-            });
-            const categories = [...categorySet].sort((a, b) => {
-                return (CATEGORY_MAP[a] || a).localeCompare(CATEGORY_MAP[b] || b);
-            });
+            allJobs.forEach(j => { if (j.category) categorySet.add(j.category); });
+            const categories = [...categorySet].sort((a, b) =>
+                (CATEGORY_MAP[a] || a).localeCompare(CATEGORY_MAP[b] || b));
             populateSelectWithLabels('filterCategory', categories, 'All Categories', CATEGORY_MAP);
 
-            // 5. Job Types
             const typeSet = new Set();
-            allJobs.forEach(j => {
-                if (j.type) typeSet.add(j.type);
-            });
-            const types = [...typeSet].sort((a, b) => {
-                return (TYPE_MAP[a] || a).localeCompare(TYPE_MAP[b] || b);
-            });
+            allJobs.forEach(j => { if (j.type) typeSet.add(j.type); });
+            const types = [...typeSet].sort((a, b) =>
+                (TYPE_MAP[a] || a).localeCompare(TYPE_MAP[b] || b));
             populateSelectWithLabels('filterType', types, 'All Types', TYPE_MAP);
         }
 
@@ -764,8 +744,7 @@
             sel.innerHTML = `<option value="">${allText}</option>`;
             values.forEach(v => {
                 const opt = document.createElement('option');
-                opt.value = v;
-                opt.textContent = v;
+                opt.value = v; opt.textContent = v;
                 sel.appendChild(opt);
             });
         }
@@ -775,13 +754,11 @@
             sel.innerHTML = `<option value="">${allText}</option>`;
             values.forEach(v => {
                 const opt = document.createElement('option');
-                opt.value = v;
-                opt.textContent = labelMap[v] || v;
+                opt.value = v; opt.textContent = labelMap[v] || v;
                 sel.appendChild(opt);
             });
         }
 
-        // ===== Apply Filters =====
         function applyFilters() {
             const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
             const companyFilter = document.getElementById('filterCompany').value;
@@ -819,7 +796,6 @@
             });
 
             filteredJobs.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-
             currentPage = 1;
             renderPage();
         }
@@ -833,9 +809,7 @@
             const end = start + perPage;
             const pageJobs = filteredJobs.slice(start, end);
 
-            document.getElementById('jobsCount').textContent =
-                `${total} job${total !== 1 ? 's' : ''}`;
-
+            document.getElementById('jobsCount').textContent = `${total} job${total !== 1 ? 's' : ''}`;
             const tbody = document.getElementById('jobsBody');
 
             if (total === 0) {
@@ -917,13 +891,9 @@
             const range = [];
             const rangeWithDots = [];
             let l;
-
             for (let i = 1; i <= total; i++) {
-                if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) {
-                    range.push(i);
-                }
+                if (i === 1 || i === total || (i >= current - delta && i <= current + delta)) range.push(i);
             }
-
             range.forEach(i => {
                 if (l) {
                     if (i - l === 2) rangeWithDots.push(l + 1);
@@ -932,7 +902,6 @@
                 rangeWithDots.push(i);
                 l = i;
             });
-
             return rangeWithDots;
         }
 
@@ -954,7 +923,6 @@
             })[c]);
         }
 
-        // ===== Salary =====
         const salarySlider = document.getElementById('salarySlider');
         const salarySummary = document.getElementById('salarySummary');
         const salaryMinInput = document.getElementById('salaryMin');
