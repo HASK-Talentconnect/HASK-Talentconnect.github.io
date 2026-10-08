@@ -6,12 +6,102 @@
     <title>Login / Sign Up - HASK TalentConnect</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .auth-wrap {
+        html, body { height: 100%; }
+
+        body {
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #222;
+        }
+
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== Navbar (same as index) ===== */
+        .navbar {
+            background: #1a2a6c;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo {
+            color: #f9c74f;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar .menu a {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .navbar .menu a:hover { color: #f9c74f; }
+
+        .navbar .btn-primary {
+            background: #f9c74f;
+            color: #1a2a6c !important;
+            padding: 8px 22px;
+            border-radius: 22px;
+            font-weight: bold !important;
+            font-size: 0.88rem;
+        }
+
+        .navbar .btn-primary:hover {
+            background: #ffd166;
+            transform: scale(1.04);
+        }
+
+        /* ===== Page Banner ===== */
+        .page-banner {
+            background: #1a2a6c;
+            color: white;
+            padding: 35px 30px 40px;
+            text-align: center;
+        }
+
+        .page-banner h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .page-banner p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        /* ===== Auth Wrapper ===== */
+        .auth-wrap {
+            flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 30px 15px;
+            align-items: flex-start;
+            padding: 40px 20px 60px;
             background: #f5f7fa;
         }
 
@@ -20,8 +110,9 @@
             border-radius: 12px;
             padding: 35px 30px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 440px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            border: 1px solid #eef1f5;
         }
 
         .auth-logo {
@@ -78,8 +169,7 @@
 
         .input-wrap { position: relative; }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 12px 42px 12px 14px;
             border: 1.5px solid #dfe3ec;
@@ -90,6 +180,7 @@
             outline: none;
             transition: 0.2s;
             font-family: inherit;
+            box-sizing: border-box;
         }
 
         .form-group input::placeholder { color: #aaa; }
@@ -193,6 +284,7 @@
         .auth-footer a {
             color: #1a2a6c;
             font-weight: 600;
+            text-decoration: none;
         }
 
         .form-section { display: none; }
@@ -207,146 +299,176 @@
             padding: 12px !important;
         }
 
-        .info-banner {
-            background: #e8f4fd;
-            color: #0277bd;
-            padding: 10px 14px;
+        .message-box {
+            padding: 12px 16px;
             border-radius: 8px;
-            font-size: 0.82rem;
-            margin-bottom: 14px;
-            text-align: center;
-        }
-
-        .back-home {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #1a2a6c;
-            text-decoration: none;
-            font-weight: 600;
             font-size: 0.88rem;
-            background: white;
-            padding: 8px 16px;
-            border-radius: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
         }
 
-        .back-home:hover { background: #f0f2f8; }
+        .message-box.show { display: block; }
+        .message-box.error { background: #fee; border: 1px solid #fcc; color: #c33; }
+        .message-box.success { background: #e8f8ee; border: 1px solid #a8e0bd; color: #1a7a3e; }
+        .message-box.info { background: #fff8e1; border: 1px solid #f9c74f; color: #8a6d00; }
 
-        @media (max-width: 500px) {
+        /* ===== Footer ===== */
+        footer {
+            background: #0f1a4a;
+            color: white;
+            text-align: center;
+            padding: 22px 20px;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        footer p { opacity: 0.75; font-size: 0.85rem; margin: 0; }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 12px 15px; flex-direction: column; gap: 10px; }
+            .navbar .menu { flex-wrap: wrap; justify-content: center; gap: 12px; }
+            .page-banner { padding: 25px 15px; }
+            .page-banner h1 { font-size: 1.4rem; }
+            .auth-wrap { padding: 25px 15px 40px; }
             .auth-card { padding: 25px 20px; }
-            .back-home { top: 12px; left: 12px; padding: 6px 12px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-home">← Back to Home</a>
+    <div class="page-wrapper">
 
-    <div class="auth-wrap">
-        <div class="auth-card">
-            <div class="auth-logo">HASK TalentConnect</div>
-            <p class="auth-sub">Connect • Grow • Succeed</p>
+        <!-- Navbar (same as index) -->
+        <nav class="navbar">
+            <div class="logo">HASK TalentConnect</div>
+            <ul class="menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="login.html" class="btn-primary">Login</a></li>
+            </ul>
+        </nav>
 
-            <div class="tabs">
-                <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
-                <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
-            </div>
-
-            <div id="messageBox" class="message-box"></div>
-
-            <!-- ===== LOGIN ===== -->
-            <div id="login-form" class="form-section active">
-                <form onsubmit="handleLogin(event)">
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="loginEmail" placeholder="you@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <div class="input-wrap">
-                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                            <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">👁️</button>
-                        </div>
-                    </div>
-                    <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot Password?</a>
-                    <button type="submit" class="btn-submit" id="loginBtn">Login to Your Account</button>
-                </form>
-                <p class="auth-footer">
-                    Don't have an account? 
-                    <a href="#" onclick="switchTab('signup'); return false;">Sign Up</a>
-                </p>
-            </div>
-
-            <!-- ===== SIGNUP ===== -->
-            <div id="signup-form" class="form-section">
-                <form onsubmit="handleSignupStart(event)">
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="signupName" placeholder="Enter your full name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="signupEmail" placeholder="you@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <div class="input-wrap">
-                            <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-                            <button type="button" class="toggle-pw" onclick="togglePassword('signupPassword', this)">👁️</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm Password</label>
-                        <div class="input-wrap">
-                            <input type="password" id="signupConfirm" placeholder="Re-enter password" required minlength="6">
-                            <button type="button" class="toggle-pw" onclick="togglePassword('signupConfirm', this)">👁️</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>I am a...</label>
-                        <div class="role-selector">
-                            <div class="role-option selected" id="roleSeeker" onclick="selectRole('seeker')">
-                                <span class="icon">👤</span>
-                                <span>Job Seeker</span>
-                            </div>
-                            <div class="role-option" id="roleEmployer" onclick="selectRole('employer')">
-                                <span class="icon">🏢</span>
-                                <span>Employer</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" id="signupBtn">Send Verification Code</button>
-                </form>
-                <p class="auth-footer">
-                    Already have an account? 
-                    <a href="#" onclick="switchTab('login'); return false;">Login</a>
-                </p>
-            </div>
-
-            <!-- ===== VERIFY ===== -->
-            <div id="verify-form" class="form-section">
-                <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 6px; font-size: 1.15rem;">Verify Your Email</h3>
-                <p style="text-align: center; color: #666; font-size: 0.85rem; margin-bottom: 18px;">
-                    We sent a 6-digit code to<br>
-                    <strong id="verifyEmail" style="color: #1a2a6c;"></strong>
-                </p>
-                <form onsubmit="handleVerifyCode(event)">
-                    <div class="form-group">
-                        <label>Verification Code</label>
-                        <input type="text" id="verifyCode" class="code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
-                    </div>
-                    <button type="submit" class="btn-submit" id="verifyBtn">Verify & Create Account</button>
-                </form>
-                <p class="auth-footer">
-                    Didn't receive? 
-                    <a href="#" onclick="resendCode(event)">Resend</a> | 
-                    <a href="#" onclick="backToSignup(event)">Back</a>
-                </p>
-            </div>
-
+        <!-- Page Banner -->
+        <div class="page-banner">
+            <h1>Welcome to HASK TalentConnect</h1>
+            <p>Login or create your free account to get started</p>
         </div>
+
+        <!-- Auth Card -->
+        <div class="auth-wrap">
+            <div class="auth-card">
+                <div class="auth-logo">HASK TalentConnect</div>
+                <p class="auth-sub">Connect • Grow • Succeed</p>
+
+                <div class="tabs">
+                    <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Login</button>
+                    <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+                </div>
+
+                <div id="messageBox" class="message-box"></div>
+
+                <!-- ===== LOGIN ===== -->
+                <div id="login-form" class="form-section active">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrap">
+                                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                                <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                        <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Forgot Password?</a>
+                        <button type="submit" class="btn-submit" id="loginBtn">Login to Your Account</button>
+                    </form>
+                    <p class="auth-footer">
+                        Don't have an account? 
+                        <a href="#" onclick="switchTab('signup'); return false;">Sign Up</a>
+                    </p>
+                </div>
+
+                <!-- ===== SIGNUP ===== -->
+                <div id="signup-form" class="form-section">
+                    <form onsubmit="handleSignupStart(event)">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="signupName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrap">
+                                <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
+                                <button type="button" class="toggle-pw" onclick="togglePassword('signupPassword', this)">👁️</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="input-wrap">
+                                <input type="password" id="signupConfirm" placeholder="Re-enter password" required minlength="6">
+                                <button type="button" class="toggle-pw" onclick="togglePassword('signupConfirm', this)">👁️</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>I am a...</label>
+                            <div class="role-selector">
+                                <div class="role-option selected" id="roleSeeker" onclick="selectRole('seeker')">
+                                    <span class="icon">👤</span>
+                                    <span>Job Seeker</span>
+                                </div>
+                                <div class="role-option" id="roleEmployer" onclick="selectRole('employer')">
+                                    <span class="icon">🏢</span>
+                                    <span>Employer</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="signupBtn">Send Verification Code</button>
+                    </form>
+                    <p class="auth-footer">
+                        Already have an account? 
+                        <a href="#" onclick="switchTab('login'); return false;">Login</a>
+                    </p>
+                </div>
+
+                <!-- ===== VERIFY ===== -->
+                <div id="verify-form" class="form-section">
+                    <h3 style="color: #1a2a6c; text-align: center; margin-bottom: 6px; font-size: 1.15rem;">Verify Your Email</h3>
+                    <p style="text-align: center; color: #666; font-size: 0.85rem; margin-bottom: 18px;">
+                        We sent a 6-digit code to<br>
+                        <strong id="verifyEmail" style="color: #1a2a6c;"></strong>
+                    </p>
+                    <form onsubmit="handleVerifyCode(event)">
+                        <div class="form-group">
+                            <label>Verification Code</label>
+                            <input type="text" id="verifyCode" class="code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required>
+                        </div>
+                        <button type="submit" class="btn-submit" id="verifyBtn">Verify & Create Account</button>
+                    </form>
+                    <p class="auth-footer">
+                        Didn't receive? 
+                        <a href="#" onclick="resendCode(event)">Resend</a> | 
+                        <a href="#" onclick="backToSignup(event)">Back</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -390,7 +512,6 @@
         let generatedCode = null;
         let codeExpiry = null;
 
-        // ===== Redirect param =====
         const urlParams = new URLSearchParams(window.location.search);
         const redirectTo = urlParams.get('redirect') || 'dashboard.html';
         const presetRole = urlParams.get('role') || '';
@@ -399,7 +520,6 @@
             setTimeout(() => selectRole('employer'), 100);
         }
 
-        // ===== Helpers =====
         function showMessage(text, type = 'info') {
             const box = document.getElementById('messageBox');
             box.textContent = text;
@@ -457,7 +577,6 @@
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
 
-        // ===== Generate Unique User ID (JS-2026-XXXX) =====
         async function generateUserID(role) {
             const year = new Date().getFullYear();
             const counterDoc = doc(db, "stats", "user_counter");
@@ -474,7 +593,6 @@
             return `${prefix}-${year}-${padded}`;
         }
 
-        // ===== Email Counter =====
         async function getEmailCount() {
             try {
                 const snap = await getDoc(doc(db, "stats", "email_counter"));
@@ -491,7 +609,6 @@
             } catch (e) {}
         }
 
-        // ===== EmailJS Send =====
         async function sendEmailJS(toEmail, toName, code) {
             const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
                 method: "POST",
@@ -512,7 +629,6 @@
             await incrementEmailCount();
         }
 
-        // ===== Signup Step 1 =====
         window.handleSignupStart = async function(event) {
             event.preventDefault();
             hideMessage();
@@ -567,7 +683,6 @@
             }
         };
 
-        // ===== Verify Code =====
         window.handleVerifyCode = async function(event) {
             event.preventDefault();
             hideMessage();
@@ -596,7 +711,6 @@
                 const user = cred.user;
                 await updateProfile(user, { displayName: pendingUser.name });
 
-                // Generate unique User ID
                 const userId = await generateUserID(pendingUser.role);
 
                 await setDoc(doc(db, "users", user.uid), {
@@ -627,7 +741,6 @@
             }
         };
 
-        // ===== Resend / Back =====
         window.resendCode = async function(e) {
             e.preventDefault();
             if (!pendingUser) return;
@@ -652,7 +765,6 @@
             hideMessage();
         };
 
-        // ===== Login =====
         window.handleLogin = async function(event) {
             event.preventDefault();
             hideMessage();
@@ -667,7 +779,6 @@
             try {
                 const cred = await signInWithEmailAndPassword(auth, email, password);
 
-                // Check blocked
                 const userDoc = await getDoc(doc(db, "users", cred.user.uid));
                 if (userDoc.exists() && userDoc.data().status === 'blocked') {
                     await signOut(auth);
@@ -698,7 +809,6 @@
             }
         };
 
-        // ===== Forgot Password =====
         window.handleForgotPassword = async function(e) {
             e.preventDefault();
             hideMessage();
@@ -715,7 +825,6 @@
             }
         };
 
-        // ===== Back button protection =====
         window.addEventListener('pageshow', function(event) {
             if (event.persisted) window.location.reload();
         });
