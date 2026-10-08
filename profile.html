@@ -132,6 +132,19 @@
 
                 <div class="green-banner">Candidate ID: <span id="candidateId">—</span></div>
 
+                <!-- ===== Profile Picture ===== -->
+                <div class="profile-pic-section">
+                    <div class="profile-pic-preview" id="picPreview">📷</div>
+                    <div class="profile-pic-controls">
+                        <label class="pic-label">Profile Picture (Optional)</label>
+                        <input type="url" id="picUrl" placeholder="Paste image URL (https://...)" oninput="previewPicUrl()">
+                        <div class="pic-actions">
+                            <button type="button" class="btn-pic-remove" onclick="removePic()">🗑️ Remove Picture</button>
+                        </div>
+                        <small class="pic-hint">Paste a direct image link (jpg, png, webp)</small>
+                    </div>
+                </div>
+
                 <form onsubmit="savePersonal(event)">
                     <div class="form-grid">
                         <div class="field">
@@ -156,7 +169,6 @@
                             <label>Nationality <span class="req">*</span></label>
                             <select id="pNationality" required>
                                 <option value="Pakistan">Pakistan</option>
-                                <!-- Countries added by JS -->
                             </select>
                         </div>
                         <div class="field">
@@ -178,7 +190,7 @@
                         </div>
                         <div class="field">
                             <label>Area of Interest <span class="req">*</span></label>
-                            <select id="pInterest" required>
+                            <select id="pInterest" required onchange="handleInterestChange()">
                                 <option value="">Select</option>
                                 <option value="IT & Software">IT & Software</option>
                                 <option value="Sales & Marketing">Sales & Marketing</option>
@@ -198,9 +210,9 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-                        <div class="field">
-                            <label>Other Interest</label>
-                            <input type="text" id="pOtherInterest">
+                        <div class="field" id="otherInterestField" style="display:none;">
+                            <label>Specify Interest <span class="req">*</span></label>
+                            <input type="text" id="pOtherInterest" placeholder="e.g. Architecture">
                         </div>
                         <div class="field">
                             <label>Domicile District <span class="req">*</span></label>
@@ -514,27 +526,31 @@
 
                 <form onsubmit="saveMisc(event)">
                     <div class="form-grid">
+
                         <div class="field full">
                             <label>Have you ever been convicted of any crime? <span class="req">*</span></label>
-                            <select id="mCrime" required>
+                            <select id="mCrime" required onchange="toggleCrimeDetails()">
                                 <option value="No">No</option>
                                 <option value="Yes">Yes</option>
                             </select>
                         </div>
-                        <div class="field full">
-                            <label>Do you have any relatives working presently with HASK TalentConnect? <span class="req">*</span></label>
-                            <select id="mRelatives" required>
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
+                        <div class="field full" id="crimeDetailsField" style="display:none;">
+                            <label>Please provide details <span class="req">*</span></label>
+                            <textarea id="mCrimeDetails" rows="3" maxlength="500" placeholder="Describe the details..."></textarea>
                         </div>
+
                         <div class="field full">
                             <label>Do you have any disability? <span class="req">*</span></label>
-                            <select id="mDisability" required>
+                            <select id="mDisability" required onchange="toggleDisabilityDetails()">
                                 <option value="No">No</option>
                                 <option value="Yes">Yes</option>
                             </select>
                         </div>
+                        <div class="field full" id="disabilityDetailsField" style="display:none;">
+                            <label>Please provide details <span class="req">*</span></label>
+                            <textarea id="mDisabilityDetails" rows="3" maxlength="500" placeholder="Describe the disability..."></textarea>
+                        </div>
+
                         <div class="field">
                             <label>From where did you hear about the opportunity? <span class="req">*</span></label>
                             <select id="mSource" required>
@@ -581,6 +597,7 @@
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
                                 <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
                             </select>
                         </div>
                         <div class="field">
@@ -634,8 +651,8 @@
                     <h4 class="sub-heading">Bonus</h4>
                     <div class="comp-row">
                         <label>Bonus(es) <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="bonus" value="Yes" onchange="toggleBonus(true)" checked> Yes</label>
-                        <label class="radio-label"><input type="radio" name="bonus" value="No" onchange="toggleBonus(false)"> No</label>
+                        <label class="radio-label"><input type="radio" name="bonus" value="Yes" checked> Yes</label>
+                        <label class="radio-label"><input type="radio" name="bonus" value="No"> No</label>
                         <label class="radio-label"><input type="radio" name="bonusType" value="On basic" checked> On basic</label>
                         <label class="radio-label"><input type="radio" name="bonusType" value="On gross"> On gross</label>
                         <input type="number" id="bonusCount" value="1" min="0" style="width:80px;" placeholder="Count">
