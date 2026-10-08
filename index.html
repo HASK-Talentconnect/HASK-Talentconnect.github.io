@@ -24,7 +24,7 @@
             flex-direction: column;
         }
 
-        /* ===== Navbar (Same on all pages) ===== */
+        /* ===== Navbar ===== */
         .navbar {
             background: #1a2a6c;
             padding: 12px 30px;
@@ -102,6 +102,7 @@
             width: 100%;
         }
 
+        /* ===== Filters Sidebar ===== */
         .filters-sidebar {
             background: white;
             border-right: 1px solid #eef1f5;
@@ -120,19 +121,9 @@
             border-bottom: 2px solid #eef1f5;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 8px;
+            margin-top: 0;
         }
-
-        .filters-sidebar h3 .reset-link {
-            font-size: 0.72rem;
-            color: #dc3545;
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .filters-sidebar h3 .reset-link:hover { text-decoration: underline; }
 
         .filter-group { margin-bottom: 18px; }
 
@@ -220,6 +211,7 @@
 
         .btn-clear:hover { background: #dc3545; color: white; }
 
+        /* ===== Jobs Panel ===== */
         .jobs-panel {
             background: #f5f7fa;
             padding: 20px 22px;
@@ -243,7 +235,7 @@
             gap: 10px;
         }
 
-        .jobs-panel-head h2 { color: #1a2a6c; font-size: 1.15rem; }
+        .jobs-panel-head h2 { color: #1a2a6c; font-size: 1.15rem; margin: 0; }
 
         .jobs-panel-head .count {
             background: #e8f4fd;
@@ -504,7 +496,6 @@
 
     <div class="page-wrapper">
 
-        <!-- Navbar -->
         <nav class="navbar">
             <div class="logo">HASK TalentConnect</div>
             <ul class="menu">
@@ -523,10 +514,7 @@
         <div class="main-layout">
 
             <aside class="filters-sidebar">
-                <h3>
-                    🔧 Filters
-                    <a href="#" class="reset-link" onclick="clearFilters(); return false;">Reset</a>
-                </h3>
+                <h3>🔧 Filters</h3>
 
                 <div class="filter-group">
                     <label>🏢 Company</label>
