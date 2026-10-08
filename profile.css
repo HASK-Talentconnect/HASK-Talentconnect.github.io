@@ -789,3 +789,104 @@ footer p {
     .green-banner { font-size: 0.82rem; padding: 8px 12px; }
     .field input, .field select, .field textarea { font-size: 0.85rem; }
 }
+/* ===== Profile Picture Section ===== */
+.profile-pic-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    background: #f8f9fc;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    border: 1px solid #eef1f5;
+}
+
+.profile-pic-preview {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #e8f4fd;
+    color: #0277bd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.profile-pic-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-pic-controls {
+    flex: 1;
+}
+
+.pic-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.profile-pic-controls input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    background: white;
+    color: #222;
+    transition: 0.2s;
+}
+
+.profile-pic-controls input:focus {
+    border-color: #1a2a6c;
+}
+
+.pic-actions {
+    margin-top: 8px;
+}
+
+.btn-pic-remove {
+    background: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.btn-pic-remove:hover {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.pic-hint {
+    display: block;
+    color: #888;
+    font-size: 0.72rem;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .profile-pic-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
