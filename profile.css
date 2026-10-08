@@ -1,6 +1,5 @@
 /* ============================================
    HASK TalentConnect - Profile Page Styles
-   Bestway-style Job Seeker Profile
    ============================================ */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +30,6 @@ body {
     overflow-y: auto;
 }
 
-/* Profile Card */
 .sidebar-profile {
     text-align: center;
     padding-bottom: 18px;
@@ -78,7 +76,6 @@ body {
     border-radius: 10px;
 }
 
-/* Progress */
 .progress-section {
     margin-bottom: 18px;
     padding-bottom: 18px;
@@ -115,7 +112,6 @@ body {
     border-radius: 10px;
 }
 
-/* Menu */
 .sidebar-menu {
     list-style: none;
     margin-bottom: 18px;
@@ -149,7 +145,6 @@ body {
     border-left-color: #29b6f6;
 }
 
-/* Completed section (green) */
 .menu-item.completed {
     background: #e8f8ee;
     color: #1a7a3e;
@@ -175,7 +170,6 @@ body {
     flex: 1;
 }
 
-/* Applying for */
 .applying-for {
     background: #f8f9fc;
     padding: 12px;
@@ -224,7 +218,6 @@ body {
 
 .profile-section.active { display: block; }
 
-/* Section Header */
 .section-header {
     margin-bottom: 18px;
     padding-bottom: 14px;
@@ -254,7 +247,6 @@ body {
 
 .sub-heading:first-child { margin-top: 0; }
 
-/* Green Banner */
 .green-banner {
     background: #4caf50;
     color: white;
@@ -266,7 +258,6 @@ body {
     letter-spacing: 0.3px;
 }
 
-/* Info Note */
 .info-note {
     background: #e8f4fd;
     color: #0277bd;
@@ -276,6 +267,92 @@ body {
     font-weight: 600;
     display: inline-block;
     margin-top: 6px;
+}
+
+/* ===== Profile Picture Section ===== */
+.profile-pic-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f8f9fc;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+    border: 1px solid #eef1f5;
+    text-align: center;
+}
+
+.profile-pic-preview {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #e8f4fd;
+    color: #0277bd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.profile-pic-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pic-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-pic-upload {
+    background: #1a2a6c;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.btn-pic-upload:hover {
+    background: #29b6f6;
+    transform: translateY(-2px);
+}
+
+.btn-pic-remove {
+    background: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.btn-pic-remove:hover {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.pic-hint {
+    color: #888;
+    font-size: 0.72rem;
+    font-style: italic;
+    margin-top: 4px;
 }
 
 /* ===== Form Grids ===== */
@@ -434,7 +511,7 @@ body {
     font-weight: bold;
 }
 
-/* ===== Data Table (for Education/Experience/Skills) ===== */
+/* ===== Data Table ===== */
 .data-table-wrap {
     overflow-x: auto;
     border: 1px solid #eef1f5;
@@ -487,7 +564,6 @@ body {
     padding: 30px 12px !important;
 }
 
-/* Table Action Buttons */
 .btn-edit {
     background: transparent;
     border: 1.5px solid #29b6f6;
@@ -697,7 +773,6 @@ footer {
     color: white;
     text-align: center;
     padding: 22px 20px;
-    margin-top: 0;
 }
 
 footer p {
@@ -788,105 +863,5 @@ footer p {
     .section-header h2 { font-size: 1.05rem; }
     .green-banner { font-size: 0.82rem; padding: 8px 12px; }
     .field input, .field select, .field textarea { font-size: 0.85rem; }
-}
-/* ===== Profile Picture Section ===== */
-.profile-pic-section {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    background: #f8f9fc;
-    padding: 18px;
-    border-radius: 10px;
-    margin-bottom: 22px;
-    border: 1px solid #eef1f5;
-}
-
-.profile-pic-preview {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: #e8f4fd;
-    color: #0277bd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    border: 3px solid white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-.profile-pic-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.profile-pic-controls {
-    flex: 1;
-}
-
-.pic-label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.profile-pic-controls input {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1.5px solid #dfe3ec;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-family: inherit;
-    outline: none;
-    background: white;
-    color: #222;
-    transition: 0.2s;
-}
-
-.profile-pic-controls input:focus {
-    border-color: #1a2a6c;
-}
-
-.pic-actions {
-    margin-top: 8px;
-}
-
-.btn-pic-remove {
-    background: #fee;
-    color: #c33;
-    border: 1px solid #fcc;
-    padding: 7px 16px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: 0.2s;
-}
-
-.btn-pic-remove:hover {
-    background: #dc3545;
-    color: white;
-    border-color: #dc3545;
-}
-
-.pic-hint {
-    display: block;
-    color: #888;
-    font-size: 0.72rem;
-    margin-top: 6px;
-    font-style: italic;
-}
-
-@media (max-width: 600px) {
-    .profile-pic-section {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+    .profile-pic-preview { width: 90px; height: 90px; font-size: 2rem; }
 }
