@@ -13,14 +13,14 @@
             background: #f5f0e8;
             display: flex;
             flex-direction: column;
-            padding: 30px 20px 60px;
+            padding: 30px 20px 50px;
             overflow-x: hidden;
         }
 
         /* Header */
         .team-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .team-header .small-tag {
@@ -33,7 +33,7 @@
         }
 
         .team-header h1 {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             color: #1a1a1a;
             font-weight: 700;
             letter-spacing: -0.5px;
@@ -46,10 +46,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 520px;
+            min-height: 640px;
             overflow: hidden;
             cursor: grab;
             user-select: none;
+            padding: 20px 0;
         }
 
         .carousel-wrap:active { cursor: grabbing; }
@@ -57,11 +58,11 @@
         .carousel-track {
             position: relative;
             width: 100%;
-            height: 480px;
+            height: 620px;
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1200px;
+            perspective: 1400px;
         }
 
         /* Member Card */
@@ -69,14 +70,14 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.7);
-            width: 280px;
-            height: 400px;
-            border-radius: 20px;
+            transform: translate(-50%, -50%) scale(0.65);
+            width: 400px;
+            height: 560px;
+            border-radius: 24px;
             overflow: hidden;
             background: #2a2a2a;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 0.4;
             pointer-events: none;
             filter: grayscale(1) brightness(0.6);
@@ -88,31 +89,36 @@
             z-index: 10;
             pointer-events: auto;
             filter: grayscale(0) brightness(1);
-            box-shadow: 0 30px 70px rgba(0,0,0,0.3);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+            cursor: pointer;
+        }
+
+        .member-card.active:hover {
+            transform: translate(-50%, -50%) scale(1.02);
         }
 
         .member-card.prev {
-            transform: translate(-130%, -50%) scale(0.75);
+            transform: translate(-125%, -50%) scale(0.72);
             opacity: 0.5;
             z-index: 5;
             filter: grayscale(1) brightness(0.55);
         }
 
         .member-card.next {
-            transform: translate(30%, -50%) scale(0.75);
+            transform: translate(25%, -50%) scale(0.72);
             opacity: 0.5;
             z-index: 5;
             filter: grayscale(1) brightness(0.55);
         }
 
         .member-card.far-prev {
-            transform: translate(-200%, -50%) scale(0.6);
+            transform: translate(-190%, -50%) scale(0.55);
             opacity: 0;
             z-index: 1;
         }
 
         .member-card.far-next {
-            transform: translate(100%, -50%) scale(0.6);
+            transform: translate(90%, -50%) scale(0.55);
             opacity: 0;
             z-index: 1;
         }
@@ -129,22 +135,81 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 22px 20px;
+            padding: 30px 25px;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
         }
 
         .member-card .card-info h3 {
-            font-size: 1.15rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             letter-spacing: 0.2px;
         }
 
         .member-card .card-info p {
-            font-size: 0.82rem;
-            opacity: 0.85;
+            font-size: 0.92rem;
+            opacity: 0.88;
             font-weight: 400;
+        }
+
+        /* LinkedIn overlay */
+        .linkedin-mini {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        .member-card.active .linkedin-mini {
+            opacity: 1;
+        }
+
+        .linkedin-mini:hover {
+            background: #0077b5;
+            transform: scale(1.1);
+        }
+
+        /* "Click to connect" hint */
+        .click-hint {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            background: rgba(0,119,181,0.9);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .member-card.active .click-hint {
+            opacity: 1;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         /* Navigation */
@@ -153,12 +218,12 @@
             flex-direction: column;
             align-items: center;
             gap: 18px;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .counter-text {
             color: #888;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 3px;
         }
@@ -170,8 +235,8 @@
         }
 
         .nav-btn {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             border: 1.5px solid #1a1a1a;
             background: transparent;
@@ -181,12 +246,19 @@
             justify-content: center;
             transition: 0.25s;
             color: #1a1a1a;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         .nav-btn:hover {
             background: #1a1a1a;
             color: white;
+            transform: scale(1.08);
+        }
+
+        .nav-btn.paused {
+            background: #f9c74f;
+            border-color: #f9c74f;
+            color: #1a1a1a;
         }
 
         /* Progress bar */
@@ -198,15 +270,20 @@
 
         .progress-bar .bar {
             width: 40px;
-            height: 2px;
+            height: 3px;
             background: #ccc;
             border-radius: 2px;
             transition: 0.3s;
+            cursor: pointer;
         }
 
         .progress-bar .bar.active {
             background: #1a1a1a;
             width: 60px;
+        }
+
+        .progress-bar .bar:hover {
+            background: #999;
         }
 
         .drag-hint {
@@ -218,49 +295,65 @@
             margin-top: 5px;
         }
 
-        /* LinkedIn overlay */
-        .linkedin-mini {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 34px;
-            height: 34px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 50%;
+        /* Timer indicator */
+        .timer-info {
+            color: #888;
+            font-size: 0.72rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 0.9rem;
-            opacity: 0;
-            transition: 0.3s;
-            backdrop-filter: blur(10px);
+            gap: 6px;
+            margin-top: -5px;
         }
 
-        .member-card.active .linkedin-mini {
-            opacity: 1;
+        .timer-dot {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
         }
 
-        .linkedin-mini:hover {
-            background: #0077b5;
+        .timer-dot.paused {
+            background: #dc3545;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .team-page { padding: 20px 15px 40px; }
-            .team-header h1 { font-size: 1.6rem; }
-            .carousel-track { height: 380px; }
+        @media (max-width: 900px) {
+            .team-header h1 { font-size: 1.9rem; }
+            .carousel-track { height: 540px; }
             .member-card {
-                width: 220px;
-                height: 320px;
+                width: 340px;
+                height: 480px;
             }
-            .member-card .card-info { padding: 18px 16px; }
-            .member-card .card-info h3 { font-size: 1rem; }
-            .member-card .card-info p { font-size: 0.75rem; }
-            .nav-btn { width: 42px; height: 42px; }
-            .progress-bar .bar { width: 28px; }
-            .progress-bar .bar.active { width: 45px; }
+            .member-card .card-info h3 { font-size: 1.2rem; }
+            .member-card .card-info p { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 600px) {
+            .team-page { padding: 20px 15px 40px; }
+            .team-header h1 { font-size: 1.5rem; }
+            .team-header .small-tag { font-size: 0.62rem; letter-spacing: 2px; }
+            .carousel-wrap { min-height: 520px; }
+            .carousel-track { height: 480px; }
+            .member-card {
+                width: 280px;
+                height: 400px;
+                border-radius: 18px;
+            }
+            .member-card .card-info { padding: 22px 18px; }
+            .member-card .card-info h3 { font-size: 1.05rem; }
+            .member-card .card-info p { font-size: 0.78rem; }
+            .nav-btn { width: 44px; height: 44px; font-size: 1rem; }
+            .progress-bar .bar { width: 26px; }
+            .progress-bar .bar.active { width: 40px; }
+            .linkedin-mini { width: 36px; height: 36px; font-size: 0.85rem; }
+            .click-hint { font-size: 0.65rem; padding: 5px 10px; }
         }
     </style>
 </head>
@@ -301,7 +394,13 @@
                 <button class="nav-btn" onclick="nextSlide()" aria-label="Next">→</button>
             </div>
 
-            <div class="drag-hint">Drag · Scroll · Arrows</div>
+            <div class="timer-info">
+                <span class="timer-dot" id="timerDot"></span>
+                <span id="timerText">Auto-rotating every 4s</span>
+                <button class="nav-btn paused" id="pauseBtn" onclick="toggleAutoRotate()" style="width: 28px; height: 28px; font-size: 0.75rem; margin-left: 5px;" title="Pause/Resume">⏸</button>
+            </div>
+
+            <div class="drag-hint">Drag · Scroll · Arrows · Click for LinkedIn</div>
         </div>
 
     </div>
@@ -386,6 +485,48 @@
         let currentIndex = 0;
         const total = teamMembers.length;
 
+        // ===== Auto-rotate =====
+        const AUTO_ROTATE_MS = 4000; // 4 seconds
+        let autoRotateTimer = null;
+        let isAutoRotating = true;
+
+        function startAutoRotate() {
+            stopAutoRotate();
+            autoRotateTimer = setInterval(() => {
+                nextSlide(true);
+            }, AUTO_ROTATE_MS);
+        }
+
+        function stopAutoRotate() {
+            if (autoRotateTimer) {
+                clearInterval(autoRotateTimer);
+                autoRotateTimer = null;
+            }
+        }
+
+        function toggleAutoRotate() {
+            isAutoRotating = !isAutoRotating;
+            const btn = document.getElementById('pauseBtn');
+            const dot = document.getElementById('timerDot');
+            const txt = document.getElementById('timerText');
+
+            if (isAutoRotating) {
+                startAutoRotate();
+                btn.textContent = '⏸';
+                btn.classList.add('paused');
+                btn.title = 'Pause';
+                dot.classList.remove('paused');
+                txt.textContent = 'Auto-rotating every 4s';
+            } else {
+                stopAutoRotate();
+                btn.textContent = '▶';
+                btn.classList.remove('paused');
+                btn.title = 'Resume';
+                dot.classList.add('paused');
+                txt.textContent = 'Auto-rotate paused';
+            }
+        }
+
         // ===== Build cards =====
         function buildCards() {
             const track = document.getElementById('carouselTrack');
@@ -396,14 +537,13 @@
                 card.className = 'member-card';
                 card.dataset.index = i;
 
-                const initials = m.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                const hasLinkedIn = m.linkedin && m.linkedin !== '#';
 
                 card.innerHTML = `
-                    <img data-photo="${m.photo}" data-initials="${initials}" data-name="${m.name}" alt="${m.name}">
-                    ${m.linkedin !== '#' ? `
-                        <a href="${m.linkedin}" target="_blank" class="linkedin-mini" onclick="event.stopPropagation()" title="LinkedIn">
-                            in
-                        </a>
+                    <img data-photo="${m.photo}" data-name="${m.name}" alt="${m.name}">
+                    ${hasLinkedIn ? `
+                        <div class="click-hint">Click to view LinkedIn →</div>
+                        <div class="linkedin-mini">in</div>
                     ` : ''}
                     <div class="card-info">
                         <h3>${m.name}</h3>
@@ -411,8 +551,15 @@
                     </div>
                 `;
 
-                card.addEventListener('click', () => {
-                    if (i !== currentIndex) goToSlide(i);
+                // Click on active card → open LinkedIn
+                card.addEventListener('click', (e) => {
+                    if (i === currentIndex) {
+                        if (hasLinkedIn) {
+                            window.open(m.linkedin, '_blank');
+                        }
+                    } else {
+                        goToSlide(i);
+                    }
                 });
 
                 track.appendChild(card);
@@ -421,13 +568,12 @@
             // Smart image loading
             document.querySelectorAll('.member-card img').forEach(img => {
                 const photoBase = img.getAttribute('data-photo').replace(/\.[^.]+$/, '');
-                const initials = img.getAttribute('data-initials');
                 const name = img.getAttribute('data-name');
                 let fmtIndex = 0;
 
                 function tryNext() {
                     if (fmtIndex >= formats.length) {
-                        img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=333&color=fff&size=400';
+                        img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=333&color=fff&size=600';
                         return;
                     }
                     const testUrl = photoBase + '.' + formats[fmtIndex];
@@ -446,7 +592,6 @@
                 const bar = document.createElement('div');
                 bar.className = 'bar';
                 bar.dataset.idx = i;
-                bar.style.cursor = 'pointer';
                 bar.addEventListener('click', () => goToSlide(i));
                 pb.appendChild(bar);
             }
@@ -485,19 +630,25 @@
         }
 
         // ===== Navigation =====
-        function nextSlide() {
+        function nextSlide(auto = false) {
             currentIndex = (currentIndex + 1) % total;
             updateCarousel();
+            if (auto && isAutoRotating) {
+                // Restart timer to avoid rapid clicks
+                startAutoRotate();
+            }
         }
 
         function prevSlide() {
             currentIndex = (currentIndex - 1 + total) % total;
             updateCarousel();
+            if (isAutoRotating) startAutoRotate();
         }
 
         function goToSlide(i) {
             currentIndex = i;
             updateCarousel();
+            if (isAutoRotating) startAutoRotate();
         }
 
         // ===== Keyboard =====
@@ -508,18 +659,11 @@
 
         // ===== Drag / Swipe =====
         const wrap = document.getElementById('carouselWrap');
-        let startX = 0, isDown = false, moved = false;
+        let startX = 0, isDown = false;
 
         wrap.addEventListener('mousedown', (e) => {
             isDown = true;
             startX = e.clientX;
-            moved = false;
-        });
-
-        wrap.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
-            const dx = e.clientX - startX;
-            if (Math.abs(dx) > 50) moved = true;
         });
 
         wrap.addEventListener('mouseup', (e) => {
@@ -555,8 +699,15 @@
             }
         }, { passive: true });
 
+        // Pause auto-rotate when tab is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopAutoRotate();
+            else if (isAutoRotating) startAutoRotate();
+        });
+
         // Init
         buildCards();
+        startAutoRotate();
     </script>
 
 </body>
