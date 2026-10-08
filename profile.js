@@ -1,6 +1,7 @@
 /* ============================================
    HASK TalentConnect - Profile JavaScript
    Complete Bestway-style Profile System
+   with Cloudinary Profile Picture Upload
    ============================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -16,6 +17,9 @@ import {
     setDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// ============================================
+// FIREBASE CONFIG
+// ============================================
 const firebaseConfig = {
     apiKey: "AIzaSyAreIiCnSheAeXc2wNeU7-qFj-qFhaXZAo",
     authDomain: "hask-talentconnect.firebaseapp.com",
@@ -24,6 +28,14 @@ const firebaseConfig = {
     messagingSenderId: "532290737820",
     appId: "1:532290737820:web:49f70281b0f34837757f59"
 };
+
+// ============================================
+// CLOUDINARY CONFIG
+// ============================================
+const CLOUDINARY_CLOUD_NAME = "mabktzhu";
+const CLOUDINARY_API_KEY = "958262513531712";
+const CLOUDINARY_PRESET = "hask_unsigned";
+const CLOUDINARY_FOLDER = "hask-talentconnect/profiles";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -175,6 +187,90 @@ function attachCnicFormatter() {
 }
 
 // ============================================
+// PROFILE PICTURE UPLOAD (Cloudinary)
+// ============================================
+window.handlePicUpload = async function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate
+    if (file.size > 5 * 1024 * 1024) {
+        showMessage('❌ Picture must be less than 5MB.', 'error');
+        event.target.value = '';
+        return;
+    }
+    if (!file.type.startsWith('image/')) {
+        showMessage('❌ Only image files are allowed.', 'error');
+        event.target.value = '';
+        return;
+    }
+
+    const preview = document.getElementById('picPreview');
+    const oldContent = preview.innerHTML;
+    preview.innerHTML = '<div style="font-size:1.5rem;">⏳</div>';
+
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_PRESET);
+        formData.append('folder', CLOUDINARY_FOLDER);
+        formData.append('public_id', `user_${currentUser.uid}`);
+        formData.append('overwrite', 'true');
+        formData.append('invalidate', 'true');
+
+        const res = await fetch(
+            `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+            { method: 'POST', body: formData }
+        );
+
+        if (!res.ok) {
+            const errText = await res.text();
+            throw new Error("Upload failed: " + errText);
+        }
+
+        const data = await res.json();
+        const downloadURL = data.secure_url;
+
+        if (!profileData.personal) profileData.personal = {};
+        profileData.personal.profilePic = downloadURL;
+        await saveProfile();
+
+        preview.innerHTML = `<img src="${downloadURL}" alt="Profile">`;
+        renderSidebarUser();
+
+        event.target.value = '';
+        showMessage('✅ Profile picture updated!', 'success');
+    } catch (err) {
+        console.error(err);
+        preview.innerHTML = oldContent;
+        showMessage('❌ Upload failed: ' + err.message, 'error');
+        event.target.value = '';
+    }
+};
+
+// ============================================
+// REMOVE PROFILE PICTURE
+// ============================================
+window.removePic = async function() {
+    if (!confirm('Remove your profile picture?')) return;
+
+    const preview = document.getElementById('picPreview');
+    preview.innerHTML = '📷';
+
+    try {
+        profileData.personal = profileData.personal || {};
+        profileData.personal.profilePic = '';
+        await saveProfile();
+
+        renderSidebarUser();
+        showMessage('✅ Picture removed', 'success');
+    } catch (err) {
+        console.error(err);
+        showMessage('❌ ' + err.message, 'error');
+    }
+};
+
+// ============================================
 // AREA OF INTEREST — Other handling
 // ============================================
 window.handleInterestChange = function() {
@@ -193,34 +289,57 @@ window.handleInterestChange = function() {
 };
 
 // ============================================
-// PROFILE PICTURE
+// TOGGLE: Crime Details
 // ============================================
-window.previewPicUrl = function() {
-    const url = document.getElementById('picUrl').value.trim();
-    const preview = document.getElementById('picPreview');
+window.toggleCrimeDetails = function() {
+    const val = document.getElementById('mCrime').value;
+    const field = document.getElementById('crimeDetailsField');
+    const input = document.getElementById('mCrimeDetails');
 
-    if (!url) {
-        preview.innerHTML = '📷';
-        return;
+    if (val === 'Yes') {
+        field.style.display = 'flex';
+        input.setAttribute('required', 'required');
+    } else {
+        field.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = '';
     }
-
-    // Load and check
-    const img = new Image();
-    img.onload = () => {
-        preview.innerHTML = `<img src="${url}" alt="Profile">`;
-    };
-    img.onerror = () => {
-        preview.innerHTML = '❌';
-    };
-    img.src = url;
 };
 
-window.removePic = function() {
-    document.getElementById('picUrl').value = '';
-    document.getElementById('picPreview').innerHTML = '📷';
-    profileData.personal = profileData.personal || {};
-    profileData.personal.profilePic = '';
-    saveProfile().then(() => showMessage('✅ Picture removed', 'success'));
+// ============================================
+// TOGGLE: Disability Details
+// ============================================
+window.toggleDisabilityDetails = function() {
+    const val = document.getElementById('mDisability').value;
+    const field = document.getElementById('disabilityDetailsField');
+    const input = document.getElementById('mDisabilityDetails');
+
+    if (val === 'Yes') {
+        field.style.display = 'flex';
+        input.setAttribute('required', 'required');
+    } else {
+        field.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = '';
+    }
+};
+
+// ============================================
+// TOGGLE: Religion Other
+// ============================================
+window.toggleReligionOther = function() {
+    const val = document.getElementById('mReligion').value;
+    const field = document.getElementById('religionOtherField');
+    const input = document.getElementById('mReligionOther');
+
+    if (val === 'Other') {
+        field.style.display = 'flex';
+        input.setAttribute('required', 'required');
+    } else {
+        field.style.display = 'none';
+        input.removeAttribute('required');
+        input.value = '';
+    }
 };
 
 // ============================================
@@ -284,7 +403,6 @@ function renderSidebarUser() {
     nameEl.textContent = name;
     idEl.textContent = '🆔 ' + (userData.userId || '—');
 
-    // Avatar — use profile picture if exists
     const pic = profileData.personal && profileData.personal.profilePic;
     if (pic) {
         avatarEl.innerHTML = `<img src="${pic}" alt="Avatar">`;
@@ -321,8 +439,7 @@ function updateProgress() {
         p.references.ref1Name && p.references.ref1Email &&
         p.references.ref2Name && p.references.ref2Email);
 
-    progressData.misc = !!(p.misc &&
-        p.misc.crime && p.misc.disability && p.misc.source);
+    progressData.misc = !!(p.misc && p.misc.crime && p.misc.disability && p.misc.source);
 
     progressData.compensation = !!(p.compensation &&
         p.compensation.basic !== undefined &&
@@ -439,7 +556,6 @@ function applyDefaults() {
 
     // Area of Interest
     if (p.interest) {
-        // If interest is not in standard list, it's a custom value
         const standardOptions = ['IT & Software','Sales & Marketing','Accounting & Finance','HR & Admin','Engineering','Education','Healthcare','Construction','Transport','Security','Hospitality','Retail','Manufacturing','Textile','Telecom','Other'];
         if (standardOptions.includes(p.interest)) {
             setVal('pInterest', p.interest);
@@ -448,7 +564,6 @@ function applyDefaults() {
                 setVal('pOtherInterest', p.otherInterest || '');
             }
         } else {
-            // Custom value — add to list as new option
             addCustomInterestOption(p.interest);
             setVal('pInterest', p.interest);
         }
@@ -466,7 +581,6 @@ function applyDefaults() {
 
     // Profile Pic
     if (p.profilePic) {
-        setVal('picUrl', p.profilePic);
         const preview = document.getElementById('picPreview');
         preview.innerHTML = `<img src="${p.profilePic}" alt="Profile">`;
     }
@@ -524,7 +638,16 @@ function applyDefaults() {
     setVal('mLinkedin', m.linkedin || '');
     setVal('mBlood', m.blood || '');
     setVal('mMarital', m.marital || '');
-    setVal('mReligion', m.religion || '');
+
+    // Religion
+    const standardReligions = ['Islam', 'Christianity', 'Hinduism', 'Sikhism', 'Buddhism'];
+    if (m.religion && !standardReligions.includes(m.religion) && m.religion !== '') {
+        setVal('mReligion', 'Other');
+        document.getElementById('religionOtherField').style.display = 'flex';
+        setVal('mReligionOther', m.religion);
+    } else {
+        setVal('mReligion', m.religion || '');
+    }
 
     // Show details if crime/disability = Yes
     if (m.crime === 'Yes') {
@@ -564,11 +687,9 @@ function addCustomInterestOption(value) {
     const sel = document.getElementById('pInterest');
     if (!sel) return;
 
-    // Check if already exists
     const exists = Array.from(sel.options).some(o => o.value === value);
     if (exists) return;
 
-    // Add before "Other"
     const otherOption = Array.from(sel.options).find(o => o.value === 'Other');
     const newOpt = document.createElement('option');
     newOpt.value = value;
@@ -592,42 +713,6 @@ function getVal(id) {
 }
 
 // ============================================
-// TOGGLE: Crime Details
-// ============================================
-window.toggleCrimeDetails = function() {
-    const val = document.getElementById('mCrime').value;
-    const field = document.getElementById('crimeDetailsField');
-    const input = document.getElementById('mCrimeDetails');
-
-    if (val === 'Yes') {
-        field.style.display = 'flex';
-        input.setAttribute('required', 'required');
-    } else {
-        field.style.display = 'none';
-        input.removeAttribute('required');
-        input.value = '';
-    }
-};
-
-// ============================================
-// TOGGLE: Disability Details
-// ============================================
-window.toggleDisabilityDetails = function() {
-    const val = document.getElementById('mDisability').value;
-    const field = document.getElementById('disabilityDetailsField');
-    const input = document.getElementById('mDisabilityDetails');
-
-    if (val === 'Yes') {
-        field.style.display = 'flex';
-        input.setAttribute('required', 'required');
-    } else {
-        field.style.display = 'none';
-        input.removeAttribute('required');
-        input.value = '';
-    }
-};
-
-// ============================================
 // SAVE: PERSONAL
 // ============================================
 window.savePersonal = async function(e) {
@@ -637,7 +722,6 @@ window.savePersonal = async function(e) {
     btn.textContent = 'Saving...';
 
     try {
-        // Handle interest
         let interestValue = getVal('pInterest');
         let otherInterest = '';
 
@@ -649,13 +733,11 @@ window.savePersonal = async function(e) {
                 btn.textContent = 'Save & Continue →';
                 return;
             }
-            // Save custom value to dropdown for future
             addCustomInterestOption(otherInterest);
-            // Use custom value as the actual interest
             interestValue = otherInterest;
         }
 
-        const profilePic = getVal('picUrl');
+        const profilePic = (profileData.personal && profileData.personal.profilePic) || '';
 
         profileData.personal = {
             title: getVal('pTitle'),
@@ -773,8 +855,8 @@ window.saveMisc = async function(e) {
     try {
         const crimeVal = getVal('mCrime');
         const disabilityVal = getVal('mDisability');
+        const religionVal = getVal('mReligion');
 
-        // Validate details if Yes
         if (crimeVal === 'Yes' && !getVal('mCrimeDetails')) {
             showMessage('❌ Please provide crime details.', 'error');
             btn.disabled = false;
@@ -783,6 +865,12 @@ window.saveMisc = async function(e) {
         }
         if (disabilityVal === 'Yes' && !getVal('mDisabilityDetails')) {
             showMessage('❌ Please provide disability details.', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Save & Continue →';
+            return;
+        }
+        if (religionVal === 'Other' && !getVal('mReligionOther')) {
+            showMessage('❌ Please specify your religion.', 'error');
             btn.disabled = false;
             btn.textContent = 'Save & Continue →';
             return;
@@ -799,7 +887,8 @@ window.saveMisc = async function(e) {
             linkedin: getVal('mLinkedin'),
             blood: getVal('mBlood'),
             marital: getVal('mMarital'),
-            religion: getVal('mReligion')
+            religion: religionVal === 'Other' ? getVal('mReligionOther') : religionVal,
+            religionType: religionVal
         };
         await saveProfile();
         updateProgress();
