@@ -986,3 +986,58 @@ footer p { opacity: 0.75; font-size: 0.85rem; }
     .profile-layout { display: block; }
     .profile-main { padding: 0; }
 }
+/* Fuel Allowance — mini labels */
+.fuel-inputs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.fuel-input-wrap {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mini-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 2px;
+}
+
+.fuel-input-wrap input {
+    padding: 9px 12px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    background: #fafbfc;
+    outline: none;
+    width: 100%;
+}
+
+.fuel-input-wrap input:focus {
+    border-color: #1a2a6c;
+    background: white;
+}
+
+/* Compensation rows — better alignment */
+.comp-row select {
+    padding: 9px 12px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    background: #fafbfc;
+    outline: none;
+    cursor: pointer;
+}
+
+.comp-row select:focus {
+    border-color: #1a2a6c;
+    background: white;
+}
