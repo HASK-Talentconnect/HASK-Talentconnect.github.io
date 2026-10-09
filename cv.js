@@ -1,6 +1,6 @@
 /* ============================================
-   HASK TalentConnect - CV Loader
-   Latest First Experience + Direct Download
+   HASK Talent Connect - CV JS (Final)
+   Silent download + Industry + Latest First
    ============================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -22,6 +22,15 @@ const db = getFirestore(app);
 
 const urlParams = new URLSearchParams(window.location.search);
 const isDownloadMode = urlParams.get('download') === '1';
+const isSilentMode = urlParams.get('silent') === '1';
+
+// Hide toolbar in silent mode
+if (isSilentMode && isDownloadMode) {
+    window.addEventListener('DOMContentLoaded', () => {
+        const tb = document.getElementById('toolbar');
+        if (tb) tb.style.display = 'none';
+    });
+}
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -39,13 +48,10 @@ onAuthStateChanged(auth, async (user) => {
         renderCV(userData, profile);
 
         document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('cvContent').style.display = 'block';
+        document.getElementById('cvWrapper').style.display = 'block';
 
-        // Auto-download if mode
         if (isDownloadMode) {
-            setTimeout(() => {
-                downloadPDF();
-            }, 800);
+            setTimeout(() => downloadPDF(), 900);
         }
 
     } catch (err) {
@@ -57,18 +63,30 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+// ============================================
+// RENDER CV
+// ============================================
 function renderCV(userData, profile) {
     const p = profile.personal || {};
+    const self = profile.self || {};
 
+    // Header date
     document.getElementById('headerDate').textContent = '📅 ' + formatDate(new Date());
+
+    // Name
     document.getElementById('cvName').textContent = p.fullName || userData.name || 'Your Name';
 
-    // Professional Title from Self Assessment (manual)
-    const self = profile.self || {};
+    // Professional Title (from Self Assessment)
     document.getElementById('cvRole').textContent = self.title || 'Professional';
 
+    // User ID
     document.getElementById('cvUserId').textContent = '🆔 ' + (userData.userId || '—');
 
+    // Running header ID
+    const headerId = document.getElementById('pageHeaderId');
+    if (headerId) headerId.textContent = '🆔 ' + (userData.userId || '—');
+
+    // Photo
     if (p.profilePic) {
         document.getElementById('cvPhoto').innerHTML = `<img src="${p.profilePic}" alt="Photo">`;
     }
@@ -80,13 +98,10 @@ function renderCV(userData, profile) {
     if (p.city || p.district) contacts.push(`<span>📍 ${esc(p.city || p.district)}${p.province ? ', ' + esc(p.province) : ''}</span>`);
     if (profile.misc && profile.misc.linkedin) contacts.push(`<span>🌐 <a href="${escA(profile.misc.linkedin)}" target="_blank">LinkedIn</a></span>`);
 
-    // Availability — show
-    if (p.availability) {
-        contacts.push(`<span>📅 <strong>Availability:</strong> ${esc(p.availability)}</span>`);
-    }
-
-    // Notice Period (from misc) — show if not immediate
-    if (profile.misc && profile.misc.noticeType === 'Period' && profile.misc.noticeNum) {
+    // Notice period
+    if (profile.misc && profile.misc.noticeType === 'Immediate') {
+        contacts.push(`<span>📅 <strong>Available:</strong> Immediate / 24 Hours</span>`);
+    } else if (profile.misc && profile.misc.noticeType === 'Period' && profile.misc.noticeNum) {
         contacts.push(`<span>⏰ <strong>Notice:</strong> ${esc(profile.misc.noticeNum)} ${esc(profile.misc.noticeUnit || 'Day(s)')}</span>`);
     }
 
@@ -122,7 +137,7 @@ function renderCV(userData, profile) {
         }
     }
 
-    // Experience — LATEST FIRST (sort by joining date desc)
+    // Experience — LATEST FIRST
     const exp = profile.experience || {};
     let entries = (exp.entries || []).slice();
     entries.sort((a, b) => {
@@ -134,7 +149,6 @@ function renderCV(userData, profile) {
     if (entries.length > 0) {
         document.getElementById('experienceSection').style.display = 'block';
 
-        // Calculate total years
         let totalYears = 0;
         entries.forEach(e => {
             const j = new Date(e.joining);
@@ -229,6 +243,9 @@ function renderCV(userData, profile) {
     }
 }
 
+// ============================================
+// REFERENCE RENDERER
+// ============================================
 function renderRef(refs, num, type) {
     return `
         <div class="ref-item">
@@ -243,7 +260,9 @@ function renderRef(refs, num, type) {
     `;
 }
 
-// ============ DIRECT PDF DOWNLOAD ============
+// ============================================
+// DIRECT PDF DOWNLOAD
+// ============================================
 window.downloadPDF = function() {
     const element = document.getElementById('cvContent');
     const today = new Date();
@@ -251,44 +270,52 @@ window.downloadPDF = function() {
     const dateStr = `${String(today.getDate()).padStart(2,'0')}-${m[today.getMonth()]}-${today.getFullYear()}`;
 
     // Filename: HASK-CV-{CandidateID}-{Name}-{Title}-{Date}.pdf
-    const userId = document.getElementById('cvUserId').textContent.replace('🆔', '').trim();
-    const name = document.getElementById('cvName').textContent.replace(/\s+/g, '_');
-    const role = document.getElementById('cvRole').textContent.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
+    const userId = (document.getElementById('cvUserId').textContent || '').replace(/🆔/g, '').trim() || 'NA';
+    const name = (document.getElementById('cvName').textContent || 'Candidate').replace(/\s+/g, '_');
+    const role = (document.getElementById('cvRole').textContent || 'Professional').replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
     const filename = `HASK-CV-${userId}-${name}-${role}-${dateStr}.pdf`;
 
     // Hide toolbar during capture
-    document.getElementById('toolbar').style.display = 'none';
+    const tb = document.getElementById('toolbar');
+    if (tb) tb.style.display = 'none';
 
     const opt = {
-        margin: 0,
+        margin: [12, 14, 12, 14], // top, right, bottom, left (mm) — uniform
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
+        html2canvas: {
             scale: 2,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
             scrollY: 0
         },
-        jsPDF: { 
-            unit: 'mm', 
-            format: 'a4', 
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
             orientation: 'portrait'
         },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.exp-entry', '.edu-entry', '.ref-item', '.section', '.profile-section', '.two-column'] }
     };
 
     html2pdf().set(opt).from(element).save().then(() => {
-        document.getElementById('toolbar').style.display = 'flex';
+        if (tb) tb.style.display = 'flex';
         console.log('✅ CV Downloaded:', filename);
+
+        // Auto-close if silent mode
+        if (isSilentMode) {
+            setTimeout(() => window.close(), 500);
+        }
     }).catch(err => {
-        document.getElementById('toolbar').style.display = 'flex';
+        if (tb) tb.style.display = 'flex';
         console.error('Download error:', err);
         alert('Download failed: ' + err.message);
     });
 };
 
-// ============ HELPERS ============
+// ============================================
+// HELPERS
+// ============================================
 function formatDate(d) {
     const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${String(d.getDate()).padStart(2,'0')}-${m[d.getMonth()]}-${d.getFullYear()}`;
