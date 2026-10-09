@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="toolbar no-print">
+    <div class="toolbar no-print" id="toolbar">
         <div class="toolbar-left">
             <a href="profile.html" class="toolbar-btn">← Back to Profile</a>
         </div>
@@ -79,6 +79,11 @@
             </div>
         </div>
 
+        <div class="section" id="languagesSection" style="display: none;">
+            <h2 class="section-title">🌐 Languages</h2>
+            <div class="section-body" id="cvLanguages"></div>
+        </div>
+
         <div class="section" id="referencesSection" style="display: none;">
             <h2 class="section-title">👥 References</h2>
             <div class="section-body">
@@ -93,6 +98,7 @@
 
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script type="module" src="cv.js"></script>
 </body>
 </html>
