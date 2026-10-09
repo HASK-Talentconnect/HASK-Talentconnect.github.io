@@ -9,6 +9,9 @@
 </head>
 <body>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
     <nav class="navbar">
         <div class="logo">HASK TalentConnect</div>
         <ul class="menu">
@@ -44,16 +47,17 @@
                 </div>
             </div>
 
-<div class="cv-action">
-    <button type="button" onclick="window.open('cv.html', '_blank')" class="btn-preview-cv">👁️ Preview My CV</button>
-</div>
+            <div class="cv-action">
+                <button type="button" onclick="window.open('cv.html', '_blank')" class="btn-preview-cv">👁️ Preview My CV</button>
+                <button type="button" onclick="directDownloadCV()" class="btn-download-cv">📥 Download CV</button>
+            </div>
 
             <ul class="sidebar-menu" id="sidebarMenu">
                 <li><a href="#" class="menu-item" data-section="personal"><span class="check-box" id="check-personal">⬜</span><span class="menu-label">Personal Details</span></a></li>
                 <li><a href="#" class="menu-item" data-section="education"><span class="check-box" id="check-education">⬜</span><span class="menu-label">Education</span></a></li>
                 <li><a href="#" class="menu-item" data-section="certifications"><span class="check-box" id="check-certifications">⬜</span><span class="menu-label">Certifications</span></a></li>
                 <li><a href="#" class="menu-item" data-section="experience"><span class="check-box" id="check-experience">⬜</span><span class="menu-label">Experience</span></a></li>
-                <li><a href="#" class="menu-item" data-section="skills"><span class="check-box" id="check-skills">⬜</span><span class="menu-label">Skills</span></a></li>
+                <li><a href="#" class="menu-item" data-section="skills"><span class="check-box" id="check-skills">⬜</span><span class="menu-label">Skills & Languages</span></a></li>
                 <li><a href="#" class="menu-item" data-section="self"><span class="check-box" id="check-self">⬜</span><span class="menu-label">Self Assessment</span></a></li>
                 <li><a href="#" class="menu-item" data-section="references"><span class="check-box" id="check-references">⬜</span><span class="menu-label">References</span></a></li>
                 <li><a href="#" class="menu-item" data-section="misc"><span class="check-box" id="check-misc">⬜</span><span class="menu-label">Miscellaneous</span></a></li>
@@ -82,8 +86,6 @@
         </aside>
 
         <main class="profile-main">
-
-            <div id="messageBox" class="message-box"></div>
 
             <!-- SECTION 1: PERSONAL -->
             <section class="profile-section active" id="section-personal">
@@ -150,7 +152,7 @@
                             <input type="text" id="pPermanentAddress" required>
                         </div>
                         <div class="field"><label>Landline #</label><input type="text" id="pLandline"></div>
-                        <div class="field"><label>Cell # <span class="req">*</span></label><input type="tel" id="pCell" placeholder="03XX-XXXXXXX" required></div>
+                        <div class="field"><label>Cell # <span class="req">*</span></label><input type="tel" id="pCell" placeholder="0300-8195675" maxlength="12" required></div>
                         <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="pEmail" required></div>
                     </div>
                     <div class="form-actions"><button type="submit" class="btn-save">Save & Continue →</button></div>
@@ -192,19 +194,24 @@
             <!-- SECTION 4: EXPERIENCE -->
             <section class="profile-section" id="section-experience">
                 <div class="section-header"><h2>💼 Experience</h2></div>
+
+                <!-- Industry-wise Experience Summary -->
+                <div class="exp-summary-box" id="expSummaryBox">
+                    <div class="exp-summary-title">💼 Experience Summary</div>
+                    <div class="exp-summary-total" id="expTotalYears">Total: 0 years</div>
+                    <div class="exp-summary-list" id="expSummaryList"></div>
+                </div>
+
                 <div class="exp-toggle">
                     <label>Do you have any working experience?</label>
                     <label class="radio-label"><input type="radio" name="hasExp" value="yes" onchange="toggleExperience(true)" checked> Yes</label>
                     <label class="radio-label"><input type="radio" name="hasExp" value="no" onchange="toggleExperience(false)"> No</label>
-                    <label style="margin-left: 30px;">Overall Experience <span class="req">*</span></label>
-                    <input type="number" id="overallExp" value="0" step="0.5" style="width: 80px;">
-                    <label style="margin-left: 20px;">Industry Experience <span class="req">*</span></label>
-                    <input type="number" id="industryExp" value="0" step="0.5" style="width: 80px;">
                 </div>
+
                 <button type="button" class="btn-add" onclick="openExperienceModal()"><span>⊕</span> Add Job Detail</button>
                 <div class="data-table-wrap">
                     <table class="data-table">
-                        <thead><tr><th>Employer</th><th>Job Title</th><th>Joining Date</th><th>Leaving Date</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Employer</th><th>Location</th><th>Job Title</th><th>Duration</th><th>Action</th></tr></thead>
                         <tbody id="experienceTableBody"><tr><td colspan="5" class="empty-row">No experience added yet</td></tr></tbody>
                     </table>
                 </div>
@@ -214,16 +221,31 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: SKILLS -->
+            <!-- SECTION 5: SKILLS & LANGUAGES -->
             <section class="profile-section" id="section-skills">
-                <div class="section-header"><h2>🛠️ Skills</h2></div>
-                <button type="button" class="btn-add" onclick="openSkillModal()"><span>⊕</span> Add Skill</button>
+                <div class="section-header"><h2>🛠️ Skills & Languages</h2></div>
+
+                <h4 class="sub-heading">Skills</h4>
+
+                <div class="skills-search-wrap">
+                    <input type="text" id="skillSearch" placeholder="🔍 Search skills (e.g. JavaScript, Cooking, Driving)..." oninput="filterSkillSuggestions()" autocomplete="off">
+                    <div class="skill-suggestions" id="skillSuggestions"></div>
+                </div>
+
+                <button type="button" class="btn-add" onclick="openSkillModal()"><span>⊕</span> Add Custom Skill</button>
+
                 <div class="data-table-wrap">
                     <table class="data-table">
                         <thead><tr><th>Skill Name</th><th>Skill Level</th><th>Description</th><th>Action</th></tr></thead>
                         <tbody id="skillsTableBody"><tr><td colspan="4" class="empty-row">No skills added yet</td></tr></tbody>
                     </table>
                 </div>
+
+                <h4 class="sub-heading" style="margin-top:25px;">🌐 Languages</h4>
+                <p class="section-note" style="margin-bottom:10px;">Select the languages you can speak, read, or write.</p>
+
+                <div class="languages-grid" id="languagesGrid"></div>
+
                 <div class="form-actions">
                     <button type="button" class="btn-prev" onclick="goToSection('experience')">← Previous</button>
                     <button type="button" class="btn-save" onclick="nextSection('self')">Save & Continue →</button>
@@ -235,6 +257,14 @@
                 <div class="section-header"><h2>📝 Self Assessment</h2></div>
                 <div class="green-banner">Self Assessment Details</div>
                 <form onsubmit="saveSelf(event)">
+
+                    <!-- Professional Title (manual) -->
+                    <div class="field">
+                        <label>Professional Title / Headline <span class="req">*</span></label>
+                        <input type="text" id="saTitle" maxlength="100" placeholder="e.g. Senior HR Executive, Mechanical Technician, Software Engineer" required>
+                        <small class="char-count">This appears under your name on your CV.</small>
+                    </div>
+
                     <div class="field"><label>Objective <span class="req">*</span></label><textarea id="saObjective" rows="3" maxlength="500" required></textarea><small class="char-count"><span id="c1">0</span> / 500</small></div>
                     <div class="field"><label>Strengths <span class="req">*</span></label><textarea id="saStrengths" rows="4" maxlength="500" required></textarea><small class="char-count"><span id="c2">0</span> / 500</small></div>
                     <div class="field"><label>Areas of Improvement <span class="req">*</span></label><textarea id="saImprovements" rows="4" maxlength="500" required></textarea><small class="char-count"><span id="c3">0</span> / 500</small></div>
@@ -257,7 +287,7 @@
                         <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref1Name" required></div>
                         <div class="field"><label>Designation <span class="req">*</span></label><input type="text" id="ref1Designation" required></div>
                         <div class="field"><label>Organization <span class="req">*</span></label><input type="text" id="ref1Org" required></div>
-                        <div class="field"><label>Phone # <span class="req">*</span></label><input type="tel" id="ref1Phone" required></div>
+                        <div class="field"><label>Phone # <span class="req">*</span></label><input type="tel" id="ref1Phone" placeholder="0300-8195675" maxlength="12" required></div>
                         <div class="field"><label>How long known? <span class="req">*</span></label><input type="number" id="ref1Known" step="0.5" required></div>
                         <div class="field full"><label>Email <span class="req">*</span></label><input type="email" id="ref1Email" required></div>
                     </div>
@@ -267,7 +297,7 @@
                         <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref2Name" required></div>
                         <div class="field"><label>Designation <span class="req">*</span></label><input type="text" id="ref2Designation" required></div>
                         <div class="field"><label>Organization <span class="req">*</span></label><input type="text" id="ref2Org" required></div>
-                        <div class="field"><label>Phone # <span class="req">*</span></label><input type="tel" id="ref2Phone" required></div>
+                        <div class="field"><label>Phone # <span class="req">*</span></label><input type="tel" id="ref2Phone" placeholder="0300-8195675" maxlength="12" required></div>
                         <div class="field"><label>How long known? <span class="req">*</span></label><input type="number" id="ref2Known" step="0.5" required></div>
                         <div class="field full"><label>Email <span class="req">*</span></label><input type="email" id="ref2Email" required></div>
                     </div>
@@ -378,23 +408,6 @@
             </section>
 
         </main>
-    </div>
-
-    <!-- CV Modal -->
-    <div class="cv-modal-overlay" id="cvModalOverlay">
-        <div class="cv-modal-box">
-            <div class="cv-modal-header">
-                <div class="cv-modal-title">📄 CV Preview</div>
-                <div class="cv-modal-actions">
-                    <button onclick="downloadCV()" class="cv-modal-btn primary">📥 Download PDF</button>
-                    <button onclick="printCV()" class="cv-modal-btn">🖨️ Print</button>
-                    <button onclick="closeCVModal()" class="cv-modal-btn close">✕ Close</button>
-                </div>
-            </div>
-            <div class="cv-modal-body" id="cvModalBody">
-                <div class="cv-loading"><div class="loader"></div><p>Generating your CV...</p></div>
-            </div>
-        </div>
     </div>
 
     <!-- Entry Modal -->
