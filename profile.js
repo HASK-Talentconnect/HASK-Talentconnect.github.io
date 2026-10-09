@@ -1,7 +1,6 @@
 /* ============================================
    HASK TalentConnect - Profile JavaScript
-   Complete Bestway-style Profile System
-   with Cloudinary Profile Picture Upload
+   Bestway-style Profile with Cloudinary Upload
    ============================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -144,6 +143,8 @@ onAuthStateChanged(auth, async (user) => {
     attachCharCounters();
     attachListeners();
 
+    updateAvatarControls();
+
     showFirstIncompleteSection();
 });
 
@@ -187,13 +188,12 @@ function attachCnicFormatter() {
 }
 
 // ============================================
-// PROFILE PICTURE UPLOAD (Cloudinary)
+// PROFILE PICTURE UPLOAD (Cloudinary - unsigned)
 // ============================================
 window.handlePicUpload = async function(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Validate
     if (file.size > 5 * 1024 * 1024) {
         showMessage('❌ Picture must be less than 5MB.', 'error');
         event.target.value = '';
@@ -205,18 +205,16 @@ window.handlePicUpload = async function(event) {
         return;
     }
 
-    const preview = document.getElementById('picPreview');
-    const oldContent = preview.innerHTML;
-    preview.innerHTML = '<div style="font-size:1.5rem;">⏳</div>';
+    const avatarEl = document.getElementById('sidebarAvatar');
+    const oldContent = avatarEl.innerHTML;
+    avatarEl.innerHTML = '⏳';
 
     try {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', CLOUDINARY_PRESET);
         formData.append('folder', CLOUDINARY_FOLDER);
-        formData.append('public_id', `user_${currentUser.uid}`);
-        formData.append('overwrite', 'true');
-        formData.append('invalidate', 'true');
+        // NOTE: unsigned upload does NOT allow public_id, overwrite, invalidate
 
         const res = await fetch(
             `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -235,14 +233,14 @@ window.handlePicUpload = async function(event) {
         profileData.personal.profilePic = downloadURL;
         await saveProfile();
 
-        preview.innerHTML = `<img src="${downloadURL}" alt="Profile">`;
-        renderSidebarUser();
+        avatarEl.innerHTML = `<img src="${downloadURL}" alt="Avatar">`;
+        updateAvatarControls();
 
         event.target.value = '';
         showMessage('✅ Profile picture updated!', 'success');
     } catch (err) {
         console.error(err);
-        preview.innerHTML = oldContent;
+        avatarEl.innerHTML = oldContent;
         showMessage('❌ Upload failed: ' + err.message, 'error');
         event.target.value = '';
     }
@@ -254,21 +252,29 @@ window.handlePicUpload = async function(event) {
 window.removePic = async function() {
     if (!confirm('Remove your profile picture?')) return;
 
-    const preview = document.getElementById('picPreview');
-    preview.innerHTML = '📷';
-
     try {
         profileData.personal = profileData.personal || {};
         profileData.personal.profilePic = '';
         await saveProfile();
 
         renderSidebarUser();
+        updateAvatarControls();
         showMessage('✅ Picture removed', 'success');
     } catch (err) {
         console.error(err);
         showMessage('❌ ' + err.message, 'error');
     }
 };
+
+// Show/hide upload & remove buttons based on whether pic exists
+function updateAvatarControls() {
+    const hasPic = !!(profileData.personal && profileData.personal.profilePic);
+    const uploadBtn = document.querySelector('.sidebar-avatar-controls .btn-pic-upload');
+    const removeBtn = document.querySelector('.sidebar-avatar-controls .btn-pic-remove');
+
+    if (uploadBtn) uploadBtn.classList.toggle('hide', hasPic);
+    if (removeBtn) removeBtn.classList.toggle('show', hasPic);
+}
 
 // ============================================
 // AREA OF INTEREST — Other handling
@@ -343,7 +349,7 @@ window.toggleReligionOther = function() {
 };
 
 // ============================================
-// LOAD PROFILE FROM FIRESTORE
+// LOAD PROFILE
 // ============================================
 async function loadProfile() {
     try {
@@ -554,7 +560,6 @@ function applyDefaults() {
     setVal('pDob', p.dob || '');
     setVal('pGender', p.gender || '');
 
-    // Area of Interest
     if (p.interest) {
         const standardOptions = ['IT & Software','Sales & Marketing','Accounting & Finance','HR & Admin','Engineering','Education','Healthcare','Construction','Transport','Security','Hospitality','Retail','Manufacturing','Textile','Telecom','Other'];
         if (standardOptions.includes(p.interest)) {
@@ -578,12 +583,6 @@ function applyDefaults() {
     setVal('pLandline', p.landline || '');
     setVal('pCell', p.cell || '');
     setVal('pEmail', p.email || userData.email || '');
-
-    // Profile Pic
-    if (p.profilePic) {
-        const preview = document.getElementById('picPreview');
-        preview.innerHTML = `<img src="${p.profilePic}" alt="Profile">`;
-    }
 
     document.getElementById('candidateId').textContent = userData.userId || '—';
 
@@ -639,7 +638,6 @@ function applyDefaults() {
     setVal('mBlood', m.blood || '');
     setVal('mMarital', m.marital || '');
 
-    // Religion
     const standardReligions = ['Islam', 'Christianity', 'Hinduism', 'Sikhism', 'Buddhism'];
     if (m.religion && !standardReligions.includes(m.religion) && m.religion !== '') {
         setVal('mReligion', 'Other');
@@ -649,7 +647,6 @@ function applyDefaults() {
         setVal('mReligion', m.religion || '');
     }
 
-    // Show details if crime/disability = Yes
     if (m.crime === 'Yes') {
         document.getElementById('crimeDetailsField').style.display = 'flex';
         setVal('mCrimeDetails', m.crimeDetails || '');
@@ -1504,5 +1501,5 @@ function showMessage(text, type = 'info') {
     box.className = 'message-box show ' + type;
     setTimeout(() => {
         box.classList.remove('show');
-    }, 4000);
+    }, 5000);
 }
