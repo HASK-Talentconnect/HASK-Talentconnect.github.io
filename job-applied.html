@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - HASK TalentConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="job-applied.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">HASK TalentConnect</div>
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Job Dashboard</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="job-applied.html" class="active-link">Job Applied</a></li>
+            <li><a href="#" id="logoutBtn" class="btn-primary">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="applied-wrap">
+
+        <!-- Header -->
+        <div class="applied-header">
+            <div>
+                <h1>📄 My Job Applications</h1>
+                <p class="section-note">Track all your applications and their current status</p>
+            </div>
+
+            <!-- Notification Bell -->
+            <div class="notif-wrap">
+                <button class="notif-bell" id="notifBell" aria-label="Notifications">
+                    🔔
+                    <span class="notif-badge" id="notifBadge" style="display:none;"></span>
+                </button>
+                <div class="notif-dropdown" id="notifDropdown">
+                    <div class="notif-header">
+                        <span>Messages & Updates</span>
+                        <button onclick="markAllRead()" class="notif-mark-read">Mark all read</button>
+                    </div>
+                    <div class="notif-list" id="notifList">
+                        <div class="notif-empty">
+                            <div style="font-size:2rem; margin-bottom:10px;">🔔</div>
+                            <p>No notifications yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-num" id="statTotal">0</div>
+                <div class="stat-lbl">Total Applications</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num" id="statWaiting">0</div>
+                <div class="stat-lbl">Waiting</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num" id="statReview">0</div>
+                <div class="stat-lbl">Under Review</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num" id="statClosed">0</div>
+                <div class="stat-lbl">Closed</div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-row">
+            <button class="filter-btn active" data-status="all" onclick="filterApplications('all', this)">All</button>
+            <button class="filter-btn" data-status="waiting" onclick="filterApplications('waiting', this)">🟡 Waiting</button>
+            <button class="filter-btn" data-status="reviewed" onclick="filterApplications('reviewed', this)">🔵 Under Review</button>
+            <button class="filter-btn" data-status="hired" onclick="filterApplications('hired', this)">🟢 Hired</button>
+            <button class="filter-btn" data-status="rejected" onclick="filterApplications('rejected', this)">⚫ Rejected</button>
+            <button class="filter-btn" data-status="closed" onclick="filterApplications('closed', this)">🔴 Closed</button>
+        </div>
+
+        <!-- Applications List -->
+        <div class="applied-list" id="appliedList">
+            <div class="loading-box">
+                <div class="loader"></div>
+                <p>Loading your applications...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="job-applied.js"></script>
+</body>
+</html>
