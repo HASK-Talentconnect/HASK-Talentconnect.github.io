@@ -113,8 +113,7 @@ function renderApplications() {
             <div class="empty-box">
                 <span class="icon">📭</span>
                 <h3>No Applications Yet</h3>
-                <p>You haven't applied for any jobs. Browse jobs and start applying!</p>
-                <a href="jobs.html" class="btn-browse">Browse Jobs →</a>
+                <p>You haven't applied for any jobs yet.</p>
             </div>
         `;
         return;
