@@ -1,5 +1,6 @@
 /* ============================================
-   HASK TalentConnect - CV/Resume Loader
+   HASK TalentConnect - CV Loader
+   Latest First Experience + Direct Download
    ============================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -19,6 +20,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+const urlParams = new URLSearchParams(window.location.search);
+const isDownloadMode = urlParams.get('download') === '1';
+
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         window.location.replace('login.html?redirect=' + encodeURIComponent('cv.html'));
@@ -37,11 +41,18 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById('loadingScreen').style.display = 'none';
         document.getElementById('cvContent').style.display = 'block';
 
+        // Auto-download if mode
+        if (isDownloadMode) {
+            setTimeout(() => {
+                downloadPDF();
+            }, 800);
+        }
+
     } catch (err) {
         console.error(err);
         document.getElementById('loadingScreen').innerHTML = `
             <p style="color:#c33;">❌ Failed to load CV: ${err.message}</p>
-            <a href="profile.html" style="color:#1a2a6c; font-weight:bold; margin-top:15px;">← Back to Profile</a>
+            <a href="profile.html" style="color:#1a2a6c;font-weight:bold;margin-top:15px;">← Back to Profile</a>
         `;
     }
 });
@@ -52,28 +63,31 @@ function renderCV(userData, profile) {
     document.getElementById('headerDate').textContent = '📅 ' + formatDate(new Date());
     document.getElementById('cvName').textContent = p.fullName || userData.name || 'Your Name';
 
-    // AI Title
-    const aiTitle = generateAITitle(profile);
-    document.getElementById('cvRole').textContent = aiTitle;
+    // Professional Title from Self Assessment (manual)
+    const self = profile.self || {};
+    document.getElementById('cvRole').textContent = self.title || 'Professional';
+
     document.getElementById('cvUserId').textContent = '🆔 ' + (userData.userId || '—');
 
     if (p.profilePic) {
         document.getElementById('cvPhoto').innerHTML = `<img src="${p.profilePic}" alt="Photo">`;
     }
 
+    // Contacts
     const contacts = [];
-    if (p.cell) contacts.push(`<span>📞 ${escapeHtml(p.cell)}</span>`);
-    if (p.email || userData.email) contacts.push(`<span>✉️ ${escapeHtml(p.email || userData.email)}</span>`);
-    if (p.city || p.district) contacts.push(`<span>📍 ${escapeHtml(p.city || p.district)}${p.province ? ', ' + escapeHtml(p.province) : ''}</span>`);
-    if (profile.misc && profile.misc.linkedin) contacts.push(`<span>🌐 <a href="${escapeAttr(profile.misc.linkedin)}" target="_blank">LinkedIn</a></span>`);
+    if (p.cell) contacts.push(`<span>📞 ${esc(p.cell)}</span>`);
+    if (p.email || userData.email) contacts.push(`<span>✉️ ${esc(p.email || userData.email)}</span>`);
+    if (p.city || p.district) contacts.push(`<span>📍 ${esc(p.city || p.district)}${p.province ? ', ' + esc(p.province) : ''}</span>`);
+    if (profile.misc && profile.misc.linkedin) contacts.push(`<span>🌐 <a href="${escA(profile.misc.linkedin)}" target="_blank">LinkedIn</a></span>`);
     document.getElementById('cvContact').innerHTML = contacts.join('');
 
-    const self = profile.self || {};
+    // Objective
     if (self.objective) {
         document.getElementById('objectiveSection').style.display = 'block';
         document.getElementById('cvObjective').textContent = self.objective;
     }
 
+    // Skills + Strengths
     const skills = profile.skills || [];
     if (skills.length > 0 || self.strengths) {
         document.getElementById('skillsStrengthsSection').style.display = 'grid';
@@ -81,8 +95,8 @@ function renderCV(userData, profile) {
         if (skills.length > 0) {
             document.getElementById('cvSkills').innerHTML = skills.map(s => `
                 <div class="skill-item">
-                    <span class="skill-name">${escapeHtml(s.name)}</span>
-                    <span class="skill-level">${escapeHtml(s.level)}</span>
+                    <span class="skill-name">${esc(s.name)}</span>
+                    <span class="skill-level">${esc(s.level)}</span>
                 </div>
             `).join('');
         } else {
@@ -90,37 +104,62 @@ function renderCV(userData, profile) {
         }
 
         if (self.strengths) {
-            const strengthsList = self.strengths.split(/[\n,•]+/).map(s => s.trim()).filter(s => s);
-            document.getElementById('cvStrengths').innerHTML = strengthsList.map(s => `<div class="list-item">${escapeHtml(s)}</div>`).join('');
+            const list = self.strengths.split(/[\n,•]+/).map(s => s.trim()).filter(s => s);
+            document.getElementById('cvStrengths').innerHTML = list.map(s => `<div class="list-item">${esc(s)}</div>`).join('');
         } else {
             document.getElementById('cvStrengths').innerHTML = '<p style="color:#888;font-style:italic;">No strengths</p>';
         }
     }
 
+    // Experience — LATEST FIRST (sort by joining date desc)
     const exp = profile.experience || {};
-    const entries = exp.entries || [];
+    let entries = (exp.entries || []).slice();
+    entries.sort((a, b) => {
+        const da = new Date(a.joining || 0);
+        const dbb = new Date(b.joining || 0);
+        return dbb - da;
+    });
+
     if (entries.length > 0) {
         document.getElementById('experienceSection').style.display = 'block';
-        document.getElementById('cvExpYears').textContent = exp.overall ? `(${exp.overall} Years Total)` : '';
+
+        // Calculate total years
+        let totalYears = 0;
+        entries.forEach(e => {
+            const j = new Date(e.joining);
+            const l = e.isCurrent || !e.leaving ? new Date() : new Date(e.leaving);
+            if (!isNaN(j) && !isNaN(l)) {
+                totalYears += Math.max(0, (l - j) / (1000 * 60 * 60 * 24 * 365.25));
+            }
+        });
+        document.getElementById('cvExpYears').textContent = totalYears > 0 ? `(${totalYears.toFixed(1)} Years Total)` : '';
 
         document.getElementById('cvExperience').innerHTML = entries.map(e => {
             const descLines = (e.description || '').split('\n').map(l => l.trim()).filter(l => l);
             const descHTML = descLines.length > 0
-                ? `<div class="exp-desc">${descLines.map(l => `<div>${escapeHtml(l.replace(/^[•\-\*]\s*/, ''))}</div>`).join('')}</div>`
+                ? `<div class="exp-desc">${descLines.map(l => `<div>${esc(l.replace(/^[•\-\*]\s*/, ''))}</div>`).join('')}</div>`
                 : '';
+
+            const contactHTML = e.contact === 'Yes' && e.contactName
+                ? `<div class="exp-contact-info">📞 Contact: <strong>${esc(e.contactName)}</strong>${e.contactTitle ? ' (' + esc(e.contactTitle) + ')' : ''}${e.contactPhone ? ' — ' + esc(e.contactPhone) : ''}</div>`
+                : '';
+
             return `
                 <div class="exp-entry">
                     <div class="exp-header">
-                        <span class="exp-title">${escapeHtml(e.title)}</span>
-                        <span class="exp-dates">${formatMonth(e.joining)} – ${e.leaving ? formatMonth(e.leaving) : 'Present'}</span>
+                        <span class="exp-title">${esc(e.title)}</span>
+                        <span class="exp-dates">${fmtMonth(e.joining)} – ${e.isCurrent ? 'Present' : (e.leaving ? fmtMonth(e.leaving) : '—')}</span>
                     </div>
-                    <div class="exp-company">${escapeHtml(e.employer)}${e.business ? ' • ' + escapeHtml(e.business) : ''}</div>
+                    <div class="exp-company">${esc(e.employer)}${e.industry ? ' • ' + esc(e.industry) : ''}</div>
+                    ${e.location ? `<div class="exp-location">📍 ${esc(e.location)}</div>` : ''}
                     ${descHTML}
+                    ${contactHTML}
                 </div>
             `;
         }).join('');
     }
 
+    // Education + Certifications
     const edu = profile.education || [];
     const certs = profile.certifications || [];
     if (edu.length > 0 || certs.length > 0) {
@@ -130,11 +169,11 @@ function renderCV(userData, profile) {
             document.getElementById('cvEducation').innerHTML = edu.map(e => `
                 <div class="edu-entry">
                     <div class="edu-header">
-                        <span class="edu-degree">${escapeHtml(e.level)}</span>
-                        <span class="edu-year">${formatMonth(e.date)}</span>
+                        <span class="edu-degree">${esc(e.level)}</span>
+                        <span class="edu-year">${fmtMonth(e.date)}</span>
                     </div>
-                    <div class="edu-institution">${escapeHtml(e.title)} — ${escapeHtml(e.institution)}</div>
-                    ${e.percentage ? `<div class="edu-grade">Grade: ${escapeHtml(e.percentage)}</div>` : ''}
+                    <div class="edu-institution">${esc(e.title)} — ${esc(e.institution)}</div>
+                    ${e.percentage ? `<div class="edu-grade">Grade: ${esc(e.percentage)}</div>` : ''}
                 </div>
             `).join('');
         } else {
@@ -145,11 +184,11 @@ function renderCV(userData, profile) {
             document.getElementById('cvCertifications').innerHTML = certs.map(c => `
                 <div class="edu-entry">
                     <div class="edu-header">
-                        <span class="edu-degree">${escapeHtml(c.name)}</span>
-                        <span class="edu-year">${escapeHtml(c.year)}</span>
+                        <span class="edu-degree">${esc(c.name)}</span>
+                        <span class="edu-year">${esc(c.year)}</span>
                     </div>
-                    <div class="edu-institution">${escapeHtml(c.issuer)}</div>
-                    ${c.certId ? `<div class="edu-grade" style="color:#666;">ID: ${escapeHtml(c.certId)}</div>` : ''}
+                    <div class="edu-institution">${esc(c.issuer)}</div>
+                    ${c.certId ? `<div class="edu-grade" style="color:#666;">ID: ${esc(c.certId)}</div>` : ''}
                 </div>
             `).join('');
         } else {
@@ -157,6 +196,18 @@ function renderCV(userData, profile) {
         }
     }
 
+    // Languages
+    const langs = profile.languages || [];
+    if (langs.length > 0) {
+        document.getElementById('languagesSection').style.display = 'block';
+        document.getElementById('cvLanguages').innerHTML = `
+            <div class="lang-tags">
+                ${langs.map(l => `<span class="lang-tag">${esc(l)}</span>`).join('')}
+            </div>
+        `;
+    }
+
+    // References
     const refs = profile.references || {};
     if (refs.ref1Name || refs.ref2Name) {
         document.getElementById('referencesSection').style.display = 'block';
@@ -170,110 +221,69 @@ function renderCV(userData, profile) {
 function renderRef(refs, num, type) {
     return `
         <div class="ref-item">
-            <div class="ref-name">${escapeHtml(refs['ref'+num+'Name'])} <span style="font-size:8pt;color:#888;font-weight:normal;">(${type})</span></div>
-            <div class="ref-designation">${escapeHtml(refs['ref'+num+'Designation'])}</div>
-            <div class="ref-org">${escapeHtml(refs['ref'+num+'Org'])}</div>
+            <div class="ref-name">${esc(refs['ref'+num+'Name'])} <span style="font-size:8pt;color:#888;font-weight:normal;">(${type})</span></div>
+            <div class="ref-designation">${esc(refs['ref'+num+'Designation'])}</div>
+            <div class="ref-org">${esc(refs['ref'+num+'Org'])}</div>
             <div class="ref-contact">
-                ${refs['ref'+num+'Phone'] ? `<div>📞 ${escapeHtml(refs['ref'+num+'Phone'])}</div>` : ''}
-                ${refs['ref'+num+'Email'] ? `<div>✉️ ${escapeHtml(refs['ref'+num+'Email'])}</div>` : ''}
+                ${refs['ref'+num+'Phone'] ? `<div>📞 ${esc(refs['ref'+num+'Phone'])}</div>` : ''}
+                ${refs['ref'+num+'Email'] ? `<div>✉️ ${esc(refs['ref'+num+'Email'])}</div>` : ''}
             </div>
         </div>
     `;
 }
 
-// ===== AI TITLE GENERATOR =====
-function generateAITitle(profile) {
-    const exp = profile.experience || {};
-    const edu = profile.education || [];
-    const skills = profile.skills || [];
-    const entries = exp.entries || [];
+// ============ DIRECT PDF DOWNLOAD ============
+window.downloadPDF = function() {
+    const element = document.getElementById('cvContent');
+    const today = new Date();
+    const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dateStr = `${String(today.getDate()).padStart(2,'0')}-${m[today.getMonth()]}-${today.getFullYear()}`;
 
-    const TITLES = {
-        "Mechanical": ["Mechanical Engineer","Mechanical Technician","Senior Mechanical Technician","Fitter","Turner","Machinist","Welder","Millwright"],
-        "Electrical": ["Electrical Engineer","Electrical Technician","Electrician","Wireman","Lineman","Instrument Technician"],
-        "Civil": ["Civil Engineer","Site Engineer","Site Supervisor","Mason","Carpenter","Painter","Plumber"],
-        "HR & Admin": ["HR Manager","HR Executive","HR Officer","HR Assistant","Admin Manager","Admin Officer","Receptionist"],
-        "IT & Software": ["Software Engineer","Software Developer","Web Developer","Mobile App Developer","IT Support Engineer","Network Administrator"],
-        "Sales & Marketing": ["Sales Manager","Sales Executive","Salesman","Marketing Manager","Business Development Executive"],
-        "Accounting & Finance": ["Accountant","Senior Accountant","Accounts Manager","Finance Manager","Auditor","Cashier"],
-        "Education": ["Teacher","Senior Teacher","Lecturer","Professor","Principal","Tutor","Trainer"],
-        "Healthcare": ["Doctor","Nurse","Pharmacist","Lab Technician","Physiotherapist","Medical Officer"],
-        "Construction": ["Laborer","Mason","Painter","Plumber","Carpenter","Welder","Steel Fixer"],
-        "Transport & Driver": ["Driver","Truck Driver","Delivery Rider","Forklift Operator"],
-        "Security": ["Security Guard","Security Supervisor","Watchman","CCTV Operator"],
-        "Hospitality": ["Chef","Cook","Waiter","Baker","Housekeeping"],
-        "Textile": ["Tailor","Stitcher","Quality Checker","Weaver"],
-        "Manufacturing": ["Production Manager","Production Supervisor","Machine Operator","Quality Inspector"],
-        "Agriculture": ["Farm Manager","Agriculture Officer","Livestock Supervisor","Veterinary Doctor"],
-        "Retail": ["Shopkeeper","Sales Associate","Cashier","Store Manager"],
-        "Telecom": ["Telecom Engineer","Telecom Technician","Network Engineer","BTS Technician"]
+    // Filename: HASK-CV-{CandidateID}-{Name}-{Title}-{Date}.pdf
+    const userId = document.getElementById('cvUserId').textContent.replace('🆔', '').trim();
+    const name = document.getElementById('cvName').textContent.replace(/\s+/g, '_');
+    const role = document.getElementById('cvRole').textContent.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
+    const filename = `HASK-CV-${userId}-${name}-${role}-${dateStr}.pdf`;
+
+    // Hide toolbar during capture
+    document.getElementById('toolbar').style.display = 'none';
+
+    const opt = {
+        margin: 0,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            scrollY: 0
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait'
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    let matched = '', industry = '';
+    html2pdf().set(opt).from(element).save().then(() => {
+        document.getElementById('toolbar').style.display = 'flex';
+        console.log('✅ CV Downloaded:', filename);
+    }).catch(err => {
+        document.getElementById('toolbar').style.display = 'flex';
+        console.error('Download error:', err);
+        alert('Download failed: ' + err.message);
+    });
+};
 
-    if (entries.length > 0) {
-        const latest = entries[0];
-        const titleText = (latest.title || '').toLowerCase();
-        const bizText = (latest.business || '').toLowerCase();
-
-        for (const [ind, titles] of Object.entries(TITLES)) {
-            for (const t of titles) {
-                if (titleText.includes(t.toLowerCase()) || t.toLowerCase().includes(titleText)) {
-                    matched = t; industry = ind; break;
-                }
-            }
-            if (matched) break;
-        }
-
-        if (!matched && titleText) {
-            for (const [ind, titles] of Object.entries(TITLES)) {
-                if (titleText.includes(ind.toLowerCase()) || bizText.includes(ind.toLowerCase())) {
-                    matched = titles[0]; industry = ind; break;
-                }
-            }
-        }
-
-        if (!matched) matched = latest.title || '';
-    }
-
-    if (!matched && edu.length > 0) {
-        const latestEdu = edu[0];
-        const degText = (latestEdu.title || '').toLowerCase();
-        for (const [ind, titles] of Object.entries(TITLES)) {
-            if (degText.includes(ind.toLowerCase())) {
-                matched = titles[0]; industry = ind; break;
-            }
-        }
-        if (!matched) matched = latestEdu.title || 'Fresh Graduate';
-    }
-
-    if (!matched && skills.length > 0) {
-        const skillText = skills.map(s => (s.name || '').toLowerCase()).join(' ');
-        for (const [ind, titles] of Object.entries(TITLES)) {
-            if (skillText.includes(ind.toLowerCase())) {
-                matched = titles[0]; industry = ind; break;
-            }
-        }
-    }
-
-    if (!matched) {
-        matched = (profile.personal && profile.personal.interest) || 'Professional';
-    }
-
-    const totalExp = exp.overall || 0;
-    if (totalExp >= 5 && !matched.toLowerCase().startsWith('senior')) matched = 'Senior ' + matched;
-    else if (totalExp >= 1 && totalExp < 5 && !matched.toLowerCase().startsWith('experienced')) matched = 'Experienced ' + matched;
-    else if (entries.length === 0 && edu.length > 0 && !matched.includes('Fresh')) matched = matched + ' (Fresh Graduate)';
-
-    return matched;
-}
-
+// ============ HELPERS ============
 function formatDate(d) {
     const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `${String(d.getDate()).padStart(2,'0')}-${m[d.getMonth()]}-${d.getFullYear()}`;
 }
 
-function formatMonth(dateStr) {
+function fmtMonth(dateStr) {
     if (!dateStr) return '—';
     try {
         const d = new Date(dateStr);
@@ -283,14 +293,12 @@ function formatMonth(dateStr) {
     } catch (e) { return dateStr; }
 }
 
-function escapeHtml(s) {
+function esc(s) {
     if (!s) return '';
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
 
-function escapeAttr(s) {
+function escA(s) {
     if (!s) return '';
     return String(s).replace(/["'&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
-
-window.downloadPDF = function() { window.print(); };
