@@ -468,3 +468,11 @@ html, body {
     .cv-header { flex-direction: column; gap: 8px; text-align: center; }
     .exp-header { flex-direction: column; gap: 2px; }
 }
+/* Availability Badge */
+.contact-strip span:has(strong) {
+    background: #e8f8ee;
+    color: #1a7a3e;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
