@@ -73,12 +73,23 @@ function renderCV(userData, profile) {
         document.getElementById('cvPhoto').innerHTML = `<img src="${p.profilePic}" alt="Photo">`;
     }
 
-    // Contacts
+    // Contact strip
     const contacts = [];
     if (p.cell) contacts.push(`<span>📞 ${esc(p.cell)}</span>`);
     if (p.email || userData.email) contacts.push(`<span>✉️ ${esc(p.email || userData.email)}</span>`);
     if (p.city || p.district) contacts.push(`<span>📍 ${esc(p.city || p.district)}${p.province ? ', ' + esc(p.province) : ''}</span>`);
     if (profile.misc && profile.misc.linkedin) contacts.push(`<span>🌐 <a href="${escA(profile.misc.linkedin)}" target="_blank">LinkedIn</a></span>`);
+
+    // Availability — show
+    if (p.availability) {
+        contacts.push(`<span>📅 <strong>Availability:</strong> ${esc(p.availability)}</span>`);
+    }
+
+    // Notice Period (from misc) — show if not immediate
+    if (profile.misc && profile.misc.noticeType === 'Period' && profile.misc.noticeNum) {
+        contacts.push(`<span>⏰ <strong>Notice:</strong> ${esc(profile.misc.noticeNum)} ${esc(profile.misc.noticeUnit || 'Day(s)')}</span>`);
+    }
+
     document.getElementById('cvContact').innerHTML = contacts.join('');
 
     // Objective
