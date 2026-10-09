@@ -295,8 +295,20 @@ body {
 }
 
 .menu-item:hover { background: #f4f6fb; color: #1a2a6c; }
-.menu-item.active { background: #e8f4fd; color: #1a2a6c; font-weight: 600; border-left-color: #29b6f6; }
-.menu-item.completed { background: #e8f8ee; color: #1a7a3e; border-left-color: #28a745; }
+
+.menu-item.active {
+    background: #e8f4fd;
+    color: #1a2a6c;
+    font-weight: 600;
+    border-left-color: #29b6f6;
+}
+
+.menu-item.completed {
+    background: #e8f8ee;
+    color: #1a7a3e;
+    border-left-color: #28a745;
+}
+
 .menu-item.completed .check-box { color: #28a745; }
 .menu-item.completed .menu-label { font-weight: 600; }
 
@@ -360,12 +372,14 @@ body {
     color: #1a2a6c;
     font-size: 0.95rem;
     font-weight: 700;
-    margin: 20px 0 12px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #eef1f5;
+    margin: 22px 0 12px;
+    padding: 8px 12px;
+    background: linear-gradient(90deg, #eef1f8 0%, #f7f9fc 100%);
+    border-left: 4px solid #1a2a6c;
+    border-radius: 6px;
 }
 
-.sub-heading:first-child { margin-top: 0; }
+.sub-heading:first-of-type { margin-top: 0; }
 
 .green-banner {
     background: #4caf50;
@@ -819,55 +833,163 @@ body {
 
 .notice-opt input:checked + span { color: #0277bd; }
 
-/* ============ TRANSPORTATION ============ */
-.fuel-inputs {
+/* ============ COMPENSATION — FINAL DESIGN ============ */
+
+/* 2-column grid for paired items */
+.comp-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px 18px;
+}
+
+.comp-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px 18px;
+}
+
+.comp-grid-5 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px 14px;
+}
+
+/* Single pair — label + inputs */
+.comp-pair {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 6px;
+    background: #fafbfc;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #eef1f5;
+    transition: 0.2s;
+}
+
+.comp-pair:hover {
+    border-color: #dfe3ec;
+    background: #f8f9fc;
+}
+
+.comp-pair > label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1a2a6c;
+    margin-bottom: 2px;
+}
+
+.comp-pair small {
+    color: #888;
+    font-size: 0.72rem;
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.pair-inputs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
     flex-wrap: wrap;
 }
 
-.fuel-inputs input {
+.pair-inputs select {
     flex: 1;
-    min-width: 140px;
-    padding: 10px 14px;
+    min-width: 90px;
+    padding: 8px 10px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    color: #333;
+}
+
+.pair-inputs input {
+    flex: 1;
+    min-width: 100px;
+    padding: 8px 10px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+    color: #333;
+}
+
+.pair-inputs select:focus,
+.pair-inputs input:focus {
+    border-color: #1a2a6c;
+    background: white;
+}
+
+/* Fuel sub-inputs */
+.fuel-sub {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.fuel-sub-item {
+    flex: 1;
+    min-width: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.mini-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #666;
+}
+
+.fuel-sub-item input {
+    padding: 8px 12px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+    width: 100%;
+}
+
+.fuel-sub-item input:focus {
+    border-color: #1a2a6c;
+    box-shadow: 0 0 0 3px rgba(26,42,108,0.06);
+}
+
+/* Individual select inside comp-pair (full width) */
+.comp-pair > select {
+    width: 100%;
+    padding: 9px 12px;
     border: 1.5px solid #dfe3ec;
     border-radius: 6px;
     font-size: 0.88rem;
     font-family: inherit;
+    background: white;
+    cursor: pointer;
     outline: none;
-    background: #fafbfc;
 }
 
-.fuel-inputs input:focus { border-color: #1a2a6c; background: white; }
+.comp-pair > select:focus { border-color: #1a2a6c; }
 
-#vehicleProvidedDetails {
-    background: #f8f9fc;
-    padding: 16px;
-    border-radius: 8px;
-    margin-top: 8px;
-    border: 1px solid #eef1f5;
-}
-
-/* ============ COMPENSATION ROWS ============ */
-.comp-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 15px 0;
-    border-bottom: 1px solid #f0f2f5;
-}
-
-.comp-row:last-child { border-bottom: none; }
-
-.comp-row > label:first-child {
-    min-width: 200px;
+.comp-pair > input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #dfe3ec;
+    border-radius: 6px;
     font-size: 0.88rem;
-    font-weight: 600;
-    color: #333;
+    font-family: inherit;
+    background: white;
+    outline: none;
 }
 
-.comp-row small { color: #888; font-size: 0.72rem; font-style: italic; }
+.comp-pair > input:focus { border-color: #1a2a6c; }
 
 /* ============ MODAL ============ */
 .modal-overlay {
@@ -965,19 +1087,23 @@ footer p { opacity: 0.75; font-size: 0.85rem; }
     .applying-for { display: none; }
     .profile-main { padding: 15px; }
     .profile-section { padding: 18px 15px; }
-    .comp-row > label:first-child { min-width: 100%; margin-bottom: 6px; }
     .form-actions { flex-direction: column-reverse; }
     .btn-save, .btn-prev { width: 100%; }
     .toast { top: 15px; right: 15px; left: 15px; max-width: none; }
     .languages-grid { grid-template-columns: 1fr 1fr; }
-    .fuel-inputs input { min-width: 100%; }
+    .comp-grid-2 { grid-template-columns: 1fr; }
+    .comp-grid-3 { grid-template-columns: 1fr 1fr; }
+    .comp-grid-5 { grid-template-columns: 1fr 1fr 1fr; }
 }
 
 @media (max-width: 500px) {
     .section-header h2 { font-size: 1.05rem; }
     .sidebar-avatar { width: 60px; height: 60px; font-size: 1.3rem; }
     .languages-grid { grid-template-columns: 1fr; }
-    #vehicleProvidedDetails > div { grid-template-columns: 1fr !important; }
+    .comp-grid-3 { grid-template-columns: 1fr; }
+    .comp-grid-5 { grid-template-columns: 1fr 1fr; }
+    .pair-inputs select,
+    .pair-inputs input { min-width: 100%; }
 }
 
 /* ============ PRINT ============ */
@@ -985,59 +1111,4 @@ footer p { opacity: 0.75; font-size: 0.85rem; }
     .profile-sidebar, .navbar, .form-actions, .cv-action, footer, .toast { display: none !important; }
     .profile-layout { display: block; }
     .profile-main { padding: 0; }
-}
-/* Fuel Allowance — mini labels */
-.fuel-inputs {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    flex: 1;
-}
-
-.fuel-input-wrap {
-    flex: 1;
-    min-width: 160px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.mini-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 2px;
-}
-
-.fuel-input-wrap input {
-    padding: 9px 12px;
-    border: 1.5px solid #dfe3ec;
-    border-radius: 6px;
-    font-size: 0.88rem;
-    font-family: inherit;
-    background: #fafbfc;
-    outline: none;
-    width: 100%;
-}
-
-.fuel-input-wrap input:focus {
-    border-color: #1a2a6c;
-    background: white;
-}
-
-/* Compensation rows — better alignment */
-.comp-row select {
-    padding: 9px 12px;
-    border: 1.5px solid #dfe3ec;
-    border-radius: 6px;
-    font-size: 0.88rem;
-    font-family: inherit;
-    background: #fafbfc;
-    outline: none;
-    cursor: pointer;
-}
-
-.comp-row select:focus {
-    border-color: #1a2a6c;
-    background: white;
 }
