@@ -15,108 +15,38 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="dashboard.html" class="active-link">Job Dashboard</a></li>
             <li><a href="profile.html">Profile</a></li>
-            <li><a href="job-applied.html">Applied Jobs</a></li>
+            <li><a href="applied-jobs.html">Applied Jobs</a></li>
             <li><a href="#" id="logoutBtn" class="btn-primary">Logout</a></li>
         </ul>
     </nav>
 
     <div class="dash-wrap">
 
-        <!-- Welcome Header -->
+        <!-- Header with Completion + Browse All -->
         <div class="dash-header">
             <div>
                 <h1>👋 Welcome back, <span id="userName">User</span>!</h1>
-                <p class="section-note">Here are jobs matching your profile</p>
+                <p class="section-note">Jobs matched to your profile</p>
             </div>
-            <div class="profile-completion-mini">
-                <div class="pc-label">Profile Completion</div>
-                <div class="pc-bar-bg">
-                    <div class="pc-bar-fill" id="pcBarFill"></div>
-                </div>
-                <div class="pc-percent" id="pcPercent">0%</div>
-            </div>
-        </div>
 
-        <!-- Profile Snapshot -->
-        <div class="profile-snapshot" id="profileSnapshot">
-            <div class="snap-item">
-                <span class="snap-icon">🛠️</span>
-                <div>
-                    <div class="snap-lbl">Skills</div>
-                    <div class="snap-val" id="snapSkills">0</div>
+            <div class="header-actions">
+                <div class="profile-completion-mini">
+                    <div class="pc-label">Profile Complete</div>
+                    <div class="pc-bar-bg">
+                        <div class="pc-bar-fill" id="pcBarFill"></div>
+                    </div>
+                    <div class="pc-percent" id="pcPercent">0%</div>
                 </div>
+                <a href="index.html" class="btn-browse-all-top">🌐 All Jobs</a>
             </div>
-            <div class="snap-item">
-                <span class="snap-icon">🎓</span>
-                <div>
-                    <div class="snap-lbl">Education</div>
-                    <div class="snap-val" id="snapEdu">0</div>
-                </div>
-            </div>
-            <div class="snap-item">
-                <span class="snap-icon">💼</span>
-                <div>
-                    <div class="snap-lbl">Experience</div>
-                    <div class="snap-val" id="snapExp">0 yrs</div>
-                </div>
-            </div>
-            <div class="snap-item">
-                <span class="snap-icon">📍</span>
-                <div>
-                    <div class="snap-lbl">Location</div>
-                    <div class="snap-val" id="snapLoc">—</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stats Row -->
-        <div class="stats-row">
-            <div class="stat-box">
-                <div class="stat-num" id="statTotal">0</div>
-                <div class="stat-lbl">Total Matched</div>
-            </div>
-            <div class="stat-box green">
-                <div class="stat-num" id="statExcellent">0</div>
-                <div class="stat-lbl">🟢 Excellent</div>
-            </div>
-            <div class="stat-box blue">
-                <div class="stat-num" id="statGood">0</div>
-                <div class="stat-lbl">🔵 Good</div>
-            </div>
-            <div class="stat-box gold">
-                <div class="stat-num" id="statFair">0</div>
-                <div class="stat-lbl">🟡 Fair</div>
-            </div>
-        </div>
-
-        <!-- Filter -->
-        <div class="filter-row">
-            <button class="filter-btn active" onclick="filterByMatch('all', this)">All Matches</button>
-            <button class="filter-btn" onclick="filterByMatch('excellent', this)">🟢 80%+</button>
-            <button class="filter-btn" onclick="filterByMatch('good', this)">🔵 60-79%</button>
-            <button class="filter-btn" onclick="filterByMatch('fair', this)">🟡 40-59%</button>
-            <button class="filter-btn" onclick="filterByMatch('low', this)">⚪ Below 40%</button>
-        </div>
-
-        <!-- Info Banner -->
-        <div class="info-banner-mini">
-            💡 <strong>How matching works:</strong> 
-            We compare your profile (skills, education, experience, location) with each job's requirements. 
-            Higher score = Better fit for you.
         </div>
 
         <!-- Jobs List -->
         <div class="jobs-list" id="jobsList">
             <div class="loading-box">
                 <div class="loader"></div>
-                <p>Analyzing jobs and matching with your profile...</p>
+                <p>Matching jobs to your profile...</p>
             </div>
-        </div>
-
-        <!-- Browse All Jobs -->
-        <div class="browse-more">
-            <p>Not finding what you're looking for?</p>
-            <a href="index.html" class="btn-browse-all">🌐 Browse All Jobs on Homepage →</a>
         </div>
 
     </div>
