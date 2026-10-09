@@ -1,13 +1,9 @@
 /* ============================================
    HASK TalentConnect - CV/Resume Styles
-   ATS-Friendly | A4 | Multi-page
+   ATS-Friendly | A4
    ============================================ */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
     font-family: Arial, 'Segoe UI', sans-serif;
@@ -17,7 +13,7 @@ html, body {
     font-size: 14px;
 }
 
-/* ===== Toolbar ===== */
+/* Toolbar */
 .toolbar {
     position: sticky;
     top: 0;
@@ -31,12 +27,7 @@ html, body {
     z-index: 100;
 }
 
-.toolbar-left,
-.toolbar-right {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
+.toolbar-left, .toolbar-right { display: flex; gap: 10px; align-items: center; }
 
 .toolbar-title {
     font-weight: 600;
@@ -60,9 +51,7 @@ html, body {
     display: inline-block;
 }
 
-.toolbar-btn:hover {
-    background: rgba(255,255,255,0.3);
-}
+.toolbar-btn:hover { background: rgba(255,255,255,0.3); }
 
 .toolbar-btn.primary {
     background: #f9c74f;
@@ -70,12 +59,9 @@ html, body {
     border-color: #f9c74f;
 }
 
-.toolbar-btn.primary:hover {
-    background: #ffd166;
-    transform: scale(1.03);
-}
+.toolbar-btn.primary:hover { background: #ffd166; transform: scale(1.03); }
 
-/* ===== Loading ===== */
+/* Loading */
 .loading-screen {
     position: fixed;
     inset: 0;
@@ -99,7 +85,7 @@ html, body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ===== CV Page (A4) ===== */
+/* CV Page A4 */
 .cv-page {
     width: 210mm;
     min-height: 297mm;
@@ -113,7 +99,7 @@ html, body {
     position: relative;
 }
 
-/* ===== Header ===== */
+/* Header */
 .cv-header {
     display: flex;
     justify-content: space-between;
@@ -144,7 +130,7 @@ html, body {
     font-family: monospace;
 }
 
-/* ===== Profile Section ===== */
+/* Profile Section */
 .profile-section {
     display: flex;
     gap: 18px;
@@ -152,10 +138,6 @@ html, body {
     padding: 12px 0;
     border-bottom: 1px solid #e5e8ee;
     margin-bottom: 14px;
-}
-
-.photo-wrap {
-    flex-shrink: 0;
 }
 
 .photo {
@@ -170,20 +152,16 @@ html, body {
     font-size: 28pt;
     color: #1a2a6c;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
-.photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.photo img { width: 100%; height: 100%; object-fit: cover; }
 
 .profile-info h1 {
     font-size: 18pt;
     color: #1a2a6c;
     font-weight: bold;
     margin-bottom: 3px;
-    letter-spacing: 0.3px;
 }
 
 .profile-info .role {
@@ -203,7 +181,7 @@ html, body {
     border-radius: 10px;
 }
 
-/* ===== Contact Strip ===== */
+/* Contact Strip */
 .contact-strip {
     display: flex;
     flex-wrap: wrap;
@@ -216,22 +194,11 @@ html, body {
     color: #333;
 }
 
-.contact-strip span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
+.contact-strip span { display: inline-flex; align-items: center; gap: 4px; }
+.contact-strip a { color: #1a2a6c; text-decoration: none; }
 
-.contact-strip a {
-    color: #1a2a6c;
-    text-decoration: none;
-}
-
-/* ===== Sections ===== */
-.section {
-    margin-bottom: 14px;
-    page-break-inside: avoid;
-}
+/* Sections */
+.section { margin-bottom: 14px; page-break-inside: avoid; }
 
 .section-title {
     font-size: 11pt;
@@ -253,17 +220,9 @@ html, body {
     margin-left: 5px;
 }
 
-.section-body {
-    font-size: 10pt;
-    color: #333;
-    line-height: 1.5;
-}
+.section-body { font-size: 10pt; color: #333; line-height: 1.5; }
 
-.section-body p {
-    margin-bottom: 4px;
-}
-
-/* ===== Two-Column Layout ===== */
+/* Two Column */
 .two-column {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -278,31 +237,9 @@ html, body {
     gap: 15px;
 }
 
-.col {
-    min-width: 0;
-}
+.col { min-width: 0; }
 
-/* ===== Skills / Strengths Lists ===== */
-.list-item {
-    padding: 3px 0;
-    font-size: 10pt;
-    color: #333;
-    line-height: 1.4;
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-}
-
-.list-item::before {
-    content: '•';
-    color: #f9c74f;
-    font-weight: bold;
-    font-size: 12pt;
-    line-height: 1;
-    flex-shrink: 0;
-}
-
-/* Skills with level */
+/* Skills */
 .skill-item {
     display: flex;
     justify-content: space-between;
@@ -339,12 +276,27 @@ html, body {
     margin-left: 8px;
 }
 
-/* ===== Experience Entry ===== */
-.exp-entry {
-    margin-bottom: 11px;
-    page-break-inside: avoid;
+/* List items */
+.list-item {
+    padding: 3px 0;
+    font-size: 10pt;
+    color: #333;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
 }
 
+.list-item::before {
+    content: '•';
+    color: #f9c74f;
+    font-weight: bold;
+    font-size: 12pt;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* Experience */
+.exp-entry { margin-bottom: 11px; page-break-inside: avoid; }
 .exp-entry:last-child { margin-bottom: 0; }
 
 .exp-header {
@@ -384,10 +336,7 @@ html, body {
     margin-top: 3px;
 }
 
-.exp-desc div {
-    position: relative;
-    padding-left: 10px;
-}
+.exp-desc div { position: relative; padding-left: 10px; }
 
 .exp-desc div::before {
     content: '•';
@@ -396,7 +345,7 @@ html, body {
     left: 0;
 }
 
-/* ===== Education / Certifications ===== */
+/* Education */
 .edu-entry {
     margin-bottom: 8px;
     padding-bottom: 6px;
@@ -437,7 +386,7 @@ html, body {
     font-weight: 600;
 }
 
-/* ===== References ===== */
+/* References */
 .ref-item {
     font-size: 9.5pt;
     line-height: 1.5;
@@ -447,37 +396,13 @@ html, body {
     border-radius: 4px;
 }
 
-.ref-name {
-    font-weight: bold;
-    color: #1a2a6c;
-    font-size: 10pt;
-}
+.ref-name { font-weight: bold; color: #1a2a6c; font-size: 10pt; }
+.ref-designation { color: #555; font-size: 9pt; }
+.ref-org { color: #666; font-size: 9pt; font-style: italic; margin-bottom: 3px; }
+.ref-contact { font-size: 8.5pt; color: #666; font-family: monospace; }
+.ref-contact div { display: flex; gap: 4px; align-items: center; }
 
-.ref-designation {
-    color: #555;
-    font-size: 9pt;
-}
-
-.ref-org {
-    color: #666;
-    font-size: 9pt;
-    font-style: italic;
-    margin-bottom: 3px;
-}
-
-.ref-contact {
-    font-size: 8.5pt;
-    color: #666;
-    font-family: monospace;
-}
-
-.ref-contact div {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-}
-
-/* ===== Footer ===== */
+/* Footer */
 .cv-footer {
     margin-top: 20px;
     padding-top: 10px;
@@ -489,84 +414,25 @@ html, body {
     font-style: italic;
 }
 
-/* ===== Print Styles ===== */
+/* Print */
 @media print {
-    @page {
-        size: A4;
-        margin: 0;
-    }
-
-    html, body {
-        background: white;
-        font-size: 10pt;
-    }
-
-    .no-print {
-        display: none !important;
-    }
-
-    .cv-page {
-        width: 100%;
-        min-height: auto;
-        margin: 0;
-        padding: 12mm 12mm;
-        box-shadow: none;
-    }
-
-    .photo {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .section-title {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .contact-strip,
-    .ref-item,
-    .profile-info .userid {
+    @page { size: A4; margin: 0; }
+    html, body { background: white; font-size: 10pt; }
+    .no-print { display: none !important; }
+    .cv-page { width: 100%; min-height: auto; margin: 0; padding: 12mm; box-shadow: none; }
+    .photo, .section-title, .contact-strip, .ref-item, .profile-info .userid {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
 }
 
-/* ===== Mobile ===== */
+/* Mobile */
 @media screen and (max-width: 800px) {
-    .cv-page {
-        width: 100%;
-        padding: 20px 15px;
-        font-size: 11px;
-    }
-
-    .two-column,
-    .two-column-inner {
-        grid-template-columns: 1fr;
-    }
-
-    .profile-section {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .toolbar {
-        flex-direction: column;
-        gap: 10px;
-        padding: 12px;
-    }
-
-    .toolbar-title {
-        display: none;
-    }
-
-    .cv-header {
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-    }
-
-    .exp-header {
-        flex-direction: column;
-        gap: 2px;
-    }
+    .cv-page { width: 100%; padding: 20px 15px; font-size: 11px; }
+    .two-column, .two-column-inner { grid-template-columns: 1fr; }
+    .profile-section { flex-direction: column; text-align: center; }
+    .toolbar { flex-direction: column; gap: 10px; padding: 12px; }
+    .toolbar-title { display: none; }
+    .cv-header { flex-direction: column; gap: 8px; text-align: center; }
+    .exp-header { flex-direction: column; gap: 2px; }
 }
