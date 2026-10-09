@@ -9,7 +9,6 @@
 </head>
 <body>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
     <nav class="navbar">
@@ -48,7 +47,7 @@
             </div>
 
             <div class="cv-action">
-                <button type="button" onclick="window.open('cv.html', '_blank')" class="btn-preview-cv">👁️ Preview My CV</button>
+                <button type="button" onclick="window.open('cv.html','_blank')" class="btn-preview-cv">👁️ Preview CV</button>
                 <button type="button" onclick="directDownloadCV()" class="btn-download-cv">📥 Download CV</button>
             </div>
 
@@ -151,9 +150,26 @@
                             </div>
                             <input type="text" id="pPermanentAddress" required>
                         </div>
-                        <div class="field"><label>Landline #</label><input type="text" id="pLandline"></div>
+                        <div class="field"><label>Landline #</label><input type="text" id="pLandline" maxlength="12"></div>
                         <div class="field"><label>Cell # <span class="req">*</span></label><input type="tel" id="pCell" placeholder="0300-8195675" maxlength="12" required></div>
-                        <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="pEmail" required></div>
+                        <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="pEmail" placeholder="you@example.com" required></div>
+
+                        <!-- Availability -->
+                        <div class="field full" style="border-top:2px solid #eef1f5; padding-top:15px; margin-top:5px;">
+                            <label style="font-size:0.95rem; color:#1a2a6c;">📅 Availability</label>
+                        </div>
+                        <div class="field">
+                            <label>When can you join? <span class="req">*</span></label>
+                            <select id="pAvailability" required>
+                                <option value="">Select Availability</option>
+                                <option value="Immediate">Immediate Joiner</option>
+                                <option value="15 Days">Within 15 Days</option>
+                                <option value="1 Month">Within 1 Month</option>
+                                <option value="2 Months">Within 2 Months</option>
+                                <option value="3 Months">Within 3 Months</option>
+                                <option value="More than 3 Months">More than 3 Months</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-actions"><button type="submit" class="btn-save">Save & Continue →</button></div>
                 </form>
@@ -195,8 +211,7 @@
             <section class="profile-section" id="section-experience">
                 <div class="section-header"><h2>💼 Experience</h2></div>
 
-                <!-- Industry-wise Experience Summary -->
-                <div class="exp-summary-box" id="expSummaryBox">
+                <div class="exp-summary-box" id="expSummaryBox" style="display:none;">
                     <div class="exp-summary-title">💼 Experience Summary</div>
                     <div class="exp-summary-total" id="expTotalYears">Total: 0 years</div>
                     <div class="exp-summary-list" id="expSummaryList"></div>
@@ -226,7 +241,6 @@
                 <div class="section-header"><h2>🛠️ Skills & Languages</h2></div>
 
                 <h4 class="sub-heading">Skills</h4>
-
                 <div class="skills-search-wrap">
                     <input type="text" id="skillSearch" placeholder="🔍 Search skills (e.g. JavaScript, Cooking, Driving)..." oninput="filterSkillSuggestions()" autocomplete="off">
                     <div class="skill-suggestions" id="skillSuggestions"></div>
@@ -243,7 +257,6 @@
 
                 <h4 class="sub-heading" style="margin-top:25px;">🌐 Languages</h4>
                 <p class="section-note" style="margin-bottom:10px;">Select the languages you can speak, read, or write.</p>
-
                 <div class="languages-grid" id="languagesGrid"></div>
 
                 <div class="form-actions">
@@ -254,21 +267,47 @@
 
             <!-- SECTION 6: SELF ASSESSMENT -->
             <section class="profile-section" id="section-self">
-                <div class="section-header"><h2>📝 Self Assessment</h2></div>
+                <div class="section-header"><h2>📝 Self Assessment</h2><p class="section-note">All fields optional except Professional Title & Objective</p></div>
                 <div class="green-banner">Self Assessment Details</div>
                 <form onsubmit="saveSelf(event)">
 
-                    <!-- Professional Title (manual) -->
                     <div class="field">
                         <label>Professional Title / Headline <span class="req">*</span></label>
-                        <input type="text" id="saTitle" maxlength="100" placeholder="e.g. Senior HR Executive, Mechanical Technician, Software Engineer" required>
+                        <input type="text" id="saTitle" maxlength="100" placeholder="e.g. Senior HR Executive, Mechanical Technician, Software Engineer" required list="titleSuggestions">
+                        <datalist id="titleSuggestions"></datalist>
                         <small class="char-count">This appears under your name on your CV.</small>
                     </div>
 
-                    <div class="field"><label>Objective <span class="req">*</span></label><textarea id="saObjective" rows="3" maxlength="500" required></textarea><small class="char-count"><span id="c1">0</span> / 500</small></div>
-                    <div class="field"><label>Strengths <span class="req">*</span></label><textarea id="saStrengths" rows="4" maxlength="500" required></textarea><small class="char-count"><span id="c2">0</span> / 500</small></div>
-                    <div class="field"><label>Areas of Improvement <span class="req">*</span></label><textarea id="saImprovements" rows="4" maxlength="500" required></textarea><small class="char-count"><span id="c3">0</span> / 500</small></div>
-                    <div class="field"><label>Skills & Experience Summary <span class="req">*</span></label><textarea id="saSummary" rows="4" maxlength="800" required></textarea><small class="char-count"><span id="c4">0</span> / 800</small></div>
+                    <div class="field">
+                        <label>Objective <span class="req">*</span></label>
+                        <textarea id="saObjective" rows="3" maxlength="500" required></textarea>
+                        <small class="char-count"><span id="c1">0</span> / 500</small>
+                    </div>
+
+                    <!-- Strengths — with suggestions -->
+                    <div class="field">
+                        <label>Strengths (Optional)</label>
+                        <div class="strengths-search-wrap">
+                            <input type="text" id="strengthSearch" placeholder="🔍 Search or type strength..." autocomplete="off">
+                            <div class="strength-suggestions" id="strengthSuggestions"></div>
+                        </div>
+                        <div class="strengths-tags" id="strengthsTags"></div>
+                        <textarea id="saStrengths" rows="3" maxlength="500" placeholder="Or type here directly..."></textarea>
+                        <small class="char-count"><span id="c2">0</span> / 500</small>
+                    </div>
+
+                    <div class="field">
+                        <label>Areas of Improvement (Optional)</label>
+                        <textarea id="saImprovements" rows="3" maxlength="500"></textarea>
+                        <small class="char-count"><span id="c3">0</span> / 500</small>
+                    </div>
+
+                    <div class="field">
+                        <label>Skills & Experience Summary (Optional)</label>
+                        <textarea id="saSummary" rows="4" maxlength="800"></textarea>
+                        <small class="char-count"><span id="c4">0</span> / 800</small>
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" class="btn-prev" onclick="goToSection('skills')">← Previous</button>
                         <button type="submit" class="btn-save">Save & Continue →</button>
@@ -278,28 +317,28 @@
 
             <!-- SECTION 7: REFERENCES -->
             <section class="profile-section" id="section-references">
-                <div class="section-header"><h2>👥 References</h2></div>
+                <div class="section-header"><h2>👥 References</h2><p class="section-note">Optional — fill only if you want to add references</p></div>
                 <div class="green-banner">References Details</div>
                 <form onsubmit="saveReferences(event)">
                     <h4 class="sub-heading">Reference #1: Personal</h4>
                     <div class="form-grid">
                         <div class="field"><label>Title</label><select id="ref1Title"><option>Mr.</option><option>Mrs.</option><option>Ms.</option></select></div>
-                        <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref1Name" required></div>
-                        <div class="field"><label>Designation <span class="req">*</span></label><input type="text" id="ref1Designation" required></div>
-                        <div class="field"><label>Organization <span class="req">*</span></label><input type="text" id="ref1Org" required></div>
-                        <div class="field"><label>Phone # <span class="req">*</span></label><input type="tel" id="ref1Phone" placeholder="0300-8195675" maxlength="12" required></div>
-                        <div class="field"><label>How long known? <span class="req">*</span></label><input type="number" id="ref1Known" step="0.5" required></div>
-                        <div class="field full"><label>Email <span class="req">*</span></label><input type="email" id="ref1Email" required></div>
+                        <div class="field"><label>Full Name</label><input type="text" id="ref1Name"></div>
+                        <div class="field"><label>Designation</label><input type="text" id="ref1Designation"></div>
+                        <div class="field"><label>Organization</label><input type="text" id="ref1Org"></div>
+                        <div class="field"><label>Phone #</label><input type="tel" id="ref1Phone" placeholder="0300-8195675" maxlength="12"></div>
+                        <div class="field"><label>How long known? (years)</label><input type="number" id="ref1Known" step="0.5"></div>
+                        <div class="field full"><label>Email</label><input type="email" id="ref1Email" placeholder="example@email.com"></div>
                     </div>
                     <h4 class="sub-heading">Reference #2: Professional</h4>
                     <div class="form-grid">
                         <div class="field"><label>Title</label><select id="ref2Title"><option>Mr.</option><option>Mrs.</option><option>Ms.</option></select></div>
-                        <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="ref2Name" required></div>
-                        <div class="field"><label>Designation <span class="req">*</span></label><input type="text" id="ref2Designation" required></div>
-                        <div class="field"><label>Organization <span class="req">*</span></label><input type="text" id="ref2Org" required></div>
-                        <div class="field"><label>Phone # <span class="req">*</span></label><input type="tel" id="ref2Phone" placeholder="0300-8195675" maxlength="12" required></div>
-                        <div class="field"><label>How long known? <span class="req">*</span></label><input type="number" id="ref2Known" step="0.5" required></div>
-                        <div class="field full"><label>Email <span class="req">*</span></label><input type="email" id="ref2Email" required></div>
+                        <div class="field"><label>Full Name</label><input type="text" id="ref2Name"></div>
+                        <div class="field"><label>Designation</label><input type="text" id="ref2Designation"></div>
+                        <div class="field"><label>Organization</label><input type="text" id="ref2Org"></div>
+                        <div class="field"><label>Phone #</label><input type="tel" id="ref2Phone" placeholder="0300-8195675" maxlength="12"></div>
+                        <div class="field"><label>How long known? (years)</label><input type="number" id="ref2Known" step="0.5"></div>
+                        <div class="field full"><label>Email</label><input type="email" id="ref2Email" placeholder="example@email.com"></div>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn-prev" onclick="goToSection('self')">← Previous</button>
@@ -318,20 +357,47 @@
                             <select id="mCrime" required onchange="toggleCrimeDetails()"><option>No</option><option>Yes</option></select>
                         </div>
                         <div class="field full" id="crimeDetailsField" style="display:none;"><label>Details <span class="req">*</span></label><textarea id="mCrimeDetails" rows="3" maxlength="500"></textarea></div>
+
                         <div class="field full"><label>Any disability? <span class="req">*</span></label>
                             <select id="mDisability" required onchange="toggleDisabilityDetails()"><option>No</option><option>Yes</option></select>
                         </div>
                         <div class="field full" id="disabilityDetailsField" style="display:none;"><label>Details <span class="req">*</span></label><textarea id="mDisabilityDetails" rows="3" maxlength="500"></textarea></div>
+
                         <div class="field"><label>Source <span class="req">*</span></label>
-                            <select id="mSource" required><option>Social Media</option><option>Friend</option><option>Website</option><option>Newspaper</option><option>Other</option></select>
+                            <select id="mSource" required onchange="toggleSourceOther()">
+                                <option>Social Media</option><option>Friend</option><option>Website</option><option>Newspaper</option><option>Other</option>
+                            </select>
                         </div>
-                        <div class="field"><label>Notice Period <span class="req">*</span></label>
-                            <div style="display:flex; gap:8px;">
-                                <input type="number" id="mNoticeNum" value="1" min="0" required>
-                                <select id="mNoticeUnit" required><option>Month</option><option>Week</option><option>Day</option></select>
+                        <div class="field" id="sourceOtherField" style="display:none;">
+                            <label>Specify Source <span class="req">*</span></label>
+                            <input type="text" id="mSourceOther" placeholder="e.g. LinkedIn, Indeed">
+                        </div>
+
+                        <!-- Notice Period -->
+                        <div class="field full">
+                            <label>Notice Period <span class="req">*</span></label>
+                            <div class="notice-wrap">
+                                <label class="radio-label notice-opt">
+                                    <input type="radio" name="noticeType" value="Immediate" onchange="toggleNoticeType()" checked>
+                                    <span>Immediate / 24 Hours Available</span>
+                                </label>
+                                <label class="radio-label notice-opt">
+                                    <input type="radio" name="noticeType" value="Period" onchange="toggleNoticeType()">
+                                    <span>Specific Period</span>
+                                </label>
+                            </div>
+                            <div id="noticePeriodBox" style="display:none; margin-top:10px; display:none;">
+                                <div class="form-grid" style="grid-template-columns:1fr 1fr;">
+                                    <div class="field"><label>Duration</label><input type="number" id="mNoticeNum" value="1" min="0"></div>
+                                    <div class="field"><label>Unit</label>
+                                        <select id="mNoticeUnit"><option>Day(s)</option><option>Week(s)</option><option>Month(s)</option></select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="field full"><label>LinkedIn URL</label><input type="url" id="mLinkedin"></div>
+
+                        <div class="field full"><label>LinkedIn URL</label><input type="url" id="mLinkedin" placeholder="https://www.linkedin.com/in/username"></div>
+
                         <div class="field"><label>Blood Group</label>
                             <select id="mBlood"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
                         </div>
@@ -357,11 +423,14 @@
                 <div class="section-header"><h2>💰 Compensation</h2></div>
                 <div class="green-banner">Compensation Details</div>
                 <form onsubmit="saveCompensation(event)">
+
+                    <h4 class="sub-heading">Salary</h4>
                     <div class="form-grid-3">
                         <div class="field"><label>Monthly Basic Salary <span class="req">*</span></label><input type="number" id="cBasic" value="0" min="0" required><small>In PKR</small></div>
                         <div class="field"><label>Monthly Gross Salary <span class="req">*</span></label><input type="number" id="cGross" value="0" min="0" required></div>
                         <div class="field"><label>Monthly Expected Salary <span class="req">*</span></label><input type="number" id="cExpected" value="0" min="0" required></div>
                     </div>
+
                     <h4 class="sub-heading">Bonus</h4>
                     <div class="comp-row">
                         <label>Bonus(es) <span class="req">*</span></label>
@@ -369,29 +438,106 @@
                         <label class="radio-label"><input type="radio" name="bonus" value="No"> No</label>
                         <label class="radio-label"><input type="radio" name="bonusType" value="On basic" checked> On basic</label>
                         <label class="radio-label"><input type="radio" name="bonusType" value="On gross"> On gross</label>
-                        <input type="number" id="bonusCount" value="1" min="0" style="width:80px;">
+                        <input type="number" id="bonusCount" value="1" min="0" style="width:80px;" placeholder="Count">
                     </div>
+
                     <h4 class="sub-heading">Allowances</h4>
-                    <div class="comp-row"><label>Leave Encashment <span class="req">*</span></label><label class="radio-label"><input type="radio" name="leave" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="leave" value="No" checked> No</label></div>
-                    <div class="comp-row"><label>Medical Allowance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="medical" value="Yes" onchange="toggleMed(true)"> Yes</label><label class="radio-label"><input type="radio" name="medical" value="No" onchange="toggleMed(false)" checked> No</label><input type="number" id="medAmount" value="0" min="0" style="width:150px;"></div>
-                    <div class="comp-row"><label>Transport Allowance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="transport" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="transport" value="No" checked> No</label></div>
-                    <div class="comp-row"><label>Fuel Allowance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="fuel" value="Yes" onchange="toggleFuel(true)"> Yes</label><label class="radio-label"><input type="radio" name="fuel" value="No" onchange="toggleFuel(false)" checked> No</label><input type="number" id="fuelAmount" value="0" min="0" style="width:120px;"><input type="number" id="fuelLiters" value="0" min="0" style="width:100px;" placeholder="Liters"></div>
-                    <div class="comp-row"><label>Accommodation Allowance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="accom" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="accom" value="No" checked> No</label></div>
-                    <div class="comp-row"><label>Vehicle Allowance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="vehicle" value="Yes" onchange="toggleVehicle(true)"> Yes</label><label class="radio-label"><input type="radio" name="vehicle" value="No" onchange="toggleVehicle(false)" checked> No</label></div>
-                    <div class="comp-row" id="vehicleDetailsRow" style="display:none;">
-                        <label>Vehicle Detail</label><input type="text" id="vehicleDetail">
-                        <label class="radio-label"><input type="radio" name="buyback" value="Yes"> Buy Back</label>
-                        <label class="radio-label"><input type="radio" name="buyback" value="No" checked> No</label>
-                        <input type="number" id="buybackYears" value="3" style="width:80px;">
+
+                    <div class="comp-row">
+                        <label>Leave Encashment <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="leave" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="leave" value="No" checked> No</label>
                     </div>
-                    <div class="comp-row"><label>Mobile Allowance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="mobile" value="Yes" onchange="toggleMobile(true)"> Yes</label><label class="radio-label"><input type="radio" name="mobile" value="No" onchange="toggleMobile(false)" checked> No</label><input type="number" id="mobileAmount" value="0" min="0" style="width:120px;"></div>
+
+                    <div class="comp-row">
+                        <label>Medical Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="medical" value="Yes" onchange="toggleMed(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="medical" value="No" onchange="toggleMed(false)" checked> No</label>
+                        <input type="number" id="medAmount" value="0" min="0" style="width:150px;" placeholder="Amount (PKR)">
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Accommodation Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="accom" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="accom" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Mobile Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="mobile" value="Yes" onchange="toggleMobile(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="mobile" value="No" onchange="toggleMobile(false)" checked> No</label>
+                        <input type="number" id="mobileAmount" value="0" min="0" style="width:150px;" placeholder="Monthly Amount (PKR)">
+                    </div>
+
+                    <!-- TRANSPORTATION SECTION -->
+                    <h4 class="sub-heading">🚗 Transportation</h4>
+
+                    <div class="comp-row">
+                        <label>Transport Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="transportAllow" value="Yes" onchange="toggleTransportAllow(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="transportAllow" value="No" onchange="toggleTransportAllow(false)" checked> No</label>
+                        <input type="number" id="transportAllowAmount" value="0" min="0" style="width:150px;" placeholder="Amount (PKR)">
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Company Transport <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="companyTransport" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="companyTransport" value="No" checked> No</label>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Fuel Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="fuel" value="Yes" onchange="toggleFuel(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="fuel" value="No" onchange="toggleFuel(false)" checked> No</label>
+                        <div class="fuel-inputs">
+                            <input type="number" id="fuelAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            <input type="number" id="fuelLiters" value="0" min="0" placeholder="Liters">
+                        </div>
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Vehicle Allowance <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="vehicleAllow" value="Yes" onchange="toggleVehicleAllow(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="vehicleAllow" value="No" onchange="toggleVehicleAllow(false)" checked> No</label>
+                        <input type="number" id="vehicleAllowAmount" value="0" min="0" style="width:150px;" placeholder="Monthly Amount (PKR)">
+                    </div>
+
+                    <div class="comp-row">
+                        <label>Vehicle Provided by Company <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="vehicleProvided" value="Yes" onchange="toggleVehicleProvided(true)"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="vehicleProvided" value="No" onchange="toggleVehicleProvided(false)" checked> No</label>
+                    </div>
+
+                    <div class="comp-row" id="vehicleProvidedDetails" style="display:none; flex-direction:column; align-items:stretch;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="field"><label>Vehicle Type / Model</label><input type="text" id="vehicleType" placeholder="e.g. Honda City 2020"></div>
+                            <div class="field"><label>Registration Number</label><input type="text" id="vehicleRegNo" placeholder="e.g. LEB-1234"></div>
+                            <div class="field"><label>Buy Back Option</label>
+                                <select id="vehicleBuyback"><option value="No">No</option><option value="Yes">Yes</option></select>
+                            </div>
+                            <div class="field"><label>Buy Back Years</label><input type="number" id="buybackYears" value="0" min="0" max="20"></div>
+                        </div>
+                    </div>
+
                     <h4 class="sub-heading">Insurance</h4>
-                    <div class="comp-row"><label>OPD Limit <span class="req">*</span></label><label class="radio-label"><input type="radio" name="opd" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="opd" value="No" checked> No</label><input type="number" id="opdAmount" value="0" min="0" style="width:150px;"></div>
+                    <div class="comp-row">
+                        <label>OPD Limit <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="opd" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="opd" value="No" checked> No</label>
+                        <input type="number" id="opdAmount" value="0" min="0" style="width:150px;" placeholder="Amount per annum">
+                    </div>
                     <div class="comp-row"><label>Health Insurance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="health" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="health" value="No" checked> No</label></div>
                     <div class="comp-row"><label>Life Insurance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="life" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="life" value="No" checked> No</label></div>
                     <div class="comp-row"><label>Provident Fund <span class="req">*</span></label><label class="radio-label"><input type="radio" name="pf" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="pf" value="No" checked> No</label></div>
-                    <div class="comp-row"><label>Gratuity <span class="req">*</span></label><label class="radio-label"><input type="radio" name="gratuity" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="gratuity" value="No" checked> No</label><label class="radio-label"><input type="radio" name="gratuityType" value="On basic" checked> On basic</label><label class="radio-label"><input type="radio" name="gratuityType" value="On gross"> On gross</label></div>
+                    <div class="comp-row">
+                        <label>Gratuity <span class="req">*</span></label>
+                        <label class="radio-label"><input type="radio" name="gratuity" value="Yes"> Yes</label>
+                        <label class="radio-label"><input type="radio" name="gratuity" value="No" checked> No</label>
+                        <label class="radio-label"><input type="radio" name="gratuityType" value="On basic" checked> On basic</label>
+                        <label class="radio-label"><input type="radio" name="gratuityType" value="On gross"> On gross</label>
+                    </div>
                     <div class="comp-row"><label>WPPF <span class="req">*</span></label><label class="radio-label"><input type="radio" name="wppf" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="wppf" value="No" checked> No</label></div>
+
                     <h4 class="sub-heading">Leaves</h4>
                     <div class="form-grid-4">
                         <div class="field"><label>Annual</label><input type="number" id="leaveAnnual" value="0" min="0"></div>
@@ -410,7 +556,6 @@
         </main>
     </div>
 
-    <!-- Entry Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <div class="modal-header">
