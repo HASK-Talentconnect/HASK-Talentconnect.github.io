@@ -1,6 +1,6 @@
 /* ============================================
    HASK Talent Connect - Smart Job Dashboard
-   Matching Algorithm + Score
+   Clean version (no stats/filters/snapshot)
    ============================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -25,7 +25,6 @@ let userData = null;
 let profile = null;
 let allJobs = [];
 let matchedJobs = [];
-let currentFilter = 'all';
 
 // ============ INIT ============
 onAuthStateChanged(auth, async (user) => {
@@ -47,20 +46,13 @@ onAuthStateChanged(auth, async (user) => {
         } catch (err) { alert(err.message); }
     });
 
-    // Load data
     await loadUser();
     await loadProfile();
     await loadJobs();
 
-    // Update UI
     renderUserHeader();
-    renderProfileSnapshot();
     renderProfileCompletion();
-
-    // Match jobs
     runMatching();
-
-    document.getElementById('loadingScreen') && (document.getElementById('loadingScreen').style.display = 'none');
 });
 
 // ============ LOAD USER ============
@@ -99,44 +91,7 @@ function renderUserHeader() {
     document.getElementById('userName').textContent = name;
 }
 
-// ============ RENDER PROFILE SNAPSHOT ============
-function renderProfileSnapshot() {
-    const p = profile.personal || {};
-    const skills = profile.skills || [];
-    const education = profile.education || [];
-    const exp = profile.experience || {};
-
-    document.getElementById('snapSkills').textContent = skills.length;
-
-    const eduLevels = ['PhD', 'MPhil', 'Master', 'Bachelor', 'Intermediate/A-Level', 'Matriculation/O-Level'];
-    let topEdu = '—';
-    for (const lvl of eduLevels) {
-        if (education.find(e => e.level === lvl)) {
-            topEdu = lvl.replace('/O-Level', '').replace('/A-Level', '');
-            break;
-        }
-    }
-    document.getElementById('snapEdu').textContent = topEdu;
-
-    const totalYears = calculateTotalExp(exp.entries || []);
-    document.getElementById('snapExp').textContent = totalYears.toFixed(1) + ' yrs';
-
-    document.getElementById('snapLoc').textContent = p.city || p.district || '—';
-}
-
-function calculateTotalExp(entries) {
-    let total = 0;
-    entries.forEach(e => {
-        const j = new Date(e.joining);
-        const l = e.isCurrent || !e.leaving ? new Date() : new Date(e.leaving);
-        if (!isNaN(j) && !isNaN(l)) {
-            total += Math.max(0, (l - j) / (1000 * 60 * 60 * 24 * 365.25));
-        }
-    });
-    return total;
-}
-
-// ============ RENDER PROFILE COMPLETION ============
+// ============ PROFILE COMPLETION ============
 function renderProfileCompletion() {
     const p = profile;
     let score = 0;
@@ -154,8 +109,10 @@ function renderProfileCompletion() {
 
     score = Math.min(score, 100);
 
-    document.getElementById('pcBarFill').style.width = score + '%';
-    document.getElementById('pcPercent').textContent = score + '%';
+    const fill = document.getElementById('pcBarFill');
+    const pct = document.getElementById('pcPercent');
+    if (fill) fill.style.width = score + '%';
+    if (pct) pct.textContent = score + '%';
 }
 
 // ============ SMART MATCHING ============
@@ -166,7 +123,6 @@ function runMatching() {
                 <span class="icon">📭</span>
                 <h3>No Jobs Available</h3>
                 <p>No jobs have been posted yet. Please check back later.</p>
-                <a href="index.html" class="btn-browse-all" style="margin-top:15px;">← Back to Homepage</a>
             </div>
         `;
         return;
@@ -180,20 +136,16 @@ function runMatching() {
     // Sort by score desc
     matchedJobs.sort((a, b) => b.score - a.score);
 
-    // Update stats
-    updateStats();
-
-    // Render
     renderMatchedJobs();
 }
 
-// ============ MATCH SCORE CALCULATION ============
+// ============ MATCH SCORE ============
 function calculateMatchScore(job, profile) {
     let score = 0;
     const reasons = [];
     const missing = [];
 
-    // ---------- 1. SKILLS MATCH (40%) ----------
+    // ---------- 1. SKILLS (40%) ----------
     const userSkills = (profile.skills || []).map(s => (s.name || '').toLowerCase());
     const jobText = ((job.title || '') + ' ' + (job.description || '') + ' ' + (job.requirements || '')).toLowerCase();
 
@@ -216,11 +168,9 @@ function calculateMatchScore(job, profile) {
         if (skillMatches === 0 && userSkills.length > 0) {
             missing.push('⚠️ No skill matches');
         }
-    } else {
-        missing.push('⚠️ Add skills to profile');
     }
 
-    // ---------- 2. EDUCATION MATCH (20%) ----------
+    // ---------- 2. EDUCATION (20%) ----------
     const education = profile.education || [];
     if (education.length > 0) {
         const eduLevels = ['PhD', 'MPhil', 'Master', 'Bachelor', 'Intermediate/A-Level', 'Matriculation/O-Level'];
@@ -248,11 +198,9 @@ function calculateMatchScore(job, profile) {
             score += 15;
             reasons.push('✅ Education OK');
         }
-    } else {
-        missing.push('⚠️ Add education');
     }
 
-    // ---------- 3. EXPERIENCE MATCH (20%) ----------
+    // ---------- 3. EXPERIENCE (20%) ----------
     const expEntries = (profile.experience && profile.experience.entries) || [];
     const totalYears = calculateTotalExp(expEntries);
 
@@ -261,7 +209,6 @@ function calculateMatchScore(job, profile) {
     if (jobExpText.includes('5+')) jobRequires = 5;
     else if (jobExpText.includes('3-5')) jobRequires = 3;
     else if (jobExpText.includes('1-2')) jobRequires = 1;
-    else if (jobExpText.includes('fresh')) jobRequires = 0;
 
     if (totalYears >= jobRequires) {
         score += 20;
@@ -269,18 +216,15 @@ function calculateMatchScore(job, profile) {
     } else if (totalYears > 0) {
         const ratio = Math.max(0, totalYears / Math.max(jobRequires, 1));
         score += ratio * 15;
-        missing.push(`⚠️ Need ${jobRequires} yrs (have ${totalYears.toFixed(1)})`);
-    } else {
-        missing.push('⚠️ Add experience');
+        missing.push(`⚠️ Need ${jobRequires} yrs`);
     }
 
-    // ---------- 4. CATEGORY/INTEREST MATCH (10%) ----------
+    // ---------- 4. CATEGORY (10%) ----------
     const p = profile.personal || {};
     const userInterest = (p.interest || '').toLowerCase();
     const jobCategory = (job.category || '').toLowerCase();
 
     if (userInterest && jobCategory) {
-        // Map interest text to category keywords
         const interestMap = {
             'it & software': ['it', 'software', 'developer', 'web'],
             'sales & marketing': ['sales', 'marketing'],
@@ -304,14 +248,12 @@ function calculateMatchScore(job, profile) {
         if (matches) {
             score += 10;
             reasons.push('✅ Category match');
-        } else {
-            missing.push('⚠️ Different category');
         }
     } else {
         score += 5;
     }
 
-    // ---------- 5. LOCATION MATCH (10%) ----------
+    // ---------- 5. LOCATION (10%) ----------
     const userCity = (p.city || p.district || '').toLowerCase();
     const userProvince = (p.province || '').toLowerCase();
     const jobLoc = (job.location || '').toLowerCase();
@@ -326,8 +268,6 @@ function calculateMatchScore(job, profile) {
         } else if (jobLoc.includes('remote')) {
             score += 8;
             reasons.push('✅ Remote job');
-        } else {
-            score += 2;
         }
     } else {
         score += 5;
@@ -350,35 +290,34 @@ function getMatchLevel(score) {
     return 'low';
 }
 
-// ============ UPDATE STATS ============
-function updateStats() {
-    document.getElementById('statTotal').textContent = matchedJobs.length;
-    document.getElementById('statExcellent').textContent = matchedJobs.filter(j => j.level === 'excellent').length;
-    document.getElementById('statGood').textContent = matchedJobs.filter(j => j.level === 'good').length;
-    document.getElementById('statFair').textContent = matchedJobs.filter(j => j.level === 'fair').length;
+function calculateTotalExp(entries) {
+    let total = 0;
+    entries.forEach(e => {
+        const j = new Date(e.joining);
+        const l = e.isCurrent || !e.leaving ? new Date() : new Date(e.leaving);
+        if (!isNaN(j) && !isNaN(l)) {
+            total += Math.max(0, (l - j) / (1000 * 60 * 60 * 24 * 365.25));
+        }
+    });
+    return total;
 }
 
 // ============ RENDER MATCHED JOBS ============
 function renderMatchedJobs() {
     const list = document.getElementById('jobsList');
 
-    let filtered = matchedJobs;
-    if (currentFilter !== 'all') {
-        filtered = matchedJobs.filter(j => j.level === currentFilter);
-    }
-
-    if (filtered.length === 0) {
+    if (matchedJobs.length === 0) {
         list.innerHTML = `
             <div class="empty-box">
                 <span class="icon">🔍</span>
-                <h3>No Jobs in This Filter</h3>
-                <p>Try a different filter or browse all jobs.</p>
+                <h3>No Jobs Found</h3>
+                <p>Try browsing all jobs.</p>
             </div>
         `;
         return;
     }
 
-    list.innerHTML = filtered.map(job => renderJobCard(job)).join('');
+    list.innerHTML = matchedJobs.map(job => renderJobCard(job)).join('');
 }
 
 function renderJobCard(job) {
@@ -427,14 +366,6 @@ function renderJobCard(job) {
     `;
 }
 
-// ============ FILTER ============
-window.filterByMatch = function(level, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    currentFilter = level;
-    renderMatchedJobs();
-};
-
 // ============ HELPERS ============
 function formatType(t) {
     if (!t) return 'Full Time';
@@ -446,4 +377,4 @@ function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 }
 
-console.log('✅ Dashboard.js (Smart Matching) loaded');
+console.log('✅ Dashboard.js (Clean) loaded');
