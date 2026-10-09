@@ -29,6 +29,15 @@
 
             <div class="sidebar-profile">
                 <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+                <input type="file" id="picFile" accept="image/*" onchange="handlePicUpload(event)" style="display:none;">
+                <div class="sidebar-avatar-controls">
+                    <button type="button" class="btn-pic-upload" onclick="document.getElementById('picFile').click()">
+                        📷 Upload
+                    </button>
+                    <button type="button" class="btn-pic-remove" onclick="removePic()" id="removePicBtn">
+                        🗑️
+                    </button>
+                </div>
                 <div class="sidebar-name" id="sidebarName">Loading...</div>
                 <div class="sidebar-id" id="sidebarId">—</div>
             </div>
@@ -131,21 +140,6 @@
                 </div>
 
                 <div class="green-banner">Candidate ID: <span id="candidateId">—</span></div>
-
-                <!-- ===== Profile Picture ===== -->
-                <div class="profile-pic-section">
-                    <div class="profile-pic-preview" id="picPreview">📷</div>
-                    <input type="file" id="picFile" accept="image/*" onchange="handlePicUpload(event)" style="display:none;">
-                    <div class="pic-controls">
-                        <button type="button" class="btn-pic-upload" onclick="document.getElementById('picFile').click()">
-                            📷 Upload Picture
-                        </button>
-                        <button type="button" class="btn-pic-remove" onclick="removePic()">
-                            🗑️ Remove
-                        </button>
-                        <small class="pic-hint">JPG, PNG, or WEBP — Max 5MB</small>
-                    </div>
-                </div>
 
                 <form onsubmit="savePersonal(event)">
                     <div class="form-grid">
