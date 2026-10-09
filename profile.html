@@ -153,7 +153,7 @@
                         <div class="field"><label>Landline #</label><input type="text" id="pLandline" maxlength="12"></div>
                         <div class="field"><label>Cell # <span class="req">*</span></label><input type="tel" id="pCell" placeholder="0300-8195675" maxlength="12" required></div>
                         <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="pEmail" placeholder="you@example.com" required></div>
-                        </div>
+                    </div>
                     <div class="form-actions"><button type="submit" class="btn-save">Save & Continue →</button></div>
                 </form>
             </section>
@@ -267,7 +267,6 @@
                         <small class="char-count"><span id="c1">0</span> / 500</small>
                     </div>
 
-                    <!-- Strengths — with suggestions -->
                     <div class="field">
                         <label>Strengths (Optional)</label>
                         <div class="strengths-search-wrap">
@@ -356,7 +355,6 @@
                             <input type="text" id="mSourceOther" placeholder="e.g. LinkedIn, Indeed">
                         </div>
 
-                        <!-- Notice Period -->
                         <div class="field full">
                             <label>Notice Period <span class="req">*</span></label>
                             <div class="notice-wrap">
@@ -369,8 +367,8 @@
                                     <span>Specific Period</span>
                                 </label>
                             </div>
-                            <div id="noticePeriodBox" style="display:none; margin-top:10px; display:none;">
-                                <div class="form-grid" style="grid-template-columns:1fr 1fr;">
+                            <div id="noticePeriodBox" style="display:none;">
+                                <div class="form-grid" style="grid-template-columns:1fr 1fr; margin-top:10px;">
                                     <div class="field"><label>Duration</label><input type="number" id="mNoticeNum" value="1" min="0"></div>
                                     <div class="field"><label>Unit</label>
                                         <select id="mNoticeUnit"><option>Day(s)</option><option>Week(s)</option><option>Month(s)</option></select>
@@ -401,144 +399,395 @@
                 </form>
             </section>
 
-            <!-- SECTION 9: COMPENSATION -->
+            <!-- SECTION 9: COMPENSATION (FULLY REDESIGNED) -->
             <section class="profile-section" id="section-compensation">
-                <div class="section-header"><h2>💰 Compensation</h2></div>
-                <div class="green-banner">Compensation Details</div>
+                <div class="section-header">
+                    <h2>💰 Compensation Package</h2>
+                    <p class="section-note">Mention your most-recent compensation package (Only Salary fields are mandatory)</p>
+                </div>
+
                 <form onsubmit="saveCompensation(event)">
 
-                    <h4 class="sub-heading">Salary</h4>
-                    <div class="form-grid-3">
-                        <div class="field"><label>Monthly Basic Salary <span class="req">*</span></label><input type="number" id="cBasic" value="0" min="0" required><small>In PKR</small></div>
-                        <div class="field"><label>Monthly Gross Salary <span class="req">*</span></label><input type="number" id="cGross" value="0" min="0" required></div>
-                        <div class="field"><label>Monthly Expected Salary <span class="req">*</span></label><input type="number" id="cExpected" value="0" min="0" required></div>
+                    <!-- SALARY -->
+                    <h4 class="sub-heading">💵 Salary</h4>
+                    <div class="comp-grid-3">
+                        <div class="field">
+                            <label>Monthly Basic Salary <span class="req">*</span></label>
+                            <input type="number" id="cBasic" value="0" min="0" required>
+                            <small>In PKR</small>
+                        </div>
+                        <div class="field">
+                            <label>Monthly Gross Salary <span class="req">*</span></label>
+                            <input type="number" id="cGross" value="0" min="0" required>
+                            <small>In PKR</small>
+                        </div>
+                        <div class="field">
+                            <label>Monthly Expected Salary <span class="req">*</span></label>
+                            <input type="number" id="cExpected" value="0" min="0" required>
+                            <small>In PKR</small>
+                        </div>
                     </div>
 
-                    <h4 class="sub-heading">Bonus</h4>
-                    <div class="comp-row">
-                        <label>Bonus(es) <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="bonus" value="Yes" checked> Yes</label>
-                        <label class="radio-label"><input type="radio" name="bonus" value="No"> No</label>
-                        <label class="radio-label"><input type="radio" name="bonusType" value="On basic" checked> On basic</label>
-                        <label class="radio-label"><input type="radio" name="bonusType" value="On gross"> On gross</label>
-                        <input type="number" id="bonusCount" value="1" min="0" style="width:80px;" placeholder="Count">
+                    <!-- BONUS & INCENTIVES -->
+                    <h4 class="sub-heading">🎁 Bonus & Incentives</h4>
+                    <div class="comp-grid-2">
+                        <div class="comp-pair">
+                            <label>Bonus</label>
+                            <div class="pair-inputs">
+                                <select id="bonusYesNo"><option>No</option><option>Yes</option></select>
+                                <select id="bonusType"><option value="">Type</option><option>On Basic</option><option>On Gross</option></select>
+                                <input type="number" id="bonusCount" value="0" min="0" placeholder="Count">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Annual Increment</label>
+                            <div class="pair-inputs">
+                                <select id="incrementYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="incrementPercent" value="0" min="0" max="100" placeholder="%">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Performance Bonus</label>
+                            <select id="performanceBonus"><option>No</option><option>Yes</option></select>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Sales Commission</label>
+                            <select id="salesCommission"><option>No</option><option>Yes</option></select>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Profit Sharing</label>
+                            <select id="profitSharing"><option>No</option><option>Yes</option></select>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Overtime Available</label>
+                            <select id="overtime"><option>No</option><option>Yes</option></select>
+                        </div>
                     </div>
 
-                    <h4 class="sub-heading">Allowances</h4>
+                    <!-- CASH ALLOWANCES -->
+                    <h4 class="sub-heading">💼 Cash Allowances</h4>
+                    <div class="comp-grid-2">
+                        <div class="comp-pair">
+                            <label>Medical Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="medicalYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="medAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
 
-                    <div class="comp-row">
-                        <label>Leave Encashment <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="leave" value="Yes"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="leave" value="No" checked> No</label>
+                        <div class="comp-pair">
+                            <label>House Rent Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="houseRentYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="houseRentAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Mobile Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="mobileYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="mobileAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Utility Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="utilityYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="utilityAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Meal / Food Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="mealYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="mealAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Dress / Uniform Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="dressYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="dressAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Education Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="educationYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="educationAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Entertainment Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="entertainmentYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="entertainmentAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Leave Encashment</label>
+                            <div class="pair-inputs">
+                                <select id="leaveEncashYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="leaveEncashAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Shift Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="shiftAllowYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="shiftAllowAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="comp-row">
-                        <label>Medical Allowance <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="medical" value="Yes" onchange="toggleMed(true)"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="medical" value="No" onchange="toggleMed(false)" checked> No</label>
-                        <input type="number" id="medAmount" value="0" min="0" style="width:150px;" placeholder="Amount (PKR)">
-                    </div>
-
-                    <div class="comp-row">
-                        <label>Accommodation Allowance <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="accom" value="Yes"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="accom" value="No" checked> No</label>
-                    </div>
-
-                    <div class="comp-row">
-                        <label>Mobile Allowance <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="mobile" value="Yes" onchange="toggleMobile(true)"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="mobile" value="No" onchange="toggleMobile(false)" checked> No</label>
-                        <input type="number" id="mobileAmount" value="0" min="0" style="width:150px;" placeholder="Monthly Amount (PKR)">
-                    </div>
-
-                    <!-- TRANSPORTATION SECTION -->
+                    <!-- TRANSPORTATION -->
                     <h4 class="sub-heading">🚗 Transportation</h4>
-
-                    <div class="comp-row">
-                        <label>Transport Allowance <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="transportAllow" value="Yes" onchange="toggleTransportAllow(true)"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="transportAllow" value="No" onchange="toggleTransportAllow(false)" checked> No</label>
-                        <input type="number" id="transportAllowAmount" value="0" min="0" style="width:150px;" placeholder="Amount (PKR)">
-                    </div>
-
-                    <div class="comp-row">
-                        <label>Company Transport <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="companyTransport" value="Yes"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="companyTransport" value="No" checked> No</label>
-                    </div>
-
-                    <div class="comp-row">
-                        <label>Fuel Allowance <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="fuel" value="Yes" onchange="toggleFuel(true)"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="fuel" value="No" onchange="toggleFuel(false)" checked> No</label>
-                        <div class="fuel-inputs">
-                            <div class="fuel-input-wrap">
-                                <label class="mini-label">💰 Amount (PKR)</label>
-                                <input type="number" id="fuelAmount" value="0" min="0" placeholder="Enter Amount">
+                    <div class="comp-grid-2">
+                        <div class="comp-pair">
+                            <label>Transport Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="transportYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="transportAmount" value="0" min="0" placeholder="Amount (PKR)">
                             </div>
-                            <div class="fuel-input-wrap">
-                                <label class="mini-label">⛽ Liters</label>
-                                <input type="number" id="fuelLiters" value="0" min="0" placeholder="Enter Liters">
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Company Transport</label>
+                            <div class="pair-inputs">
+                                <select id="companyTransportYesNo"><option>No</option><option>Yes</option></select>
+                                <select id="companyTransportType">
+                                    <option value="">Type</option>
+                                    <option>Pick & Drop</option>
+                                    <option>Point-to-Point</option>
+                                    <option>Shuttle Service</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Fuel Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="fuelYesNo"><option>No</option><option>Yes</option></select>
+                            </div>
+                            <div class="fuel-sub">
+                                <div class="fuel-sub-item">
+                                    <label class="mini-label">💰 Amount (PKR)</label>
+                                    <input type="number" id="fuelAmount" value="0" min="0" placeholder="Enter Amount">
+                                </div>
+                                <div class="fuel-sub-item">
+                                    <label class="mini-label">⛽ Liters</label>
+                                    <input type="number" id="fuelLiters" value="0" min="0" placeholder="Enter Liters">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comp-pair">
+                            <label>Vehicle Allowance</label>
+                            <div class="pair-inputs">
+                                <select id="vehicleAllowYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="vehicleAllowAmount" value="0" min="0" placeholder="Amount (PKR)">
                             </div>
                         </div>
                     </div>
 
-                    <div class="comp-row">
-                        <label>Vehicle Allowance <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="vehicleAllow" value="Yes" onchange="toggleVehicleAllow(true)"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="vehicleAllow" value="No" onchange="toggleVehicleAllow(false)" checked> No</label>
-                        <input type="number" id="vehicleAllowAmount" value="0" min="0" style="width:150px;" placeholder="Monthly Amount (PKR)">
+                    <!-- Vehicle Provided by Company -->
+                    <div class="comp-pair" style="margin-top:12px;">
+                        <label>Vehicle Provided by Company</label>
+                        <select id="vehicleProvidedYesNo" onchange="toggleVehicleProvidedFinal()" style="max-width:200px;">
+                            <option>No</option>
+                            <option>Yes</option>
+                        </select>
                     </div>
 
-                    <div class="comp-row">
-                        <label>Vehicle Provided by Company <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="vehicleProvided" value="Yes" onchange="toggleVehicleProvided(true)"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="vehicleProvided" value="No" onchange="toggleVehicleProvided(false)" checked> No</label>
-                    </div>
-
-                    <div class="comp-row" id="vehicleProvidedDetails" style="display:none; flex-direction:column; align-items:stretch;">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                            <div class="field"><label>Vehicle Type / Model</label><input type="text" id="vehicleType" placeholder="e.g. Honda City 2020"></div>
-                            <div class="field"><label>Registration Number</label><input type="text" id="vehicleRegNo" placeholder="e.g. LEB-1234"></div>
-                            <div class="field"><label>Buy Back Option</label>
-                                <select id="vehicleBuyback"><option value="No">No</option><option value="Yes">Yes</option></select>
+                    <div id="vehicleProvidedBox" style="display:none; background:#f8f9fc; padding:16px; border-radius:8px; margin-top:10px; border:1px solid #eef1f5;">
+                        <div class="comp-grid-2">
+                            <div class="comp-pair">
+                                <label>Vehicle Type / Model</label>
+                                <input type="text" id="vehicleType" placeholder="e.g. Honda City 2020">
                             </div>
-                            <div class="field"><label>Buy Back Years</label><input type="number" id="buybackYears" value="0" min="0" max="20"></div>
+                            <div class="comp-pair">
+                                <label>Maintenance By</label>
+                                <select id="vehicleMaintenance">
+                                    <option value="">Select</option>
+                                    <option>Company Maintained</option>
+                                    <option>Employee Maintained</option>
+                                    <option>Hybrid Maintenance</option>
+                                </select>
+                            </div>
+                            <div class="comp-pair">
+                                <label>Hybrid Maintenance</label>
+                                <select id="hybridMaintenance">
+                                    <option>No</option>
+                                    <option>Yes</option>
+                                </select>
+                                <small>If Hybrid — Company + Employee Shared</small>
+                            </div>
                         </div>
                     </div>
 
-                    <h4 class="sub-heading">Insurance</h4>
-                    <div class="comp-row">
-                        <label>OPD Limit <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="opd" value="Yes"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="opd" value="No" checked> No</label>
-                        <input type="number" id="opdAmount" value="0" min="0" style="width:150px;" placeholder="Amount per annum">
+                    <!-- INSURANCE & HEALTH -->
+                    <h4 class="sub-heading">🏥 Insurance & Health</h4>
+                    <div class="comp-grid-2">
+                        <div class="comp-pair">
+                            <label>Health Insurance</label>
+                            <div class="pair-inputs">
+                                <select id="healthYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="healthAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Family Coverage</label>
+                            <select id="familyCoverage"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Life Insurance</label>
+                            <div class="pair-inputs">
+                                <select id="lifeYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="lifeAmount" value="0" min="0" placeholder="Amount (PKR)">
+                            </div>
+                        </div>
+                        <div class="comp-pair">
+                            <label>OPD Limit</label>
+                            <div class="pair-inputs">
+                                <select id="opdYesNo"><option>No</option><option>Yes</option></select>
+                                <input type="number" id="opdAmount" value="0" min="0" placeholder="Amount per year">
+                            </div>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Maternity Coverage</label>
+                            <select id="maternityYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Disability Insurance</label>
+                            <select id="disabilityYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
                     </div>
-                    <div class="comp-row"><label>Health Insurance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="health" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="health" value="No" checked> No</label></div>
-                    <div class="comp-row"><label>Life Insurance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="life" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="life" value="No" checked> No</label></div>
-                                       <div class="comp-row">
-                        <label>Retirement Benefit <span class="req">*</span></label>
-                        <select id="retirementBenefit" onchange="toggleRetirement()" style="flex:1; max-width:280px;">
-                            <option value="None">None</option>
-                            <option value="Provident Fund">Provident Fund (PF)</option>
-                            <option value="Gratuity">Gratuity</option>
-                        </select>
-                        <select id="retirementType" style="display:none; flex:1; max-width:200px;">
-                            <option value="On basic">On Basic</option>
-                            <option value="On gross">On Gross</option>
-                        </select>
-                    </div>
-                    <div class="comp-row"><label>WPPF <span class="req">*</span></label><label class="radio-label"><input type="radio" name="wppf" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="wppf" value="No" checked> No</label></div>
 
-                    <h4 class="sub-heading">Leaves</h4>
-                    <div class="form-grid-4">
-                        <div class="field"><label>Annual</label><input type="number" id="leaveAnnual" value="0" min="0"></div>
-                        <div class="field"><label>Casual</label><input type="number" id="leaveCasual" value="0" min="0"></div>
-                        <div class="field"><label>Sick</label><input type="number" id="leaveSick" value="0" min="0"></div>
-                        <div class="field"><label>Working Days/Week</label><input type="number" id="workingDays" value="5" min="1" max="7"></div>
+                    <!-- RETIREMENT & SAVINGS -->
+                    <h4 class="sub-heading">🏦 Retirement & Savings</h4>
+                    <div class="comp-grid-2">
+                        <div class="comp-pair">
+                            <label>Retirement Benefit</label>
+                            <select id="retirementBenefit" onchange="toggleRetirementFinal()">
+                                <option value="None">None</option>
+                                <option value="Provident Fund">Provident Fund (PF)</option>
+                                <option value="Gratuity">Gratuity</option>
+                                <option value="Both">Both (PF + Gratuity)</option>
+                            </select>
+                        </div>
+                        <div class="comp-pair" id="gratuityTypeField" style="display:none;">
+                            <label>Gratuity Type</label>
+                            <select id="gratuityType">
+                                <option>On Basic</option>
+                                <option>On Gross</option>
+                            </select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>WPPF</label>
+                            <select id="wppfYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>EOBI</label>
+                            <select id="eobiYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Social Security</label>
+                            <select id="socialSecYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
                     </div>
-                    <div class="field"><label>Any Other Benefit</label><textarea id="otherBenefit" rows="3"></textarea></div>
+
+                    <!-- LEAVES & TIME OFF -->
+                    <h4 class="sub-heading">📅 Leaves & Time Off</h4>
+                    <div class="comp-grid-5">
+                        <div class="field"><label>Annual</label><input type="number" id="leaveAnnual" value="14" min="0"></div>
+                        <div class="field"><label>Casual</label><input type="number" id="leaveCasual" value="10" min="0"></div>
+                        <div class="field"><label>Sick</label><input type="number" id="leaveSick" value="8" min="0"></div>
+                        <div class="field"><label>Maternity</label><input type="number" id="leaveMaternity" value="90" min="0"></div>
+                        <div class="field"><label>Working Days/Week</label><input type="number" id="workingDays" value="6" min="1" max="7"></div>
+                    </div>
+
+                    <div class="comp-grid-2" style="margin-top:15px;">
+                        <div class="comp-pair">
+                            <label>Weekly Off</label>
+                            <select id="weeklyOff">
+                                <option value="">Select</option>
+                                <option>Sunday</option>
+                                <option>Saturday</option>
+                                <option>Sunday + Saturday</option>
+                                <option>Friday</option>
+                                <option>Rotational</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Prayer Break</label>
+                            <select id="prayerBreak"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Compensatory Off</label>
+                            <select id="compOff"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Public Holidays</label>
+                            <select id="publicHolidays"><option>No</option><option>Yes</option></select>
+                        </div>
+                    </div>
+
+                    <!-- OTHER BENEFITS -->
+                    <h4 class="sub-heading">🎓 Other Benefits</h4>
+                    <div class="comp-grid-2">
+                        <div class="comp-pair">
+                            <label>Training & Development</label>
+                            <select id="trainingYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Annual Leave Tickets</label>
+                            <select id="leaveTicketsYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Gym / Fitness</label>
+                            <select id="gymYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Subsidized Canteen</label>
+                            <select id="canteenYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Mobile Phone Given</label>
+                            <select id="mobilePhoneYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Laptop Given</label>
+                            <select id="laptopYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Relocation Support</label>
+                            <select id="relocationYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                        <div class="comp-pair">
+                            <label>Housing Provided</label>
+                            <select id="housingYesNo"><option>No</option><option>Yes</option></select>
+                        </div>
+                    </div>
+
+                    <div class="field" style="margin-top:15px;">
+                        <label>Any Other Benefit (Free Text)</label>
+                        <textarea id="otherBenefit" rows="3" maxlength="500"></textarea>
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" class="btn-prev" onclick="goToSection('misc')">← Previous</button>
                         <button type="submit" class="btn-save">Save & Finish ✓</button>
