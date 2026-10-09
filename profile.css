@@ -428,13 +428,6 @@ body {
 .field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .field small { color: #888; font-size: 0.72rem; margin-top: 3px; }
 
-/* Email field — smaller */
-.field input[type="email"] {
-    font-family: 'Courier New', monospace;
-    font-size: 0.86rem;
-    letter-spacing: -0.2px;
-}
-
 .char-count {
     color: #888;
     font-size: 0.72rem;
