@@ -60,11 +60,8 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadProfile();
 
-    // Fill title suggestions datalist
     const titleDL = document.getElementById('titleSuggestions');
-    if (titleDL) {
-        titleDL.innerHTML = PROFESSIONAL_TITLES.map(t => `<option value="${escA(t)}">`).join('');
-    }
+    if (titleDL) titleDL.innerHTML = PROFESSIONAL_TITLES.map(t => `<option value="${escA(t)}">`).join('');
 
     populateCountries('pNationality');
     populateCountries('pCountry');
@@ -170,7 +167,6 @@ window.copyPresentToPermanent = function() {
     }
 };
 
-// Auto-sync present → permanent on input if checkbox checked
 document.addEventListener('input', (e) => {
     if (e.target.id === 'pAddress') {
         const cb = document.getElementById('sameAddress');
@@ -215,7 +211,6 @@ function attachPhoneFormatters() {
             });
         }
     });
-    // For dynamically-created contact phone in modal
     document.addEventListener('input', (e) => {
         if (e.target.id === 'expContactPhone') {
             e.target.value = formatPakPhone(e.target.value);
@@ -258,7 +253,6 @@ function attachStrengthListeners() {
         }
     });
 
-    // Close on outside click
     document.addEventListener('click', (e) => {
         const box = document.getElementById('strengthSuggestions');
         const wrap = document.querySelector('.strengths-search-wrap');
@@ -273,7 +267,6 @@ window.addStrength = async function(s) {
     document.getElementById('strengthSearch').value = '';
     document.getElementById('strengthSuggestions').classList.remove('show');
     renderStrengthTags();
-    // Save combined to textarea value
     syncStrengthsToTextarea();
 };
 
@@ -414,7 +407,6 @@ async function saveProfile() {
         updatedAt: new Date().toISOString()
     }, { merge: true });
 }
-window.saveProfileSilent = async function() { try { await saveProfile(); } catch(e) {} };
 
 // ============ SIDEBAR USER ============
 function renderSidebarUser() {
@@ -428,22 +420,41 @@ function renderSidebarUser() {
     else av.textContent = init;
 }
 
-// ============ PROGRESS ============
+// ============ PROGRESS (GREEN FIX) ============
 function updateProgress() {
     const p = profileData;
-    progressData.personal = !!(p.personal && p.personal.fullName && p.personal.fatherName &&
-        p.personal.cnic && p.personal.dob && p.personal.gender && p.personal.cell &&
-        p.personal.email && p.personal.address && p.personal.permanentAddress &&
-        p.personal.province && p.personal.domicile && p.personal.district &&
-        p.personal.tehsil && p.personal.availability);
+
+    // Personal — required fields
+    progressData.personal = !!(p.personal &&
+        p.personal.fullName && p.personal.fatherName &&
+        p.personal.cnic && p.personal.dob && p.personal.gender &&
+        p.personal.cell && p.personal.email && p.personal.address &&
+        p.personal.permanentAddress && p.personal.province &&
+        p.personal.domicile && p.personal.district && p.personal.tehsil);
+
+    // Education — at least 1
     progressData.education = p.education && p.education.length > 0;
+
+    // Certifications — optional but counts if added
     progressData.certifications = p.certifications && p.certifications.length > 0;
+
+    // Experience — has false OR at least 1 entry
     progressData.experience = p.experience && (p.experience.has === false || (p.experience.entries && p.experience.entries.length > 0));
+
+    // Skills — at least 1 skill OR 1 language
     progressData.skills = (p.skills && p.skills.length > 0) || (p.languages && p.languages.length > 0);
+
+    // Self — Title + Objective (minimum)
     progressData.self = !!(p.self && p.self.title && p.self.objective);
+
+    // References — LENIENT (only 1 name needed)
     progressData.references = !!(p.references && (p.references.ref1Name || p.references.ref2Name));
-    progressData.misc = !!(p.misc && p.misc.crime && p.misc.disability && p.misc.source && p.misc.noticeType);
-    progressData.compensation = !!(p.compensation && p.compensation.basic !== undefined && p.compensation.gross !== undefined && p.compensation.expected !== undefined);
+
+    // Misc — LENIENT (source is always filled by default)
+    progressData.misc = !!(p.misc && (p.misc.source || p.misc.crime || p.misc.disability || p.misc.noticeType));
+
+    // Compensation — LENIENT (basic or gross > 0)
+    progressData.compensation = !!(p.compensation && (p.compensation.basic > 0 || p.compensation.gross > 0));
 }
 
 function renderProgress() {
@@ -511,12 +522,10 @@ function attachListeners() {
         } catch (err) { alert(err.message); }
     });
 
-    // Auto-save before unload
     window.addEventListener('beforeunload', () => {
         try { saveProfile(); } catch(e) {}
     });
 
-    // Also on visibility change (mobile)
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) { try { saveProfile(); } catch(e) {} }
     });
@@ -573,7 +582,6 @@ function applyDefaults() {
     setVal('pLandline', p.landline || '');
     setVal('pCell', p.cell || '');
     setVal('pEmail', p.email || userData.email || '');
-    setVal('pAvailability', p.availability || '');
     document.getElementById('candidateId').textContent = userData.userId || '—';
 
     if (profileData.experience && profileData.experience.has === false) {
@@ -587,8 +595,6 @@ function applyDefaults() {
     setVal('saObjective', sa.objective || '');
     setVal('saImprovements', sa.improvements || '');
     setVal('saSummary', sa.summary || '');
-
-    // Strengths — from array or text
     selectedStrengths = Array.isArray(sa.strengthsList) && sa.strengthsList.length > 0
         ? sa.strengthsList.slice()
         : ((sa.strengths || '').split(/\n+/).map(s => s.trim()).filter(s => s));
@@ -619,24 +625,20 @@ function applyDefaults() {
     setVal('mBlood', m.blood || '');
     setVal('mMarital', m.marital || '');
 
-    // Source Other
     if (m.source === 'Other') {
         setVal('mSource', 'Other');
         document.getElementById('sourceOtherField').style.display = 'flex';
         setVal('mSourceOther', m.sourceOther || '');
     }
 
-    // Notice Period
     const noticeType = m.noticeType || 'Immediate';
-    const noticeRadios = document.querySelectorAll('input[name="noticeType"]');
-    noticeRadios.forEach(r => { r.checked = r.value === noticeType; });
+    document.querySelectorAll('input[name="noticeType"]').forEach(rd => { rd.checked = rd.value === noticeType; });
     if (noticeType === 'Period') {
         document.getElementById('noticePeriodBox').style.display = 'block';
         setVal('mNoticeNum', m.noticeNum || 1);
         setVal('mNoticeUnit', m.noticeUnit || 'Day(s)');
     }
 
-    // Religion
     const stdRel = ['Islam','Christianity','Hinduism','Sikhism','Buddhism'];
     if (m.religion && !stdRel.includes(m.religion) && m.religion !== '') {
         setVal('mReligion', 'Other');
@@ -653,30 +655,101 @@ function applyDefaults() {
         setVal('mDisabilityDetails', m.disabilityDetails || '');
     }
 
-    // Compensation
+    // Compensation (new structure)
     const c = profileData.compensation || {};
     setVal('cBasic', c.basic !== undefined ? c.basic : 0);
     setVal('cGross', c.gross !== undefined ? c.gross : 0);
     setVal('cExpected', c.expected !== undefined ? c.expected : 0);
-    setVal('bonusCount', c.bonusCount || 1);
+
+    setVal('bonusYesNo', c.bonusYesNo || 'No');
+    setVal('bonusType', c.bonusType || '');
+    setVal('bonusCount', c.bonusCount || 0);
+
+    setVal('incrementYesNo', c.incrementYesNo || 'No');
+    setVal('incrementPercent', c.incrementPercent || 0);
+
+    setVal('performanceBonus', c.performanceBonus || 'No');
+    setVal('salesCommission', c.salesCommission || 'No');
+    setVal('profitSharing', c.profitSharing || 'No');
+    setVal('overtime', c.overtime || 'No');
+
+    setVal('medicalYesNo', c.medicalYesNo || 'No');
     setVal('medAmount', c.medAmount || 0);
+    setVal('houseRentYesNo', c.houseRentYesNo || 'No');
+    setVal('houseRentAmount', c.houseRentAmount || 0);
+    setVal('mobileYesNo', c.mobileYesNo || 'No');
     setVal('mobileAmount', c.mobileAmount || 0);
-    setVal('transportAllowAmount', c.transportAllowAmount || 0);
+    setVal('utilityYesNo', c.utilityYesNo || 'No');
+    setVal('utilityAmount', c.utilityAmount || 0);
+    setVal('mealYesNo', c.mealYesNo || 'No');
+    setVal('mealAmount', c.mealAmount || 0);
+    setVal('dressYesNo', c.dressYesNo || 'No');
+    setVal('dressAmount', c.dressAmount || 0);
+    setVal('educationYesNo', c.educationYesNo || 'No');
+    setVal('educationAmount', c.educationAmount || 0);
+    setVal('entertainmentYesNo', c.entertainmentYesNo || 'No');
+    setVal('entertainmentAmount', c.entertainmentAmount || 0);
+    setVal('leaveEncashYesNo', c.leaveEncashYesNo || 'No');
+    setVal('leaveEncashAmount', c.leaveEncashAmount || 0);
+    setVal('shiftAllowYesNo', c.shiftAllowYesNo || 'No');
+    setVal('shiftAllowAmount', c.shiftAllowAmount || 0);
+
+    setVal('transportYesNo', c.transportYesNo || 'No');
+    setVal('transportAmount', c.transportAmount || 0);
+    setVal('companyTransportYesNo', c.companyTransportYesNo || 'No');
+    setVal('companyTransportType', c.companyTransportType || '');
+    setVal('fuelYesNo', c.fuelYesNo || 'No');
     setVal('fuelAmount', c.fuelAmount || 0);
     setVal('fuelLiters', c.fuelLiters || 0);
+    setVal('vehicleAllowYesNo', c.vehicleAllowYesNo || 'No');
     setVal('vehicleAllowAmount', c.vehicleAllowAmount || 0);
-    setVal('vehicleType', c.vehicleType || '');
-    setVal('vehicleRegNo', c.vehicleRegNo || '');
-    setVal('vehicleBuyback', c.vehicleBuyback || 'No');
-    setVal('buybackYears', c.buybackYears || 0);
-    setVal('opdAmount', c.opdAmount || 0);
-    setVal('leaveAnnual', c.leaveAnnual || 0);
-    setVal('leaveCasual', c.leaveCasual || 0);
-    setVal('leaveSick', c.leaveSick || 0);
-    setVal('workingDays', c.workingDays || 5);
-    setVal('otherBenefit', c.otherBenefit || '');
 
-    // Radio state for compensation — already default, skip complex restore
+    setVal('vehicleProvidedYesNo', c.vehicleProvidedYesNo || 'No');
+    if (c.vehicleProvidedYesNo === 'Yes') {
+        document.getElementById('vehicleProvidedBox').style.display = 'block';
+    }
+    setVal('vehicleType', c.vehicleType || '');
+    setVal('vehicleMaintenance', c.vehicleMaintenance || '');
+    setVal('hybridMaintenance', c.hybridMaintenance || 'No');
+
+    setVal('healthYesNo', c.healthYesNo || 'No');
+    setVal('healthAmount', c.healthAmount || 0);
+    setVal('familyCoverage', c.familyCoverage || 'No');
+    setVal('lifeYesNo', c.lifeYesNo || 'No');
+    setVal('lifeAmount', c.lifeAmount || 0);
+    setVal('opdYesNo', c.opdYesNo || 'No');
+    setVal('opdAmount', c.opdAmount || 0);
+    setVal('maternityYesNo', c.maternityYesNo || 'No');
+    setVal('disabilityYesNo', c.disabilityYesNo || 'No');
+
+    setVal('retirementBenefit', c.retirementBenefit || 'None');
+    if (c.retirementBenefit === 'Gratuity' || c.retirementBenefit === 'Both') {
+        document.getElementById('gratuityTypeField').style.display = 'flex';
+    }
+    setVal('gratuityType', c.gratuityType || 'On Basic');
+    setVal('wppfYesNo', c.wppfYesNo || 'No');
+    setVal('eobiYesNo', c.eobiYesNo || 'No');
+    setVal('socialSecYesNo', c.socialSecYesNo || 'No');
+
+    setVal('leaveAnnual', c.leaveAnnual || 14);
+    setVal('leaveCasual', c.leaveCasual || 10);
+    setVal('leaveSick', c.leaveSick || 8);
+    setVal('leaveMaternity', c.leaveMaternity || 90);
+    setVal('workingDays', c.workingDays || 6);
+    setVal('weeklyOff', c.weeklyOff || '');
+    setVal('prayerBreak', c.prayerBreak || 'No');
+    setVal('compOff', c.compOff || 'No');
+    setVal('publicHolidays', c.publicHolidays || 'No');
+
+    setVal('trainingYesNo', c.trainingYesNo || 'No');
+    setVal('leaveTicketsYesNo', c.leaveTicketsYesNo || 'No');
+    setVal('gymYesNo', c.gymYesNo || 'No');
+    setVal('canteenYesNo', c.canteenYesNo || 'No');
+    setVal('mobilePhoneYesNo', c.mobilePhoneYesNo || 'No');
+    setVal('laptopYesNo', c.laptopYesNo || 'No');
+    setVal('relocationYesNo', c.relocationYesNo || 'No');
+    setVal('housingYesNo', c.housingYesNo || 'No');
+    setVal('otherBenefit', c.otherBenefit || '');
 
     renderEducationTable();
     renderCertificationsTable();
@@ -684,22 +757,6 @@ function applyDefaults() {
     renderSkillsTable();
     renderExpSummary();
     renderLanguages();
-
-    if (c.vehicleProvided === 'Yes') {
-        document.getElementById('vehicleProvidedDetails').style.display = 'flex';
-        const r = document.querySelector('input[name="vehicleProvided"][value="Yes"]');
-        if (r) r.checked = true;
-    }
-    if (c.transportAllow === 'Yes') {
-        const r = document.querySelector('input[name="transportAllow"][value="Yes"]');
-        if (r) r.checked = true;
-        toggleTransportAllow(true);
-    }
-    if (c.vehicleAllow === 'Yes') {
-        const r = document.querySelector('input[name="vehicleAllow"][value="Yes"]');
-        if (r) r.checked = true;
-        toggleVehicleAllow(true);
-    }
 }
 
 function addCustomInterest(v) {
@@ -762,19 +819,14 @@ window.toggleNoticeType = function() {
     document.getElementById('noticePeriodBox').style.display = val === 'Period' ? 'block' : 'none';
 };
 
-window.toggleMed = function(s) { const el = document.getElementById('medAmount'); if (el) el.disabled = !s; };
-window.toggleMobile = function(s) { const el = document.getElementById('mobileAmount'); if (el) el.disabled = !s; };
-window.toggleFuel = function(s) {
-    ['fuelAmount','fuelLiters'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.disabled = !s;
-    });
+window.toggleRetirementFinal = function() {
+    const v = document.getElementById('retirementBenefit').value;
+    document.getElementById('gratuityTypeField').style.display = (v === 'Gratuity' || v === 'Both') ? 'flex' : 'none';
 };
-window.toggleTransportAllow = function(s) { const el = document.getElementById('transportAllowAmount'); if (el) el.disabled = !s; };
-window.toggleVehicleAllow = function(s) { const el = document.getElementById('vehicleAllowAmount'); if (el) el.disabled = !s; };
-window.toggleVehicleProvided = function(s) {
-    const box = document.getElementById('vehicleProvidedDetails');
-    if (box) box.style.display = s ? 'flex' : 'none';
+
+window.toggleVehicleProvidedFinal = function() {
+    const v = document.getElementById('vehicleProvidedYesNo').value;
+    document.getElementById('vehicleProvidedBox').style.display = v === 'Yes' ? 'block' : 'none';
 };
 
 // ============ SAVE: PERSONAL ============
@@ -799,7 +851,6 @@ window.savePersonal = async function(e) {
             district: getVal('pDistrict'), tehsil: getVal('pTehsil'), postalCode: getVal('pPostalCode'),
             address: getVal('pAddress'), permanentAddress: getVal('pPermanentAddress'),
             landline: getVal('pLandline'), cell: getVal('pCell'), email: getEmail('pEmail'),
-            availability: getVal('pAvailability'),
             profilePic: pic
         };
         await saveProfile();
@@ -886,30 +937,86 @@ window.saveMisc = async function(e) {
     finally { btn.disabled = false; btn.textContent = 'Save & Continue →'; }
 };
 
-// ============ SAVE: COMPENSATION ============
+// ============ SAVE: COMPENSATION (NEW) ============
 window.saveCompensation = async function(e) {
     e.preventDefault();
     const btn = e.target.querySelector('.btn-save');
     btn.disabled = true; btn.textContent = 'Saving...';
     try {
-        const R = n => { const el = document.querySelector(`input[name="${n}"]:checked`); return el ? el.value : ''; };
         profileData.compensation = {
-            basic: +getVal('cBasic')||0, gross: +getVal('cGross')||0, expected: +getVal('cExpected')||0,
-            bonus: R('bonus'), bonusType: R('bonusType'), bonusCount: +getVal('bonusCount')||0,
-            leave: R('leave'), medical: R('medical'), medAmount: +getVal('medAmount')||0,
-            accom: R('accom'), mobile: R('mobile'), mobileAmount: +getVal('mobileAmount')||0,
-            transportAllow: R('transportAllow'), transportAllowAmount: +getVal('transportAllowAmount')||0,
-            companyTransport: R('companyTransport'),
-            fuel: R('fuel'), fuelAmount: +getVal('fuelAmount')||0, fuelLiters: +getVal('fuelLiters')||0,
-            vehicleAllow: R('vehicleAllow'), vehicleAllowAmount: +getVal('vehicleAllowAmount')||0,
-            vehicleProvided: R('vehicleProvided'),
-            vehicleType: getVal('vehicleType'), vehicleRegNo: getVal('vehicleRegNo'),
-            vehicleBuyback: getVal('vehicleBuyback'), buybackYears: +getVal('buybackYears')||0,
-            opd: R('opd'), opdAmount: +getVal('opdAmount')||0,
-            health: R('health'), life: R('life'), pf: R('pf'),
-            gratuity: R('gratuity'), gratuityType: R('gratuityType'), wppf: R('wppf'),
-            leaveAnnual: +getVal('leaveAnnual')||0, leaveCasual: +getVal('leaveCasual')||0,
-            leaveSick: +getVal('leaveSick')||0, workingDays: +getVal('workingDays')||0,
+            // Salary
+            basic: +getVal('cBasic') || 0,
+            gross: +getVal('cGross') || 0,
+            expected: +getVal('cExpected') || 0,
+
+            // Bonus & Incentives
+            bonusYesNo: getVal('bonusYesNo'),
+            bonusType: getVal('bonusType'),
+            bonusCount: +getVal('bonusCount') || 0,
+            incrementYesNo: getVal('incrementYesNo'),
+            incrementPercent: +getVal('incrementPercent') || 0,
+            performanceBonus: getVal('performanceBonus'),
+            salesCommission: getVal('salesCommission'),
+            profitSharing: getVal('profitSharing'),
+            overtime: getVal('overtime'),
+
+            // Allowances
+            medicalYesNo: getVal('medicalYesNo'), medAmount: +getVal('medAmount') || 0,
+            houseRentYesNo: getVal('houseRentYesNo'), houseRentAmount: +getVal('houseRentAmount') || 0,
+            mobileYesNo: getVal('mobileYesNo'), mobileAmount: +getVal('mobileAmount') || 0,
+            utilityYesNo: getVal('utilityYesNo'), utilityAmount: +getVal('utilityAmount') || 0,
+            mealYesNo: getVal('mealYesNo'), mealAmount: +getVal('mealAmount') || 0,
+            dressYesNo: getVal('dressYesNo'), dressAmount: +getVal('dressAmount') || 0,
+            educationYesNo: getVal('educationYesNo'), educationAmount: +getVal('educationAmount') || 0,
+            entertainmentYesNo: getVal('entertainmentYesNo'), entertainmentAmount: +getVal('entertainmentAmount') || 0,
+            leaveEncashYesNo: getVal('leaveEncashYesNo'), leaveEncashAmount: +getVal('leaveEncashAmount') || 0,
+            shiftAllowYesNo: getVal('shiftAllowYesNo'), shiftAllowAmount: +getVal('shiftAllowAmount') || 0,
+
+            // Transportation
+            transportYesNo: getVal('transportYesNo'), transportAmount: +getVal('transportAmount') || 0,
+            companyTransportYesNo: getVal('companyTransportYesNo'), companyTransportType: getVal('companyTransportType'),
+            fuelYesNo: getVal('fuelYesNo'), fuelAmount: +getVal('fuelAmount') || 0, fuelLiters: +getVal('fuelLiters') || 0,
+            vehicleAllowYesNo: getVal('vehicleAllowYesNo'), vehicleAllowAmount: +getVal('vehicleAllowAmount') || 0,
+            vehicleProvidedYesNo: getVal('vehicleProvidedYesNo'),
+            vehicleType: getVal('vehicleType'),
+            vehicleMaintenance: getVal('vehicleMaintenance'),
+            hybridMaintenance: getVal('hybridMaintenance'),
+
+            // Insurance
+            healthYesNo: getVal('healthYesNo'), healthAmount: +getVal('healthAmount') || 0,
+            familyCoverage: getVal('familyCoverage'),
+            lifeYesNo: getVal('lifeYesNo'), lifeAmount: +getVal('lifeAmount') || 0,
+            opdYesNo: getVal('opdYesNo'), opdAmount: +getVal('opdAmount') || 0,
+            maternityYesNo: getVal('maternityYesNo'),
+            disabilityYesNo: getVal('disabilityYesNo'),
+
+            // Retirement
+            retirementBenefit: getVal('retirementBenefit'),
+            gratuityType: getVal('gratuityType'),
+            wppfYesNo: getVal('wppfYesNo'),
+            eobiYesNo: getVal('eobiYesNo'),
+            socialSecYesNo: getVal('socialSecYesNo'),
+
+            // Leaves
+            leaveAnnual: +getVal('leaveAnnual') || 0,
+            leaveCasual: +getVal('leaveCasual') || 0,
+            leaveSick: +getVal('leaveSick') || 0,
+            leaveMaternity: +getVal('leaveMaternity') || 0,
+            workingDays: +getVal('workingDays') || 6,
+            weeklyOff: getVal('weeklyOff'),
+            prayerBreak: getVal('prayerBreak'),
+            compOff: getVal('compOff'),
+            publicHolidays: getVal('publicHolidays'),
+
+            // Other Benefits
+            trainingYesNo: getVal('trainingYesNo'),
+            leaveTicketsYesNo: getVal('leaveTicketsYesNo'),
+            gymYesNo: getVal('gymYesNo'),
+            canteenYesNo: getVal('canteenYesNo'),
+            mobilePhoneYesNo: getVal('mobilePhoneYesNo'),
+            laptopYesNo: getVal('laptopYesNo'),
+            relocationYesNo: getVal('relocationYesNo'),
+            housingYesNo: getVal('housingYesNo'),
             otherBenefit: getVal('otherBenefit')
         };
         await saveProfile();
@@ -1545,14 +1652,10 @@ function escA(s) { if (!s) return ''; return String(s).replace(/["'&<>]/g, c => 
 
 // ============ DIRECT DOWNLOAD ============
 window.directDownloadCV = async function() {
-    showToast('Preparing your CV...', 'info');
+    showToast('Generating your CV...', 'info');
     try { await saveProfile(); } catch(e) {}
-    setTimeout(() => { window.open('cv.html?download=1', '_blank'); }, 500);
-};
-
-// ============ EXPOSE FOR CV.JS ============
-window.generateAITitle = function(profile) {
-    // Kept for backward compatibility (cv.js has its own)
+    const w = window.open('cv.html?download=1&silent=1', '_blank', 'width=1,height=1,left=-1000,top=-1000');
+    if (!w) showToast('Please allow popups', 'error');
 };
 
 console.log('✅ Profile.js (Final) loaded');
