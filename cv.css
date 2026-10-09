@@ -1,6 +1,5 @@
 /* ============================================
-   HASK TalentConnect - CV/Resume Styles
-   ATS-Friendly | A4
+   HASK TalentConnect - CV CSS
    ============================================ */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -85,7 +84,7 @@ html, body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* CV Page A4 */
+/* CV Page */
 .cv-page {
     width: 210mm;
     min-height: 297mm;
@@ -96,7 +95,6 @@ html, body {
     font-size: 10pt;
     line-height: 1.45;
     color: #222;
-    position: relative;
 }
 
 /* Header */
@@ -130,7 +128,7 @@ html, body {
     font-family: monospace;
 }
 
-/* Profile Section */
+/* Profile */
 .profile-section {
     display: flex;
     gap: 18px;
@@ -276,7 +274,7 @@ html, body {
     margin-left: 8px;
 }
 
-/* List items */
+/* List */
 .list-item {
     padding: 3px 0;
     font-size: 10pt;
@@ -328,6 +326,12 @@ html, body {
     margin-bottom: 3px;
 }
 
+.exp-location {
+    font-size: 9pt;
+    color: #777;
+    margin-bottom: 3px;
+}
+
 .exp-desc {
     font-size: 9.5pt;
     color: #555;
@@ -343,6 +347,16 @@ html, body {
     color: #888;
     position: absolute;
     left: 0;
+}
+
+.exp-contact-info {
+    font-size: 8.5pt;
+    color: #666;
+    background: #f8f9fc;
+    padding: 4px 10px;
+    border-radius: 5px;
+    margin-top: 4px;
+    border-left: 2px solid #1a2a6c;
 }
 
 /* Education */
@@ -386,6 +400,23 @@ html, body {
     font-weight: 600;
 }
 
+/* Languages */
+.lang-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.lang-tag {
+    background: #e8f4fd;
+    color: #0277bd;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 9.5pt;
+    font-weight: 600;
+    border: 1px solid #b3e0ff;
+}
+
 /* References */
 .ref-item {
     font-size: 9.5pt;
@@ -418,9 +449,10 @@ html, body {
 @media print {
     @page { size: A4; margin: 0; }
     html, body { background: white; font-size: 10pt; }
-    .no-print { display: none !important; }
+    .no-print, #toolbar { display: none !important; }
     .cv-page { width: 100%; min-height: auto; margin: 0; padding: 12mm; box-shadow: none; }
-    .photo, .section-title, .contact-strip, .ref-item, .profile-info .userid {
+    .photo, .section-title, .contact-strip, .ref-item, .profile-info .userid,
+    .lang-tag, .exp-contact-info {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
