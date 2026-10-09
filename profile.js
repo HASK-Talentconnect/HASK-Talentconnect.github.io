@@ -190,10 +190,11 @@ function attachCnicFormatter() {
 // ============================================
 // PROFILE PICTURE UPLOAD (Cloudinary - unsigned)
 // ============================================
-window.handlePicUpload = async function(event) {
+window.handlePicUpload = function(event) {
     const file = event.target.files[0];
     if (!file) return;
 
+    // Validate size
     if (file.size > 5 * 1024 * 1024) {
         showMessage('❌ Picture must be less than 5MB.', 'error');
         event.target.value = '';
@@ -207,43 +208,83 @@ window.handlePicUpload = async function(event) {
 
     const avatarEl = document.getElementById('sidebarAvatar');
     const oldContent = avatarEl.innerHTML;
-    avatarEl.innerHTML = '⏳';
 
-    try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', CLOUDINARY_PRESET);
-        formData.append('folder', CLOUDINARY_FOLDER);
-        // NOTE: unsigned upload does NOT allow public_id, overwrite, invalidate
+    // Show progress ring overlay
+    avatarEl.innerHTML = `
+        <div class="upload-progress-overlay" id="uploadOverlay">
+            <svg class="progress-ring" viewBox="0 0 100 100">
+                <circle class="ring-bg" cx="50" cy="50" r="50"></circle>
+                <circle class="ring-fill" id="progressRingFill" cx="50" cy="50" r="50"></circle>
+            </svg>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+    `;
 
-        const res = await fetch(
-            `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-            { method: 'POST', body: formData }
-        );
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    formData.append('folder', CLOUDINARY_FOLDER);
 
-        if (!res.ok) {
-            const errText = await res.text();
-            throw new Error("Upload failed: " + errText);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, true);
+
+    // Progress tracking
+    xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            const ring = document.getElementById('progressRingFill');
+            const text = document.getElementById('progressText');
+            if (ring) {
+                const circumference = 314;
+                ring.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+            }
+            if (text) text.textContent = percent + '%';
         }
+    });
 
-        const data = await res.json();
-        const downloadURL = data.secure_url;
+    // Complete
+    xhr.onload = async function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+                const downloadURL = data.secure_url;
 
-        if (!profileData.personal) profileData.personal = {};
-        profileData.personal.profilePic = downloadURL;
-        await saveProfile();
+                if (!profileData.personal) profileData.personal = {};
+                profileData.personal.profilePic = downloadURL;
+                await saveProfile();
 
-        avatarEl.innerHTML = `<img src="${downloadURL}" alt="Avatar">`;
-        updateAvatarControls();
+                // Show checkmark briefly
+                const overlay = document.getElementById('uploadOverlay');
+                if (overlay) {
+                    overlay.innerHTML = '<div class="progress-check">✅</div>';
+                }
 
-        event.target.value = '';
-        showMessage('✅ Profile picture updated!', 'success');
-    } catch (err) {
-        console.error(err);
+                // After 700ms, show actual image
+                setTimeout(() => {
+                    avatarEl.innerHTML = `<img src="${downloadURL}" alt="Avatar">`;
+                    updateAvatarControls();
+                    event.target.value = '';
+                }, 700);
+
+            } catch (err) {
+                console.error(err);
+                avatarEl.innerHTML = oldContent;
+                event.target.value = '';
+            }
+        } else {
+            console.error('Upload failed:', xhr.responseText);
+            avatarEl.innerHTML = oldContent;
+            event.target.value = '';
+        }
+    };
+
+    xhr.onerror = function() {
+        console.error('Upload network error');
         avatarEl.innerHTML = oldContent;
-        showMessage('❌ Upload failed: ' + err.message, 'error');
         event.target.value = '';
-    }
+    };
+
+    xhr.send(formData);
 };
 
 // ============================================
