@@ -1,0 +1,176 @@
+/* ============ EMPLOYER APPLICANTS PAGE ============ */
+
+.applicants-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px 20px 50px;
+    min-height: calc(100vh - 60px);
+}
+
+.applicants-header { margin-bottom: 25px; }
+.applicants-header h1 { color: #1a2a6c; font-size: 1.6rem; margin-bottom: 4px; }
+.section-note { color: #888; font-size: 0.88rem; }
+.active-link { color: #f9c74f !important; font-weight: bold !important; }
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.stat-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    text-align: center;
+    border-top: 4px solid #1a2a6c;
+}
+
+.stat-num { font-size: 1.8rem; font-weight: bold; color: #1a2a6c; margin-bottom: 4px; }
+.stat-lbl { color: #666; font-size: 0.82rem; }
+
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+.filter-btn {
+    background: white;
+    border: 1.5px solid #dfe3ec;
+    color: #444;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+}
+.filter-btn:hover { border-color: #1a2a6c; background: #f4f6fb; }
+.filter-btn.active { background: #1a2a6c; color: white; border-color: #1a2a6c; }
+
+.applicants-list { display: flex; flex-direction: column; gap: 14px; }
+
+.applicant-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    border-left: 4px solid #1a2a6c;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.applicant-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+.applicant-info h3 { color: #1a2a6c; font-size: 1.05rem; margin-bottom: 4px; }
+.applicant-info .email { color: #555; font-size: 0.88rem; margin-bottom: 6px; }
+.applicant-info .job-title { color: #764ba2; font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
+.applicant-info .meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.8rem; color: #777; }
+.applicant-info .applied-date { font-size: 0.78rem; color: #999; margin-top: 4px; font-style: italic; }
+
+.applicant-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+.action-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.action-btn.view { background: #e8f4fd; color: #0277bd; }
+.action-btn.view:hover { background: #0277bd; color: white; }
+
+.action-btn.hire { background: #d4edda; color: #155724; }
+.action-btn.hire:hover { background: #28a745; color: white; }
+
+.action-btn.reject { background: #f8d7da; color: #721c24; }
+.action-btn.reject:hover { background: #dc3545; color: white; }
+
+.action-btn.review { background: #fff3cd; color: #856404; }
+.action-btn.review:hover { background: #f9c74f; color: #1a2a6c; }
+
+.status-pill {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.status-pill.waiting { background: #fff3cd; color: #856404; }
+.status-pill.reviewed { background: #d1ecf1; color: #0c5460; }
+.status-pill.hired { background: #d4edda; color: #155724; }
+.status-pill.rejected { background: #f8d7da; color: #721c24; }
+.status-pill.closed { background: #e2e3e5; color: #383d41; }
+
+/* Applicant Details Modal */
+.app-detail-modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none; justify-content: center; align-items: center;
+    z-index: 1000; padding: 20px;
+}
+.app-detail-modal.show { display: flex; }
+.app-detail-box {
+    background: white; border-radius: 12px;
+    max-width: 650px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.app-detail-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 22px; border-bottom: 1px solid #eef1f5;
+    position: sticky; top: 0; background: white; border-radius: 12px 12px 0 0;
+}
+.app-detail-header h3 { color: #1a2a6c; font-size: 1.1rem; }
+.app-detail-close {
+    background: none; border: none; font-size: 1.4rem; color: #999;
+    cursor: pointer; padding: 3px 8px; border-radius: 6px;
+}
+.app-detail-close:hover { background: #fee; color: #dc3545; }
+.app-detail-body { padding: 22px; }
+.app-detail-row { padding: 10px 0; border-bottom: 1px solid #f5f7fa; display: flex; gap: 12px; }
+.app-detail-row:last-child { border-bottom: none; }
+.app-detail-row .lbl { color: #888; font-size: 0.85rem; min-width: 130px; font-weight: 600; }
+.app-detail-row .val { color: #222; font-size: 0.9rem; flex: 1; word-break: break-word; }
+
+.loading-box, .empty-box {
+    background: white; padding: 60px 30px; border-radius: 12px;
+    text-align: center; color: #888;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+}
+.loader {
+    width: 40px; height: 40px; border: 4px solid #e0e4ef;
+    border-top-color: #1a2a6c; border-radius: 50%;
+    animation: spin 0.9s linear infinite; margin: 0 auto 15px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-box .icon { font-size: 3.5rem; margin-bottom: 15px; display: block; }
+.empty-box h3 { color: #1a2a6c; margin-bottom: 10px; }
+
+/* Toast */
+.toast-mini {
+    position: fixed; top: 30px; right: 30px;
+    background: #28a745; color: white;
+    padding: 14px 22px; border-radius: 10px;
+    font-weight: 600; font-size: 0.92rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999; opacity: 0; transform: translateX(400px);
+    transition: all 0.4s;
+}
+.toast-mini.show { opacity: 1; transform: translateX(0); }
+.toast-mini.error { background: #dc3545; }
+
+@media (max-width: 700px) {
+    .applicant-card { grid-template-columns: 1fr; }
+    .applicant-actions { justify-content: flex-start; }
+    .toast-mini { top: 15px; right: 15px; left: 15px; }
+}
