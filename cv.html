@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CV - HASK TalentConnect</title>
+    <link rel="stylesheet" href="cv.css">
+</head>
+<body>
+
+    <!-- Toolbar (only on screen, hidden in print) -->
+    <div class="toolbar no-print">
+        <div class="toolbar-left">
+            <a href="profile.html" class="toolbar-btn">
+                ← Back to Profile
+            </a>
+        </div>
+        <div class="toolbar-title">📄 CV Preview</div>
+        <div class="toolbar-right">
+            <button onclick="downloadPDF()" class="toolbar-btn primary">
+                📥 Download PDF
+            </button>
+            <button onclick="window.print()" class="toolbar-btn">
+                🖨️ Print
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-screen no-print" id="loadingScreen">
+        <div class="loader"></div>
+        <p>Loading your CV...</p>
+    </div>
+
+    <!-- CV Content -->
+    <div class="cv-page" id="cvContent" style="display: none;">
+
+        <!-- Header -->
+        <div class="cv-header">
+            <div class="header-brand">
+                <div class="brand-logo">HASK TalentConnect</div>
+                <div class="brand-tagline">Careers • Connect • Grow • Succeed</div>
+            </div>
+            <div class="header-date" id="headerDate">—</div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="photo-wrap">
+                <div class="photo" id="cvPhoto">📷</div>
+            </div>
+            <div class="profile-info">
+                <h1 id="cvName">Loading...</h1>
+                <div class="role" id="cvRole">—</div>
+                <div class="userid" id="cvUserId">🆔 —</div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="contact-strip" id="cvContact"></div>
+
+        <!-- Objective -->
+        <div class="section" id="objectiveSection" style="display: none;">
+            <h2 class="section-title">🎯 Career Objective</h2>
+            <div class="section-body" id="cvObjective"></div>
+        </div>
+
+        <!-- Skills + Strengths (BEFORE Experience) -->
+        <div class="two-column" id="skillsStrengthsSection" style="display: none;">
+            <div class="col">
+                <h2 class="section-title">🛠️ Skills</h2>
+                <div class="section-body" id="cvSkills"></div>
+            </div>
+            <div class="col">
+                <h2 class="section-title">📝 Strengths</h2>
+                <div class="section-body" id="cvStrengths"></div>
+            </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="section" id="experienceSection" style="display: none;">
+            <h2 class="section-title">💼 Work Experience <span class="exp-years" id="cvExpYears"></span></h2>
+            <div class="section-body" id="cvExperience"></div>
+        </div>
+
+        <!-- Education + Certifications -->
+        <div class="two-column" id="eduCertSection" style="display: none;">
+            <div class="col">
+                <h2 class="section-title">🎓 Education</h2>
+                <div class="section-body" id="cvEducation"></div>
+            </div>
+            <div class="col">
+                <h2 class="section-title">📜 Certifications</h2>
+                <div class="section-body" id="cvCertifications"></div>
+            </div>
+        </div>
+
+        <!-- References -->
+        <div class="section" id="referencesSection" style="display: none;">
+            <h2 class="section-title">👥 References</h2>
+            <div class="section-body">
+                <div class="two-column-inner" id="cvReferences"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="cv-footer">
+            <div>📄 Generated from <strong>HASK TalentConnect</strong></div>
+            <div>🌐 hask-talentconnect.github.io</div>
+        </div>
+
+    </div>
+
+    <script type="module" src="cv.js"></script>
+
+</body>
+</html>
