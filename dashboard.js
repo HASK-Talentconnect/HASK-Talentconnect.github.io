@@ -308,4 +308,142 @@ function calculateMatchScore(job, profile) {
             missing.push('⚠️ Different category');
         }
     } else {
-        score += 
+        score += 5;
+    }
+
+    // ---------- 5. LOCATION MATCH (10%) ----------
+    const userCity = (p.city || p.district || '').toLowerCase();
+    const userProvince = (p.province || '').toLowerCase();
+    const jobLoc = (job.location || '').toLowerCase();
+
+    if (userCity && jobLoc) {
+        if (jobLoc.includes(userCity)) {
+            score += 10;
+            reasons.push('✅ Same city');
+        } else if (userProvince && jobLoc.includes(userProvince)) {
+            score += 6;
+            reasons.push('✅ Same province');
+        } else if (jobLoc.includes('remote')) {
+            score += 8;
+            reasons.push('✅ Remote job');
+        } else {
+            score += 2;
+        }
+    } else {
+        score += 5;
+    }
+
+    score = Math.min(Math.round(score), 100);
+
+    return {
+        score,
+        level: getMatchLevel(score),
+        reasons,
+        missing
+    };
+}
+
+function getMatchLevel(score) {
+    if (score >= 80) return 'excellent';
+    if (score >= 60) return 'good';
+    if (score >= 40) return 'fair';
+    return 'low';
+}
+
+// ============ UPDATE STATS ============
+function updateStats() {
+    document.getElementById('statTotal').textContent = matchedJobs.length;
+    document.getElementById('statExcellent').textContent = matchedJobs.filter(j => j.level === 'excellent').length;
+    document.getElementById('statGood').textContent = matchedJobs.filter(j => j.level === 'good').length;
+    document.getElementById('statFair').textContent = matchedJobs.filter(j => j.level === 'fair').length;
+}
+
+// ============ RENDER MATCHED JOBS ============
+function renderMatchedJobs() {
+    const list = document.getElementById('jobsList');
+
+    let filtered = matchedJobs;
+    if (currentFilter !== 'all') {
+        filtered = matchedJobs.filter(j => j.level === currentFilter);
+    }
+
+    if (filtered.length === 0) {
+        list.innerHTML = `
+            <div class="empty-box">
+                <span class="icon">🔍</span>
+                <h3>No Jobs in This Filter</h3>
+                <p>Try a different filter or browse all jobs.</p>
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = filtered.map(job => renderJobCard(job)).join('');
+}
+
+function renderJobCard(job) {
+    const initial = (job.company || 'C').charAt(0).toUpperCase();
+    const levelLabel = {
+        excellent: 'Excellent Match',
+        good: 'Good Match',
+        fair: 'Fair Match',
+        low: 'Low Match'
+    }[job.level];
+
+    const reasonsHTML = job.reasons.slice(0, 4).map(r => `<span class="reason-tag">${r}</span>`).join('');
+    const missingHTML = job.missing.slice(0, 2).map(m => `<span class="reason-tag missing">${m}</span>`).join('');
+
+    return `
+        <div class="job-match-card ${job.level}">
+            <div class="job-logo">${initial}</div>
+
+            <div class="job-info">
+                <h3>${escapeHtml(job.title || 'Untitled Job')}</h3>
+                <div class="company-name">🏢 ${escapeHtml(job.company || 'Unknown Company')}</div>
+                <div class="meta">
+                    <span>📍 ${escapeHtml(job.location || 'Pakistan')}</span>
+                    <span>💼 ${formatType(job.type)}</span>
+                    ${job.salary ? `<span>💰 ${escapeHtml(job.salary)}</span>` : ''}
+                </div>
+                <div class="match-reasons">
+                    ${reasonsHTML}
+                    ${missingHTML}
+                </div>
+            </div>
+
+            <div class="match-score">
+                <div class="score-circle ${job.level}">
+                    <span class="score-num">${job.score}</span>
+                    <span class="score-pct">%</span>
+                </div>
+                <div class="score-label ${job.level}">${levelLabel}</div>
+            </div>
+
+            <div class="job-actions">
+                <a href="job-details.html?job=${job.id}" class="btn-view-details">👁️ View Details</a>
+                <a href="job-details.html?job=${job.id}" class="btn-apply-now">📝 Apply Now →</a>
+            </div>
+        </div>
+    `;
+}
+
+// ============ FILTER ============
+window.filterByMatch = function(level, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    currentFilter = level;
+    renderMatchedJobs();
+};
+
+// ============ HELPERS ============
+function formatType(t) {
+    if (!t) return 'Full Time';
+    return t.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function escapeHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+console.log('✅ Dashboard.js (Smart Matching) loaded');
