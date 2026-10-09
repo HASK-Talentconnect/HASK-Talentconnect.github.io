@@ -388,4 +388,77 @@ export const PAKISTAN_DATA = {
     "Islamabad Capital Territory": {
         "Islamabad": { tehsils: ["Islamabad Urban", "Islamabad Rural"], postal: "44000" }
     },
-    "Gil
+    "Gilgit-Baltistan": {
+        "Astore": { tehsils: ["Astore", "Shounter", "Eidgah"], postal: "14100" },
+        "Diamer": { tehsils: ["Chilas", "Darel", "Tangir", "Babusar"], postal: "14000" },
+        "Ghanche": { tehsils: ["Khaplu", "Mashabrum", "Daghoni"], postal: "16800" },
+        "Ghizer": { tehsils: ["Gahkuch", "Punial", "Ishkoman", "Yasin"], postal: "15200" },
+        "Gilgit": { tehsils: ["Gilgit", "Danyore", "Juglot", "Oshikhandass"], postal: "15100" },
+        "Hunza": { tehsils: ["Aliabad", "Gulmit", "Sost"], postal: "15700" },
+        "Kharmang": { tehsils: ["Tolti", "Kharmang"], postal: "16300" },
+        "Nagar": { tehsils: ["Nagar", "Chalt"], postal: "15500" },
+        "Shigar": { tehsils: ["Shigar", "Dassu"], postal: "16100" },
+        "Skardu": { tehsils: ["Skardu", "Ghanche", "Shigar", "Kharmang"], postal: "16100" }
+    },
+    "Azad Jammu & Kashmir": {
+        "Bagh": { tehsils: ["Bagh", "Dhir Kot", "Hari Ghel", "Rera"], postal: "12500" },
+        "Bhimber": { tehsils: ["Bhimber", "Barnala", "Samahni"], postal: "12200" },
+        "Haveli": { tehsils: ["Forward Kahuta", "Haveli"], postal: "12550" },
+        "Jhelum Valley": { tehsils: ["Hattian Bala", "Chikar", "Leepa"], postal: "12450" },
+        "Kotli": { tehsils: ["Kotli", "Charhoi", "Khuiratta", "Sehnsa", "Fatehpur Thakiala"], postal: "12000" },
+        "Mirpur": { tehsils: ["Mirpur", "Dadyal", "Chakswari"], postal: "10250" },
+        "Muzaffarabad": { tehsils: ["Muzaffarabad", "Nasirabad", "Ghori", "Pattika"], postal: "13100" },
+        "Neelum": { tehsils: ["Athmuqam", "Sharda"], postal: "13250" },
+        "Poonch": { tehsils: ["Rawalakot", "Hajira", "Abbaspur", "Thorar"], postal: "12350" },
+        "Sudhnoti": { tehsils: ["Pallandri", "Baloch", "Tarar Khel"], postal: "12200" }
+    }
+};
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+// Get all provinces
+export function getProvinces() {
+    return Object.keys(PAKISTAN_DATA);
+}
+
+// Get districts by province
+export function getDistricts(province) {
+    if (!PAKISTAN_DATA[province]) return [];
+    return Object.keys(PAKISTAN_DATA[province]);
+}
+
+// Get tehsils by province + district
+export function getTehsils(province, district) {
+    if (!PAKISTAN_DATA[province] || !PAKISTAN_DATA[province][district]) return [];
+    return PAKISTAN_DATA[province][district].tehsils || [];
+}
+
+// Get postal code by province + district
+export function getPostalCode(province, district) {
+    if (!PAKISTAN_DATA[province] || !PAKISTAN_DATA[province][district]) return '';
+    return PAKISTAN_DATA[province][district].postal || '';
+}
+
+// Get all job titles (flat list)
+export function getAllTitles() {
+    const all = [];
+    Object.values(JOB_TITLES_DB).forEach(titles => {
+        titles.forEach(t => all.push(t));
+    });
+    return all;
+}
+
+// Get titles by keyword (search)
+export function searchTitles(keyword) {
+    if (!keyword) return [];
+    const k = keyword.toLowerCase();
+    const result = [];
+    Object.values(JOB_TITLES_DB).forEach(titles => {
+        titles.forEach(t => {
+            if (t.toLowerCase().includes(k)) result.push(t);
+        });
+    });
+    return result;
+}
