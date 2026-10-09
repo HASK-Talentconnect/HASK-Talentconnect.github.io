@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicants - HASK TalentConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="employer-applicants.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">HASK TalentConnect</div>
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="post-job.html">Post a Job</a></li>
+            <li><a href="employer-applicants.html" class="active-link">Applicants</a></li>
+            <li><a href="#" id="logoutBtn" class="btn-primary">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="applicants-wrap">
+
+        <div class="applicants-header">
+            <div>
+                <h1>👥 Job Applicants</h1>
+                <p class="section-note">Review applications and update candidate status</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Total Applicants</div></div>
+            <div class="stat-box"><div class="stat-num" id="statWaiting">0</div><div class="stat-lbl">New / Waiting</div></div>
+            <div class="stat-box"><div class="stat-num" id="statReview">0</div><div class="stat-lbl">Under Review</div></div>
+            <div class="stat-box"><div class="stat-num" id="statHired">0</div><div class="stat-lbl">Hired</div></div>
+        </div>
+
+        <!-- Job Filter -->
+        <div class="filter-row" id="jobFilterRow">
+            <button class="filter-btn active" data-job="all" onclick="filterByJob('all', this)">All Jobs</button>
+        </div>
+
+        <!-- Applicants List -->
+        <div class="applicants-list" id="applicantsList">
+            <div class="loading-box">
+                <div class="loader"></div>
+                <p>Loading applicants...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 HASK TalentConnect. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="employer-applicants.js"></script>
+</body>
+</html>
