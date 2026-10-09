@@ -1,6 +1,6 @@
 /* ============================================
    HASK TalentConnect - Profile JavaScript
-   Bestway-style Profile with Cloudinary Upload
+   With Province/District, Universities, Certifications
    ============================================ */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -78,6 +78,99 @@ const COUNTRIES = [
 ];
 
 // ============================================
+// PROVINCE → DISTRICTS
+// ============================================
+const PROVINCE_DISTRICTS = {
+    "Punjab": [
+        "Attock","Bahawalnagar","Bahawalpur","Bhakkar","Chakwal","Chiniot","Dera Ghazi Khan","Faisalabad",
+        "Gujranwala","Gujrat","Hafizabad","Jhang","Jhelum","Kasur","Khanewal","Khushab","Lahore","Layyah",
+        "Lodhran","Mandi Bahauddin","Mianwali","Multan","Muzaffargarh","Nankana Sahib","Narowal","Okara",
+        "Pakpattan","Rahim Yar Khan","Rajanpur","Rawalpindi","Sahiwal","Sargodha","Sheikhupura","Sialkot",
+        "Toba Tek Singh","Vehari"
+    ],
+    "Sindh": [
+        "Badin","Dadu","Ghotki","Hyderabad","Jacobabad","Jamshoro","Karachi Central","Karachi East",
+        "Karachi South","Karachi West","Kashmore","Khairpur","Korangi","Larkana","Malir","Matiari",
+        "Mirpur Khas","Naushahro Feroze","Qambar Shahdadkot","Sanghar","Shaheed Benazirabad","Shikarpur",
+        "Sujawal","Sukkur","Tando Allahyar","Tando Muhammad Khan","Tharparkar","Thatta","Umerkot","Kemari"
+    ],
+    "Khyber Pakhtunkhwa": [
+        "Abbottabad","Bajaur","Bannu","Battagram","Buner","Charsadda","Chitral","Dera Ismail Khan",
+        "Hangu","Haripur","Karak","Khyber","Kohat","Kohistan","Kurram","Lakki Marwat","Lower Dir",
+        "Lower Kohistan","Malakand","Mansehra","Mardan","Mohmand","North Waziristan","Nowshera","Orakzai",
+        "Peshawar","Shangla","South Waziristan","Swabi","Swat","Tank","Tor Ghar","Upper Chitral",
+        "Upper Dir","Upper Kohistan"
+    ],
+    "Balochistan": [
+        "Awaran","Barkhan","Chagai","Chaman","Dera Bugti","Duki","Gwadar","Harnai","Jaffarabad","Jhal Magsi",
+        "Kachhi","Kalat","Kech","Kharan","Khuzdar","Killa Abdullah","Killa Saifullah","Kohlu","Lasbela",
+        "Loralai","Mastung","Musakhel","Nasirabad","Nushki","Panjgur","Pishin","Quetta","Sherani","Sibi",
+        "Sohbatpur","Washuk","Zhob","Ziarat"
+    ],
+    "Islamabad Capital Territory": [
+        "Islamabad"
+    ],
+    "Gilgit-Baltistan": [
+        "Astore","Diamer","Ghanche","Ghizer","Gilgit","Hunza","Kharmang","Nagar","Shigar","Skardu"
+    ],
+    "Azad Jammu & Kashmir": [
+        "Bagh","Bhimber","Haveli","Jhelum Valley","Kotli","Mirpur","Muzaffarabad","Neelum","Poonch","Sudhnoti"
+    ]
+};
+
+// ============================================
+// UNIVERSITIES OF PAKISTAN (Major)
+// ============================================
+const UNIVERSITIES = [
+    "Air University, Islamabad",
+    "Allama Iqbal Open University, Islamabad",
+    "Arid Agriculture University, Rawalpindi",
+    "Bahauddin Zakariya University, Multan",
+    "Bahria University, Islamabad",
+    "Balochistan University of Information Technology, Quetta",
+    "COMSATS University Islamabad",
+    "Fatima Jinnah Medical University, Lahore",
+    "Federal Urdu University, Karachi",
+    "Gomal University, Dera Ismail Khan",
+    "Government College University, Faisalabad",
+    "Government College University, Lahore",
+    "Hazara University, Mansehra",
+    "International Islamic University, Islamabad",
+    "Islamia University, Bahawalpur",
+    "King Edward Medical University, Lahore",
+    "Kohat University of Science & Technology",
+    "Lahore University of Management Sciences (LUMS)",
+    "Liaquat University of Medical & Health Sciences, Jamshoro",
+    "Mehran University of Engineering & Technology, Jamshoro",
+    "National University of Computer & Emerging Sciences (FAST)",
+    "National University of Modern Languages (NUML), Islamabad",
+    "National University of Sciences & Technology (NUST), Islamabad",
+    "Peshawar University",
+    "Pir Mehr Ali Shah Arid Agriculture University, Rawalpindi",
+    "Quaid-i-Azam University, Islamabad",
+    "Riphah International University, Islamabad",
+    "Sindh Agriculture University, Tandojam",
+    "University of Agriculture, Faisalabad",
+    "University of Balochistan, Quetta",
+    "University of Central Punjab, Lahore",
+    "University of Engineering & Technology, Lahore",
+    "University of Engineering & Technology, Peshawar",
+    "University of Engineering & Technology, Taxila",
+    "University of Gujrat",
+    "University of Karachi",
+    "University of Lahore",
+    "University of Malakand",
+    "University of Management & Technology (UMT), Lahore",
+    "University of Peshawar",
+    "University of Punjab, Lahore",
+    "University of Sargodha",
+    "University of Sindh, Jamshoro",
+    "University of Veterinary & Animal Sciences, Lahore",
+    "Virtual University of Pakistan",
+    "Other"
+];
+
+// ============================================
 // GLOBAL STATE
 // ============================================
 let currentUser = null;
@@ -85,6 +178,7 @@ let userData = null;
 let profileData = {
     personal: null,
     education: [],
+    certifications: [],
     experience: { has: true, overall: 0, industry: 0, entries: [] },
     skills: [],
     self: null,
@@ -95,6 +189,7 @@ let profileData = {
 let progressData = {
     personal: false,
     education: false,
+    certifications: false,
     experience: false,
     skills: false,
     self: false,
@@ -104,6 +199,7 @@ let progressData = {
 };
 
 let editingEduIndex = null;
+let editingCertIndex = null;
 let editingExpIndex = null;
 let editingSkillIndex = null;
 
@@ -154,9 +250,7 @@ onAuthStateChanged(auth, async (user) => {
 function populateCountries(selectId) {
     const sel = document.getElementById(selectId);
     if (!sel) return;
-
     sel.innerHTML = '<option value="Pakistan">Pakistan</option>';
-
     COUNTRIES.forEach(c => {
         if (c !== 'Pakistan') {
             const opt = document.createElement('option');
@@ -166,6 +260,28 @@ function populateCountries(selectId) {
         }
     });
 }
+
+// ============================================
+// PROVINCE → DISTRICT HANDLER
+// ============================================
+window.handleProvinceChange = function(provinceId, districtId) {
+    const province = document.getElementById(provinceId).value;
+    const districtSel = document.getElementById(districtId);
+
+    if (!province) {
+        districtSel.innerHTML = '<option value="">Select Province First</option>';
+        return;
+    }
+
+    const districts = PROVINCE_DISTRICTS[province] || [];
+    districtSel.innerHTML = '<option value="">Select District</option>';
+    districts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        districtSel.appendChild(opt);
+    });
+};
 
 // ============================================
 // CNIC AUTO-FORMAT
@@ -188,13 +304,12 @@ function attachCnicFormatter() {
 }
 
 // ============================================
-// PROFILE PICTURE UPLOAD (Cloudinary - unsigned)
+// PROFILE PICTURE UPLOAD (Cloudinary)
 // ============================================
 window.handlePicUpload = function(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Validate size
     if (file.size > 5 * 1024 * 1024) {
         showMessage('❌ Picture must be less than 5MB.', 'error');
         event.target.value = '';
@@ -209,7 +324,6 @@ window.handlePicUpload = function(event) {
     const avatarEl = document.getElementById('sidebarAvatar');
     const oldContent = avatarEl.innerHTML;
 
-    // Show progress ring overlay
     avatarEl.innerHTML = `
         <div class="upload-progress-overlay" id="uploadOverlay">
             <svg class="progress-ring" viewBox="0 0 100 100">
@@ -228,7 +342,6 @@ window.handlePicUpload = function(event) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, true);
 
-    // Progress tracking
     xhr.upload.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
             const percent = Math.round((e.loaded / e.total) * 100);
@@ -242,7 +355,6 @@ window.handlePicUpload = function(event) {
         }
     });
 
-    // Complete
     xhr.onload = async function() {
         if (xhr.status >= 200 && xhr.status < 300) {
             try {
@@ -253,19 +365,14 @@ window.handlePicUpload = function(event) {
                 profileData.personal.profilePic = downloadURL;
                 await saveProfile();
 
-                // Show checkmark briefly
                 const overlay = document.getElementById('uploadOverlay');
-                if (overlay) {
-                    overlay.innerHTML = '<div class="progress-check">✅</div>';
-                }
+                if (overlay) overlay.innerHTML = '<div class="progress-check">✅</div>';
 
-                // After 700ms, show actual image
                 setTimeout(() => {
                     avatarEl.innerHTML = `<img src="${downloadURL}" alt="Avatar">`;
                     updateAvatarControls();
                     event.target.value = '';
                 }, 700);
-
             } catch (err) {
                 console.error(err);
                 avatarEl.innerHTML = oldContent;
@@ -279,7 +386,6 @@ window.handlePicUpload = function(event) {
     };
 
     xhr.onerror = function() {
-        console.error('Upload network error');
         avatarEl.innerHTML = oldContent;
         event.target.value = '';
     };
@@ -288,43 +394,48 @@ window.handlePicUpload = function(event) {
 };
 
 // ============================================
-// REMOVE PROFILE PICTURE
+// REMOVE PICTURE
 // ============================================
 window.removePic = async function() {
     if (!confirm('Remove your profile picture?')) return;
-
     try {
         profileData.personal = profileData.personal || {};
         profileData.personal.profilePic = '';
         await saveProfile();
-
         renderSidebarUser();
         updateAvatarControls();
-        showMessage('✅ Picture removed', 'success');
     } catch (err) {
-        console.error(err);
         showMessage('❌ ' + err.message, 'error');
     }
 };
 
-// Show/hide upload & remove buttons based on whether pic exists
 function updateAvatarControls() {
     const hasPic = !!(profileData.personal && profileData.personal.profilePic);
     const uploadBtn = document.querySelector('.sidebar-avatar-controls .btn-pic-upload');
     const removeBtn = document.querySelector('.sidebar-avatar-controls .btn-pic-remove');
-
     if (uploadBtn) uploadBtn.classList.toggle('hide', hasPic);
     if (removeBtn) removeBtn.classList.toggle('show', hasPic);
 }
 
 // ============================================
-// AREA OF INTEREST — Other handling
+// PREVIEW CV
+// ============================================
+window.previewCV = function() {
+    // Save first, then open CV in new tab
+    saveProfile().then(() => {
+        window.open('cv.html', '_blank');
+    }).catch(err => {
+        showMessage('❌ Please save your data first: ' + err.message, 'error');
+    });
+};
+
+// ============================================
+// AREA OF INTEREST — Other
 // ============================================
 window.handleInterestChange = function() {
     const val = document.getElementById('pInterest').value;
     const otherField = document.getElementById('otherInterestField');
     const otherInput = document.getElementById('pOtherInterest');
-
     if (val === 'Other') {
         otherField.style.display = 'flex';
         otherInput.setAttribute('required', 'required');
@@ -336,13 +447,12 @@ window.handleInterestChange = function() {
 };
 
 // ============================================
-// TOGGLE: Crime Details
+// TOGGLE: Crime / Disability / Religion
 // ============================================
 window.toggleCrimeDetails = function() {
     const val = document.getElementById('mCrime').value;
     const field = document.getElementById('crimeDetailsField');
     const input = document.getElementById('mCrimeDetails');
-
     if (val === 'Yes') {
         field.style.display = 'flex';
         input.setAttribute('required', 'required');
@@ -353,14 +463,10 @@ window.toggleCrimeDetails = function() {
     }
 };
 
-// ============================================
-// TOGGLE: Disability Details
-// ============================================
 window.toggleDisabilityDetails = function() {
     const val = document.getElementById('mDisability').value;
     const field = document.getElementById('disabilityDetailsField');
     const input = document.getElementById('mDisabilityDetails');
-
     if (val === 'Yes') {
         field.style.display = 'flex';
         input.setAttribute('required', 'required');
@@ -371,14 +477,10 @@ window.toggleDisabilityDetails = function() {
     }
 };
 
-// ============================================
-// TOGGLE: Religion Other
-// ============================================
 window.toggleReligionOther = function() {
     const val = document.getElementById('mReligion').value;
     const field = document.getElementById('religionOtherField');
     const input = document.getElementById('mReligionOther');
-
     if (val === 'Other') {
         field.style.display = 'flex';
         input.setAttribute('required', 'required');
@@ -396,12 +498,12 @@ async function loadProfile() {
     try {
         const profileRef = doc(db, "profiles", currentUser.uid);
         const snap = await getDoc(profileRef);
-
         if (snap.exists()) {
             const data = snap.data();
             profileData = {
                 personal: data.personal || null,
                 education: data.education || [],
+                certifications: data.certifications || [],
                 experience: data.experience || { has: true, overall: 0, industry: 0, entries: [] },
                 skills: data.skills || [],
                 self: data.self || null,
@@ -410,9 +512,7 @@ async function loadProfile() {
                 compensation: data.compensation || null
             };
         }
-    } catch (e) {
-        console.warn("Profile load error:", e);
-    }
+    } catch (e) { console.warn(e); }
 }
 
 // ============================================
@@ -420,7 +520,6 @@ async function loadProfile() {
 // ============================================
 async function saveProfile() {
     if (!currentUser) return;
-
     try {
         const profileRef = doc(db, "profiles", currentUser.uid);
         await setDoc(profileRef, {
@@ -430,10 +529,7 @@ async function saveProfile() {
             userEmail: userData.email,
             updatedAt: new Date().toISOString()
         }, { merge: true });
-    } catch (e) {
-        console.error("Save error:", e);
-        throw e;
-    }
+    } catch (e) { throw e; }
 }
 
 // ============================================
@@ -443,19 +539,13 @@ function renderSidebarUser() {
     const nameEl = document.getElementById('sidebarName');
     const idEl = document.getElementById('sidebarId');
     const avatarEl = document.getElementById('sidebarAvatar');
-
     const name = userData.name || 'User';
     const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-
     nameEl.textContent = name;
     idEl.textContent = '🆔 ' + (userData.userId || '—');
-
     const pic = profileData.personal && profileData.personal.profilePic;
-    if (pic) {
-        avatarEl.innerHTML = `<img src="${pic}" alt="Avatar">`;
-    } else {
-        avatarEl.textContent = initials;
-    }
+    if (pic) avatarEl.innerHTML = `<img src="${pic}" alt="Avatar">`;
+    else avatarEl.textContent = initials;
 }
 
 // ============================================
@@ -469,25 +559,18 @@ function updateProgress() {
         p.personal.cnic && p.personal.dob &&
         p.personal.gender && p.personal.cell &&
         p.personal.email && p.personal.address &&
-        p.personal.domicile && p.personal.city);
+        p.personal.province && p.personal.domicile && p.personal.city);
 
     progressData.education = p.education && p.education.length > 0;
+    progressData.certifications = p.certifications && p.certifications.length > 0;
     progressData.experience = p.experience && (
         p.experience.has === false ||
         (p.experience.entries && p.experience.entries.length > 0)
     );
     progressData.skills = p.skills && p.skills.length > 0;
-
-    progressData.self = !!(p.self &&
-        p.self.objective && p.self.strengths &&
-        p.self.improvements && p.self.summary);
-
-    progressData.references = !!(p.references &&
-        p.references.ref1Name && p.references.ref1Email &&
-        p.references.ref2Name && p.references.ref2Email);
-
+    progressData.self = !!(p.self && p.self.objective && p.self.strengths && p.self.improvements && p.self.summary);
+    progressData.references = !!(p.references && p.references.ref1Name && p.references.ref1Email && p.references.ref2Name && p.references.ref2Email);
     progressData.misc = !!(p.misc && p.misc.crime && p.misc.disability && p.misc.source);
-
     progressData.compensation = !!(p.compensation &&
         p.compensation.basic !== undefined &&
         p.compensation.gross !== undefined &&
@@ -495,7 +578,7 @@ function updateProgress() {
 }
 
 function renderProgress() {
-    const sections = ['personal', 'education', 'experience', 'skills', 'self', 'references', 'misc', 'compensation'];
+    const sections = ['personal', 'education', 'certifications', 'experience', 'skills', 'self', 'references', 'misc', 'compensation'];
     const completed = sections.filter(s => progressData[s]).length;
     const total = sections.length;
     const percent = Math.round((completed / total) * 100);
@@ -535,22 +618,17 @@ function showSection(sectionName) {
 window.goToSection = showSection;
 
 window.nextSection = function(nextName) {
-    saveProfile()
-        .then(() => {
-            updateProgress();
-            renderProgress();
-            showSection(nextName);
-        })
-        .catch(e => showMessage('❌ Save failed: ' + e.message, 'error'));
+    saveProfile().then(() => {
+        updateProgress();
+        renderProgress();
+        showSection(nextName);
+    }).catch(e => showMessage('❌ Save failed: ' + e.message, 'error'));
 };
 
 function showFirstIncompleteSection() {
-    const order = ['personal', 'education', 'experience', 'skills', 'self', 'references', 'misc', 'compensation'];
+    const order = ['personal', 'education', 'certifications', 'experience', 'skills', 'self', 'references', 'misc', 'compensation'];
     for (const s of order) {
-        if (!progressData[s]) {
-            showSection(s);
-            return;
-        }
+        if (!progressData[s]) { showSection(s); return; }
     }
     showSection('personal');
 }
@@ -562,8 +640,7 @@ function attachListeners() {
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            const section = item.dataset.section;
-            showSection(section);
+            showSection(item.dataset.section);
         });
     });
 
@@ -576,9 +653,7 @@ function attachListeners() {
                 sessionStorage.removeItem('hask_logged_in');
                 await signOut(auth);
                 window.location.replace('login.html');
-            } catch (err) {
-                alert('Error: ' + err.message);
-            }
+            } catch (err) { alert('Error: ' + err.message); }
         });
     }
 }
@@ -615,7 +690,15 @@ function applyDefaults() {
         }
     }
 
-    setVal('pDomicile', p.domicile || '');
+    // Province + District
+    if (p.province) {
+        setVal('pProvince', p.province);
+        handleProvinceChange('pProvince', 'pDomicile');
+        setTimeout(() => {
+            setVal('pDomicile', p.domicile || '');
+        }, 100);
+    }
+
     setVal('pAddress', p.address || '');
     setVal('pCountry', p.country || 'Pakistan');
     setVal('pCity', p.city || '');
@@ -627,7 +710,6 @@ function applyDefaults() {
 
     document.getElementById('candidateId').textContent = userData.userId || '—';
 
-    // Experience
     const exp = profileData.experience || {};
     setVal('overallExp', exp.overall || 0);
     setVal('industryExp', exp.industry || 0);
@@ -636,7 +718,6 @@ function applyDefaults() {
         if (noRadio) noRadio.checked = true;
     }
 
-    // Self
     const sa = profileData.self || {};
     setVal('saObjective', sa.objective || '');
     setVal('saStrengths', sa.strengths || '');
@@ -650,7 +731,6 @@ function applyDefaults() {
         });
     }, 100);
 
-    // References
     const r = profileData.references || {};
     setVal('ref1Title', r.ref1Title || 'Mr.');
     setVal('ref1Name', r.ref1Name || '');
@@ -668,7 +748,6 @@ function applyDefaults() {
     setVal('ref2Known', r.ref2Known || '');
     setVal('ref2Email', r.ref2Email || '');
 
-    // Misc
     const m = profileData.misc || {};
     setVal('mCrime', m.crime || 'No');
     setVal('mDisability', m.disability || 'No');
@@ -697,7 +776,6 @@ function applyDefaults() {
         setVal('mDisabilityDetails', m.disabilityDetails || '');
     }
 
-    // Compensation
     const c = profileData.compensation || {};
     setVal('cBasic', c.basic !== undefined ? c.basic : 0);
     setVal('cGross', c.gross !== undefined ? c.gross : 0);
@@ -717,6 +795,7 @@ function applyDefaults() {
     setVal('otherBenefit', c.otherBenefit || '');
 
     renderEducationTable();
+    renderCertificationsTable();
     renderExperienceTable();
     renderSkillsTable();
 }
@@ -724,20 +803,14 @@ function applyDefaults() {
 function addCustomInterestOption(value) {
     const sel = document.getElementById('pInterest');
     if (!sel) return;
-
     const exists = Array.from(sel.options).some(o => o.value === value);
     if (exists) return;
-
     const otherOption = Array.from(sel.options).find(o => o.value === 'Other');
     const newOpt = document.createElement('option');
     newOpt.value = value;
     newOpt.textContent = value;
-
-    if (otherOption) {
-        sel.insertBefore(newOpt, otherOption);
-    } else {
-        sel.appendChild(newOpt);
-    }
+    if (otherOption) sel.insertBefore(newOpt, otherOption);
+    else sel.appendChild(newOpt);
 }
 
 function setVal(id, value) {
@@ -762,7 +835,6 @@ window.savePersonal = async function(e) {
     try {
         let interestValue = getVal('pInterest');
         let otherInterest = '';
-
         if (interestValue === 'Other') {
             otherInterest = getVal('pOtherInterest');
             if (!otherInterest) {
@@ -787,6 +859,7 @@ window.savePersonal = async function(e) {
             gender: getVal('pGender'),
             interest: interestValue,
             otherInterest: otherInterest,
+            province: getVal('pProvince'),
             domicile: getVal('pDomicile'),
             address: getVal('pAddress'),
             country: getVal('pCountry'),
@@ -821,7 +894,6 @@ window.saveSelf = async function(e) {
     const btn = e.target.querySelector('.btn-save');
     btn.disabled = true;
     btn.textContent = 'Saving...';
-
     try {
         profileData.self = {
             objective: getVal('saObjective'),
@@ -850,7 +922,6 @@ window.saveReferences = async function(e) {
     const btn = e.target.querySelector('.btn-save');
     btn.disabled = true;
     btn.textContent = 'Saving...';
-
     try {
         profileData.references = {
             ref1Title: getVal('ref1Title'),
@@ -897,20 +968,17 @@ window.saveMisc = async function(e) {
 
         if (crimeVal === 'Yes' && !getVal('mCrimeDetails')) {
             showMessage('❌ Please provide crime details.', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Save & Continue →';
+            btn.disabled = false; btn.textContent = 'Save & Continue →';
             return;
         }
         if (disabilityVal === 'Yes' && !getVal('mDisabilityDetails')) {
             showMessage('❌ Please provide disability details.', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Save & Continue →';
+            btn.disabled = false; btn.textContent = 'Save & Continue →';
             return;
         }
         if (religionVal === 'Other' && !getVal('mReligionOther')) {
             showMessage('❌ Please specify your religion.', 'error');
-            btn.disabled = false;
-            btn.textContent = 'Save & Continue →';
+            btn.disabled = false; btn.textContent = 'Save & Continue →';
             return;
         }
 
@@ -1009,12 +1077,10 @@ window.saveCompensation = async function(e) {
 function renderEducationTable() {
     const tbody = document.getElementById('educationTableBody');
     const list = profileData.education || [];
-
     if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="empty-row">No education added yet</td></tr>`;
         return;
     }
-
     tbody.innerHTML = list.map((e, i) => `
         <tr>
             <td>${escapeHtml(e.level)}</td>
@@ -1028,6 +1094,12 @@ function renderEducationTable() {
             </td>
         </tr>
     `).join('');
+}
+
+function getUniversityOptions(selected = '') {
+    return UNIVERSITIES.map(u => 
+        `<option value="${u}" ${u === selected ? 'selected' : ''}>${u}</option>`
+    ).join('');
 }
 
 window.openEducationModal = function() {
@@ -1051,8 +1123,15 @@ window.openEducationModal = function() {
                     </select>
                 </div>
                 <div class="field">
-                    <label>Institution <span class="req">*</span></label>
-                    <input type="text" id="eduInstitution" required>
+                    <label>University / Institution <span class="req">*</span></label>
+                    <select id="eduInstitution" onchange="handleUniChange()" required>
+                        <option value="">Select University</option>
+                        ${getUniversityOptions()}
+                    </select>
+                </div>
+                <div class="field" id="eduOtherUniField" style="display:none;">
+                    <label>Enter Institution Name <span class="req">*</span></label>
+                    <input type="text" id="eduOtherUni" placeholder="e.g. Bahria University">
                 </div>
                 <div class="field">
                     <label>Degree Title <span class="req">*</span></label>
@@ -1076,6 +1155,20 @@ window.openEducationModal = function() {
     openModal();
 };
 
+window.handleUniChange = function() {
+    const val = document.getElementById('eduInstitution').value;
+    const otherField = document.getElementById('eduOtherUniField');
+    const otherInput = document.getElementById('eduOtherUni');
+    if (val === 'Other') {
+        otherField.style.display = 'flex';
+        otherInput.setAttribute('required', 'required');
+    } else {
+        otherField.style.display = 'none';
+        otherInput.removeAttribute('required');
+        otherInput.value = '';
+    }
+};
+
 window.editEducation = function(i) {
     editingEduIndex = i;
     const e = profileData.education[i];
@@ -1092,8 +1185,16 @@ window.editEducation = function(i) {
                     </select>
                 </div>
                 <div class="field">
-                    <label>Institution <span class="req">*</span></label>
-                    <input type="text" id="eduInstitution" value="${escapeAttr(e.institution)}" required>
+                    <label>University / Institution <span class="req">*</span></label>
+                    <select id="eduInstitution" onchange="handleUniChange()" required>
+                        <option value="">Select University</option>
+                        ${getUniversityOptions(e.institution)}
+                        <option value="__custom__" ${!UNIVERSITIES.includes(e.institution) && e.institution ? 'selected' : ''}>Enter Custom</option>
+                    </select>
+                </div>
+                <div class="field" id="eduOtherUniField" style="display:${(!UNIVERSITIES.includes(e.institution) && e.institution) ? 'flex' : 'none'};">
+                    <label>Enter Institution Name <span class="req">*</span></label>
+                    <input type="text" id="eduOtherUni" value="${escapeAttr(!UNIVERSITIES.includes(e.institution) ? e.institution : '')}" placeholder="e.g. Bahria University">
                 </div>
                 <div class="field">
                     <label>Degree Title <span class="req">*</span></label>
@@ -1119,20 +1220,23 @@ window.editEducation = function(i) {
 
 window.saveEducationEntry = async function(e) {
     e.preventDefault();
+    let institutionVal = getVal('eduInstitution');
+    if (institutionVal === 'Other' || institutionVal === '__custom__') {
+        institutionVal = getVal('eduOtherUni');
+        if (!institutionVal) {
+            showMessage('❌ Please enter institution name.', 'error');
+            return;
+        }
+    }
     const entry = {
         level: getVal('eduLevel'),
-        institution: getVal('eduInstitution'),
+        institution: institutionVal,
         title: getVal('eduTitle'),
         date: getVal('eduDate'),
         percentage: getVal('eduPercentage')
     };
-
-    if (editingEduIndex === null) {
-        profileData.education.push(entry);
-    } else {
-        profileData.education[editingEduIndex] = entry;
-    }
-
+    if (editingEduIndex === null) profileData.education.push(entry);
+    else profileData.education[editingEduIndex] = entry;
     try {
         await saveProfile();
         renderEducationTable();
@@ -1140,9 +1244,7 @@ window.saveEducationEntry = async function(e) {
         renderProgress();
         closeModal();
         showMessage('✅ Education saved!', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
 };
 
 window.deleteEducation = async function(i) {
@@ -1153,9 +1255,127 @@ window.deleteEducation = async function(i) {
         renderEducationTable();
         updateProgress();
         renderProgress();
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
+};
+
+// ============================================
+// CERTIFICATIONS TABLE
+// ============================================
+function renderCertificationsTable() {
+    const tbody = document.getElementById('certificationsTableBody');
+    const list = profileData.certifications || [];
+    if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-row">No certifications added yet</td></tr>`;
+        return;
     }
+    tbody.innerHTML = list.map((c, i) => `
+        <tr>
+            <td>${escapeHtml(c.name)}</td>
+            <td>${escapeHtml(c.issuer)}</td>
+            <td>${escapeHtml(c.year)}</td>
+            <td>${escapeHtml(c.certId || '-')}</td>
+            <td>
+                <button class="btn-edit" onclick="editCertification(${i})">✎</button>
+                <button class="btn-delete" onclick="deleteCertification(${i})">✕</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+window.openCertificationModal = function() {
+    editingCertIndex = null;
+    document.getElementById('modalTitle').textContent = 'Add Certification';
+    document.getElementById('modalBody').innerHTML = `
+        <form onsubmit="saveCertificationEntry(event)">
+            <div class="form-grid">
+                <div class="field full">
+                    <label>Certificate Name <span class="req">*</span></label>
+                    <input type="text" id="certName" placeholder="e.g. CHRP - Certified HR Professional" required>
+                </div>
+                <div class="field">
+                    <label>Issuing Authority <span class="req">*</span></label>
+                    <input type="text" id="certIssuer" placeholder="e.g. PIPD, Microsoft" required>
+                </div>
+                <div class="field">
+                    <label>Year <span class="req">*</span></label>
+                    <input type="text" id="certYear" placeholder="e.g. 2024" required>
+                </div>
+                <div class="field">
+                    <label>Certificate ID (Optional)</label>
+                    <input type="text" id="certId">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-save">Save</button>
+            </div>
+        </form>
+    `;
+    openModal();
+};
+
+window.editCertification = function(i) {
+    editingCertIndex = i;
+    const c = profileData.certifications[i];
+    document.getElementById('modalTitle').textContent = 'Edit Certification';
+    document.getElementById('modalBody').innerHTML = `
+        <form onsubmit="saveCertificationEntry(event)">
+            <div class="form-grid">
+                <div class="field full">
+                    <label>Certificate Name <span class="req">*</span></label>
+                    <input type="text" id="certName" value="${escapeAttr(c.name)}" required>
+                </div>
+                <div class="field">
+                    <label>Issuing Authority <span class="req">*</span></label>
+                    <input type="text" id="certIssuer" value="${escapeAttr(c.issuer)}" required>
+                </div>
+                <div class="field">
+                    <label>Year <span class="req">*</span></label>
+                    <input type="text" id="certYear" value="${escapeAttr(c.year)}" required>
+                </div>
+                <div class="field">
+                    <label>Certificate ID (Optional)</label>
+                    <input type="text" id="certId" value="${escapeAttr(c.certId)}">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-save">Update</button>
+            </div>
+        </form>
+    `;
+    openModal();
+};
+
+window.saveCertificationEntry = async function(e) {
+    e.preventDefault();
+    const entry = {
+        name: getVal('certName'),
+        issuer: getVal('certIssuer'),
+        year: getVal('certYear'),
+        certId: getVal('certId')
+    };
+    if (editingCertIndex === null) profileData.certifications.push(entry);
+    else profileData.certifications[editingCertIndex] = entry;
+    try {
+        await saveProfile();
+        renderCertificationsTable();
+        updateProgress();
+        renderProgress();
+        closeModal();
+        showMessage('✅ Certification saved!', 'success');
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
+};
+
+window.deleteCertification = async function(i) {
+    if (!confirm('Delete this certification?')) return;
+    profileData.certifications.splice(i, 1);
+    try {
+        await saveProfile();
+        renderCertificationsTable();
+        updateProgress();
+        renderProgress();
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
 };
 
 // ============================================
@@ -1164,17 +1384,13 @@ window.deleteEducation = async function(i) {
 function renderExperienceTable() {
     const tbody = document.getElementById('experienceTableBody');
     const list = (profileData.experience && profileData.experience.entries) || [];
-
     if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="empty-row">No experience added yet</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-row">No experience added yet</td></tr>`;
         return;
     }
-
     tbody.innerHTML = list.map((e, i) => `
         <tr>
             <td>${escapeHtml(e.employer)}</td>
-            <td>${escapeHtml(e.manager)}</td>
-            <td>${escapeHtml(e.business)}</td>
             <td>${escapeHtml(e.title)}</td>
             <td>${escapeHtml(e.joining)}</td>
             <td>${escapeHtml(e.leaving || 'Present')}</td>
@@ -1228,6 +1444,11 @@ window.openExperienceModal = function() {
                         <option value="No">No</option>
                     </select>
                 </div>
+                <div class="field full">
+                    <label>Job Description / Key Responsibilities (Optional)</label>
+                    <textarea id="expDescription" rows="4" maxlength="1000" placeholder="• Managed payroll for 200+ employees&#10;• Handled recruitment and onboarding&#10;• Prepared monthly HR reports"></textarea>
+                    <small class="char-count"><span id="expDescCount">0</span> / 1000 characters</small>
+                </div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
@@ -1235,6 +1456,10 @@ window.openExperienceModal = function() {
             </div>
         </form>
     `;
+    const ta = document.getElementById('expDescription');
+    if (ta) ta.addEventListener('input', () => {
+        document.getElementById('expDescCount').textContent = ta.value.length;
+    });
     openModal();
 };
 
@@ -1276,6 +1501,11 @@ window.editExperience = function(i) {
                         <option value="No" ${e.contact === 'No' ? 'selected' : ''}>No</option>
                     </select>
                 </div>
+                <div class="field full">
+                    <label>Job Description / Key Responsibilities (Optional)</label>
+                    <textarea id="expDescription" rows="4" maxlength="1000">${escapeHtml(e.description || '')}</textarea>
+                    <small class="char-count"><span id="expDescCount">${(e.description || '').length}</span> / 1000 characters</small>
+                </div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn-prev" onclick="closeModal()">Cancel</button>
@@ -1283,6 +1513,10 @@ window.editExperience = function(i) {
             </div>
         </form>
     `;
+    const ta = document.getElementById('expDescription');
+    if (ta) ta.addEventListener('input', () => {
+        document.getElementById('expDescCount').textContent = ta.value.length;
+    });
     openModal();
 };
 
@@ -1295,21 +1529,15 @@ window.saveExperienceEntry = async function(e) {
         title: getVal('expTitle'),
         joining: getVal('expJoining'),
         leaving: getVal('expLeaving'),
-        contact: getVal('expContact')
+        contact: getVal('expContact'),
+        description: getVal('expDescription')
     };
-
     if (!profileData.experience) profileData.experience = { has: true, overall: 0, industry: 0, entries: [] };
     if (!profileData.experience.entries) profileData.experience.entries = [];
-
-    if (editingExpIndex === null) {
-        profileData.experience.entries.push(entry);
-    } else {
-        profileData.experience.entries[editingExpIndex] = entry;
-    }
-
+    if (editingExpIndex === null) profileData.experience.entries.push(entry);
+    else profileData.experience.entries[editingExpIndex] = entry;
     profileData.experience.overall = Number(getVal('overallExp')) || 0;
     profileData.experience.industry = Number(getVal('industryExp')) || 0;
-
     try {
         await saveProfile();
         renderExperienceTable();
@@ -1317,9 +1545,7 @@ window.saveExperienceEntry = async function(e) {
         renderProgress();
         closeModal();
         showMessage('✅ Experience saved!', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
 };
 
 window.deleteExperience = async function(i) {
@@ -1330,9 +1556,7 @@ window.deleteExperience = async function(i) {
         renderExperienceTable();
         updateProgress();
         renderProgress();
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
 };
 
 // ============================================
@@ -1341,12 +1565,10 @@ window.deleteExperience = async function(i) {
 function renderSkillsTable() {
     const tbody = document.getElementById('skillsTableBody');
     const list = profileData.skills || [];
-
     if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" class="empty-row">No skills added yet</td></tr>`;
         return;
     }
-
     tbody.innerHTML = list.map((s, i) => `
         <tr>
             <td>${escapeHtml(s.name)}</td>
@@ -1432,13 +1654,8 @@ window.saveSkillEntry = async function(e) {
         level: getVal('skillLevel'),
         description: getVal('skillDesc')
     };
-
-    if (editingSkillIndex === null) {
-        profileData.skills.push(entry);
-    } else {
-        profileData.skills[editingSkillIndex] = entry;
-    }
-
+    if (editingSkillIndex === null) profileData.skills.push(entry);
+    else profileData.skills[editingSkillIndex] = entry;
     try {
         await saveProfile();
         renderSkillsTable();
@@ -1446,9 +1663,7 @@ window.saveSkillEntry = async function(e) {
         renderProgress();
         closeModal();
         showMessage('✅ Skill saved!', 'success');
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
 };
 
 window.deleteSkill = async function(i) {
@@ -1459,21 +1674,14 @@ window.deleteSkill = async function(i) {
         renderSkillsTable();
         updateProgress();
         renderProgress();
-    } catch (err) {
-        showMessage('❌ ' + err.message, 'error');
-    }
+    } catch (err) { showMessage('❌ ' + err.message, 'error'); }
 };
 
 // ============================================
 // MODAL CONTROL
 // ============================================
-function openModal() {
-    document.getElementById('modalOverlay').classList.add('show');
-}
-
-window.closeModal = function() {
-    document.getElementById('modalOverlay').classList.remove('show');
-};
+function openModal() { document.getElementById('modalOverlay').classList.add('show'); }
+window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('show'); };
 
 // ============================================
 // TOGGLES
