@@ -9,7 +9,6 @@
 </head>
 <body>
 
-    <!-- ===== Job Seeker Navbar ===== -->
     <nav class="navbar">
         <div class="logo">HASK TalentConnect</div>
         <ul class="menu">
@@ -21,10 +20,8 @@
         </ul>
     </nav>
 
-    <!-- ===== Profile Layout ===== -->
     <div class="profile-layout">
 
-        <!-- ===== Sidebar ===== -->
         <aside class="profile-sidebar">
 
             <div class="sidebar-profile">
@@ -52,6 +49,13 @@
                 </div>
             </div>
 
+            <!-- Preview CV Button -->
+            <div class="cv-action">
+                <button type="button" onclick="previewCV()" class="btn-preview-cv">
+                    👁️ Preview My CV
+                </button>
+            </div>
+
             <ul class="sidebar-menu" id="sidebarMenu">
                 <li>
                     <a href="#" class="menu-item" data-section="personal">
@@ -63,6 +67,12 @@
                     <a href="#" class="menu-item" data-section="education">
                         <span class="check-box" id="check-education">⬜</span>
                         <span class="menu-label">Education</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="menu-item" data-section="certifications">
+                        <span class="check-box" id="check-certifications">⬜</span>
+                        <span class="menu-label">Certifications</span>
                     </a>
                 </li>
                 <li>
@@ -125,7 +135,6 @@
 
         </aside>
 
-        <!-- ===== Main Content ===== -->
         <main class="profile-main">
 
             <div id="messageBox" class="message-box"></div>
@@ -210,10 +219,30 @@
                             <label>Specify Interest <span class="req">*</span></label>
                             <input type="text" id="pOtherInterest" placeholder="e.g. Architecture">
                         </div>
+
+                        <!-- Province -->
+                        <div class="field">
+                            <label>Province <span class="req">*</span></label>
+                            <select id="pProvince" required onchange="handleProvinceChange('pProvince', 'pDomicile')">
+                                <option value="">Select Province</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Sindh">Sindh</option>
+                                <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
+                                <option value="Balochistan">Balochistan</option>
+                                <option value="Islamabad Capital Territory">Islamabad Capital Territory</option>
+                                <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                                <option value="Azad Jammu & Kashmir">Azad Jammu & Kashmir</option>
+                            </select>
+                        </div>
+
+                        <!-- Domicile District -->
                         <div class="field">
                             <label>Domicile District <span class="req">*</span></label>
-                            <input type="text" id="pDomicile" placeholder="e.g. Sheikhupura" required>
+                            <select id="pDomicile" required>
+                                <option value="">Select Province First</option>
+                            </select>
                         </div>
+
                         <div class="field full">
                             <label>Present Address <span class="req">*</span></label>
                             <input type="text" id="pAddress" required>
@@ -289,12 +318,48 @@
 
                 <div class="form-actions">
                     <button type="button" class="btn-prev" onclick="goToSection('personal')">← Previous</button>
+                    <button type="button" class="btn-save" onclick="nextSection('certifications')">Save & Continue →</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SECTION 3: CERTIFICATIONS
+                 ============================================ -->
+            <section class="profile-section" id="section-certifications">
+                <div class="section-header">
+                    <h2>📜 Certifications</h2>
+                    <p class="section-note">Add your professional certifications and short courses (Optional)</p>
+                </div>
+
+                <button type="button" class="btn-add" onclick="openCertificationModal()">
+                    <span>⊕</span> Add Certification
+                </button>
+
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Certificate Name</th>
+                                <th>Issuing Authority</th>
+                                <th>Year</th>
+                                <th>Certificate ID</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="certificationsTableBody">
+                            <tr><td colspan="5" class="empty-row">No certifications added yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="goToSection('education')">← Previous</button>
                     <button type="button" class="btn-save" onclick="nextSection('experience')">Save & Continue →</button>
                 </div>
             </section>
 
             <!-- ============================================
-                 SECTION 3: EXPERIENCE
+                 SECTION 4: EXPERIENCE
                  ============================================ -->
             <section class="profile-section" id="section-experience">
                 <div class="section-header">
@@ -324,8 +389,6 @@
                         <thead>
                             <tr>
                                 <th>Employer</th>
-                                <th>Manager's Name</th>
-                                <th>Nature of Business</th>
                                 <th>Job Title</th>
                                 <th>Joining Date</th>
                                 <th>Leaving Date</th>
@@ -333,19 +396,19 @@
                             </tr>
                         </thead>
                         <tbody id="experienceTableBody">
-                            <tr><td colspan="7" class="empty-row">No experience added yet</td></tr>
+                            <tr><td colspan="5" class="empty-row">No experience added yet</td></tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn-prev" onclick="goToSection('education')">← Previous</button>
+                    <button type="button" class="btn-prev" onclick="goToSection('certifications')">← Previous</button>
                     <button type="button" class="btn-save" onclick="nextSection('skills')">Save & Continue →</button>
                 </div>
             </section>
 
             <!-- ============================================
-                 SECTION 4: SKILLS
+                 SECTION 5: SKILLS
                  ============================================ -->
             <section class="profile-section" id="section-skills">
                 <div class="section-header">
@@ -379,7 +442,7 @@
             </section>
 
             <!-- ============================================
-                 SECTION 5: SELF ASSESSMENT
+                 SECTION 6: SELF ASSESSMENT
                  ============================================ -->
             <section class="profile-section" id="section-self">
                 <div class="section-header">
@@ -419,7 +482,7 @@
             </section>
 
             <!-- ============================================
-                 SECTION 6: REFERENCES
+                 SECTION 7: REFERENCES
                  ============================================ -->
             <section class="profile-section" id="section-references">
                 <div class="section-header">
@@ -510,7 +573,7 @@
             </section>
 
             <!-- ============================================
-                 SECTION 7: MISCELLANEOUS
+                 SECTION 8: MISCELLANEOUS
                  ============================================ -->
             <section class="profile-section" id="section-misc">
                 <div class="section-header">
@@ -622,7 +685,7 @@
             </section>
 
             <!-- ============================================
-                 SECTION 8: COMPENSATION
+                 SECTION 9: COMPENSATION
                  ============================================ -->
             <section class="profile-section" id="section-compensation">
                 <div class="section-header">
@@ -800,7 +863,7 @@
 
     </div>
 
-    <!-- ===== Modal ===== -->
+    <!-- Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <div class="modal-header">
