@@ -473,8 +473,14 @@
                         <label class="radio-label"><input type="radio" name="fuel" value="Yes" onchange="toggleFuel(true)"> Yes</label>
                         <label class="radio-label"><input type="radio" name="fuel" value="No" onchange="toggleFuel(false)" checked> No</label>
                         <div class="fuel-inputs">
-                            <input type="number" id="fuelAmount" value="0" min="0" placeholder="Amount (PKR)">
-                            <input type="number" id="fuelLiters" value="0" min="0" placeholder="Liters">
+                            <div class="fuel-input-wrap">
+                                <label class="mini-label">💰 Amount (PKR)</label>
+                                <input type="number" id="fuelAmount" value="0" min="0" placeholder="Enter Amount">
+                            </div>
+                            <div class="fuel-input-wrap">
+                                <label class="mini-label">⛽ Liters</label>
+                                <input type="number" id="fuelLiters" value="0" min="0" placeholder="Enter Liters">
+                            </div>
                         </div>
                     </div>
 
@@ -511,13 +517,17 @@
                     </div>
                     <div class="comp-row"><label>Health Insurance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="health" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="health" value="No" checked> No</label></div>
                     <div class="comp-row"><label>Life Insurance <span class="req">*</span></label><label class="radio-label"><input type="radio" name="life" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="life" value="No" checked> No</label></div>
-                    <div class="comp-row"><label>Provident Fund <span class="req">*</span></label><label class="radio-label"><input type="radio" name="pf" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="pf" value="No" checked> No</label></div>
-                    <div class="comp-row">
-                        <label>Gratuity <span class="req">*</span></label>
-                        <label class="radio-label"><input type="radio" name="gratuity" value="Yes"> Yes</label>
-                        <label class="radio-label"><input type="radio" name="gratuity" value="No" checked> No</label>
-                        <label class="radio-label"><input type="radio" name="gratuityType" value="On basic" checked> On basic</label>
-                        <label class="radio-label"><input type="radio" name="gratuityType" value="On gross"> On gross</label>
+                                       <div class="comp-row">
+                        <label>Retirement Benefit <span class="req">*</span></label>
+                        <select id="retirementBenefit" onchange="toggleRetirement()" style="flex:1; max-width:280px;">
+                            <option value="None">None</option>
+                            <option value="Provident Fund">Provident Fund (PF)</option>
+                            <option value="Gratuity">Gratuity</option>
+                        </select>
+                        <select id="retirementType" style="display:none; flex:1; max-width:200px;">
+                            <option value="On basic">On Basic</option>
+                            <option value="On gross">On Gross</option>
+                        </select>
                     </div>
                     <div class="comp-row"><label>WPPF <span class="req">*</span></label><label class="radio-label"><input type="radio" name="wppf" value="Yes"> Yes</label><label class="radio-label"><input type="radio" name="wppf" value="No" checked> No</label></div>
 
