@@ -1,143 +1,247 @@
 /* ============================================
-   HASK TalentConnect - Complete Data
+   HASK Talent Connect - Complete Data
    Industries + Languages + Skills + Locations
+   + Strengths + Professional Titles
    ============================================ */
 
 // ============================================
-// INDUSTRIES LIST
+// STRENGTHS SUGGESTIONS (Common Professional)
+// ============================================
+export const STRENGTHS_LIST = [
+    "Administration",
+    "Communication Skills",
+    "Computer Skills (MS Office)",
+    "Employee Relations",
+    "Time Management",
+    "Problem Solving",
+    "Team Leadership",
+    "Attention to Detail",
+    "Multitasking",
+    "Adaptability",
+    "Critical Thinking",
+    "Creativity",
+    "Decision Making",
+    "Conflict Resolution",
+    "Customer Service Orientation",
+    "Negotiation Skills",
+    "Presentation Skills",
+    "Public Speaking",
+    "Report Writing",
+    "Data Analysis",
+    "Project Management",
+    "Strategic Planning",
+    "Team Building",
+    "Mentoring & Coaching",
+    "Work Under Pressure",
+    "Fast Learner",
+    "Self-Motivated",
+    "Honest & Reliable",
+    "Punctual & Disciplined",
+    "Positive Attitude",
+    "Quick Decision Making",
+    "Problem Identification",
+    "Resource Management",
+    "Interpersonal Skills",
+    "Active Listening",
+    "Patience & Empathy",
+    "Leadership Qualities",
+    "Delegation Skills",
+    "Quality Focus",
+    "Safety Consciousness"
+];
+
+// ============================================
+// PROFESSIONAL TITLES (Suggestions for Self Assessment)
+// ============================================
+export const PROFESSIONAL_TITLES = [
+    "Accountant","Senior Accountant","Accounts Manager","Finance Manager","Auditor","Cashier",
+    "HR Manager","HR Executive","HR Officer","HR Assistant","Recruiter","Admin Manager","Admin Officer",
+    "Software Engineer","Software Developer","Web Developer","Mobile App Developer","QA Engineer",
+    "Data Analyst","Data Scientist","UI/UX Designer","IT Support Engineer","Network Administrator",
+    "Mechanical Engineer","Mechanical Technician","Fitter","Turner","Machinist","Welder","Millwright",
+    "Electrical Engineer","Electrical Technician","Electrician","Instrument Technician",
+    "Civil Engineer","Site Engineer","Site Supervisor","Mason","Carpenter","Plumber","Painter",
+    "Sales Manager","Sales Executive","Salesman","Marketing Manager","Business Development Executive",
+    "Teacher","Senior Teacher","Lecturer","Professor","Principal","Tutor","Trainer",
+    "Doctor","Nurse","Pharmacist","Lab Technician","Physiotherapist","Medical Officer",
+    "Driver","Truck Driver","Delivery Rider","Forklift Operator","Heavy Vehicle Driver",
+    "Security Guard","Security Supervisor","CCTV Operator",
+    "Chef","Cook","Waiter","Baker","Barista","Housekeeping",
+    "Tailor","Master Tailor","Stitcher","Quality Checker","Weaver",
+    "Production Manager","Production Supervisor","Machine Operator","Quality Inspector",
+    "Farm Manager","Agriculture Officer","Livestock Supervisor","Veterinary Doctor",
+    "Shopkeeper","Sales Associate","Store Manager","Inventory Manager",
+    "Telecom Engineer","Telecom Technician","BTS Technician",
+    "Lawyer","Advocate","Legal Advisor","Paralegal",
+    "Journalist","Content Writer","Video Editor","Photographer","Graphic Designer"
+];
+
+// ============================================
+// INDUSTRIES
 // ============================================
 export const INDUSTRIES = [
-    "Accounting & Finance",
-    "Advertising & Marketing",
-    "Agriculture & Farming",
-    "Automotive",
-    "Banking & Financial Services",
-    "Chemicals",
-    "Construction & Real Estate",
-    "Consulting",
-    "Customer Service & BPO",
-    "Education & Training",
-    "Engineering",
-    "Food & Beverage",
-    "Government & Public Sector",
-    "Healthcare & Medical",
-    "Hospitality & Tourism",
-    "HR & Admin",
-    "IT & Software",
-    "Legal",
-    "Logistics & Supply Chain",
-    "Manufacturing",
-    "Media & Entertainment",
-    "Mining & Metals",
-    "NGO & Social Services",
-    "Oil & Gas",
-    "Pharmaceuticals",
-    "Retail & Wholesale",
-    "Sales & Marketing",
-    "Security Services",
-    "Telecom",
-    "Textile & Garments",
-    "Transportation",
-    "Utilities (Power, Water)",
-    "Warehousing",
-    "Other"
+    "Accounting & Finance","Advertising & Marketing","Agriculture & Farming","Automotive",
+    "Banking & Financial Services","Chemicals","Construction & Real Estate","Consulting",
+    "Customer Service & BPO","Education & Training","Engineering","Food & Beverage",
+    "Government & Public Sector","Healthcare & Medical","Hospitality & Tourism","HR & Admin",
+    "IT & Software","Legal","Logistics & Supply Chain","Manufacturing","Media & Entertainment",
+    "Mining & Metals","NGO & Social Services","Oil & Gas","Pharmaceuticals",
+    "Retail & Wholesale","Sales & Marketing","Security Services","Telecom",
+    "Textile & Garments","Transportation","Utilities (Power, Water)","Warehousing","Other"
 ];
 
 // ============================================
-// PAKISTAN LANGUAGES
+// LANGUAGES
 // ============================================
 export const LANGUAGES = [
-    "Urdu",
-    "English",
-    "Punjabi",
-    "Pashto",
-    "Sindhi",
-    "Saraiki",
-    "Balochi",
-    "Hindko",
-    "Kashmiri",
-    "Brahvi",
-    "Shina",
-    "Balti",
-    "Khowar",
-    "Wakhi",
-    "Arabic",
-    "Persian/Farsi",
-    "Other"
+    "Urdu","English","Punjabi","Pashto","Sindhi","Saraiki","Balochi","Hindko",
+    "Kashmiri","Brahvi","Shina","Balti","Khowar","Wakhi",
+    "Arabic","Persian/Farsi","Other"
 ];
 
 // ============================================
-// SKILLS DATABASE (Pakistan)
+// SKILLS (300+ comprehensive)
 // ============================================
 export const SKILLS_DB = [
-    // IT & Software
-    "JavaScript", "Python", "Java", "PHP", "C++", "C#", "React", "Node.js", "Angular", "Vue.js",
-    "HTML", "CSS", "Bootstrap", "Tailwind CSS", "TypeScript", "SQL", "MySQL", "MongoDB", "PostgreSQL",
-    "Firebase", "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Git", "GitHub",
-    "Web Development", "Mobile App Development", "Android Development", "iOS Development", "Flutter",
-    "React Native", "UI/UX Design", "Graphic Design", "Photoshop", "Illustrator", "Figma",
-    "SEO", "Digital Marketing", "Google Ads", "Facebook Ads", "Content Writing", "Copywriting",
-    "Video Editing", "Premiere Pro", "After Effects", "Data Analysis", "Data Science", "Machine Learning",
-    "Artificial Intelligence", "Cybersecurity", "Ethical Hacking", "Networking", "CCNA", "Linux",
-    
-    // HR & Admin
-    "Recruitment", "Talent Acquisition", "Payroll Processing", "HR Policies", "Employee Relations",
-    "Performance Management", "Compensation & Benefits", "Training & Development", "HRIS", "Onboarding",
-    "Interviewing", "HR Compliance", "Labor Law", "Conflict Resolution", "Office Administration",
-    "Documentation", "Filing", "Scheduling", "Email Management", "MS Office", "MS Excel", "MS Word",
-    "PowerPoint", "Google Workspace", "Data Entry",
-    
-    // Accounting & Finance
-    "Bookkeeping", "Financial Reporting", "Taxation", "Auditing", "Budgeting", "Forecasting",
-    "Accounts Payable", "Accounts Receivable", "Payroll", "QuickBooks", "Tally", "SAP FICO",
-    "Financial Analysis", "Cash Flow Management", "Cost Accounting", "Internal Controls",
-    
-    // Sales & Marketing
-    "Sales", "Business Development", "Lead Generation", "Cold Calling", "Negotiation", "Customer Service",
-    "Client Relationship", "Market Research", "Brand Management", "Product Marketing", "B2B Sales",
-    "B2C Sales", "Retail Sales", "Channel Sales", "Key Account Management", "CRM", "Salesforce",
-    
-    // Engineering
-    "AutoCAD", "SolidWorks", "MATLAB", "Civil Engineering", "Mechanical Engineering", "Electrical Engineering",
-    "Project Management", "Site Supervision", "Quality Control", "Production Planning", "Maintenance",
-    "PLC Programming", "SCADA", "HVAC", "Welding", "Machining", "CNC Operation", "3D Printing",
-    
-    // Healthcare
-    "Patient Care", "Medical Coding", "First Aid", "CPR", "Vital Signs Monitoring", "Phlebotomy",
-    "Medication Administration", "EMR Systems", "Clinical Research", "Diagnosis", "Medical Records",
-    
-    // Education
-    "Teaching", "Curriculum Development", "Lesson Planning", "Classroom Management", "Student Assessment",
-    "Online Teaching", "Zoom", "Google Classroom", "Special Education", "Educational Technology",
-    
-    // Construction & Labor
-    "Masonry", "Carpentry", "Plumbing", "Electrical Wiring", "Painting", "Tiling", "Steel Fixing",
-    "Scaffolding", "Concrete Work", "Plastering", "Heavy Equipment Operation", "Crane Operation",
-    
-    // Transport & Driver
-    "Driving", "Heavy Vehicle Driving", "Delivery", "Route Planning", "Vehicle Maintenance",
-    "Forklift Operation", "Cargo Handling",
-    
-    // Hospitality
-    "Cooking", "Baking", "Food Preparation", "Customer Service", "Bartending", "Barista", "Housekeeping",
-    "Front Desk", "Event Planning",
-    
-    // Security
-    "Security Guarding", "CCTV Monitoring", "Access Control", "Patrolling", "Emergency Response",
-    "Fire Safety", "First Aid",
-    
-    // Textile & Manufacturing
-    "Tailoring", "Stitching", "Embroidery", "Quality Checking", "Weaving", "Dyeing", "Pattern Making",
-    "Machine Operation", "Assembly", "Packaging", "Inventory Management", "Warehouse Operations",
-    
-    // Soft Skills
-    "Communication", "Teamwork", "Time Management", "Problem Solving", "Leadership", "Critical Thinking",
-    "Adaptability", "Creativity", "Work Ethic", "Attention to Detail", "Multitasking", "Decision Making",
-    "Conflict Management", "Presentation Skills", "Public Speaking"
+    // IT & Software (60)
+    "JavaScript","TypeScript","Python","Java","PHP","C++","C#","Kotlin","Swift","Go","Ruby","Rust",
+    "React","React Native","Angular","Vue.js","Next.js","Node.js","Express.js","Django","Flask","Laravel",
+    "HTML","HTML5","CSS","CSS3","SASS","Bootstrap","Tailwind CSS","Material UI",
+    "SQL","MySQL","PostgreSQL","MongoDB","Oracle","SQLite","Redis","Firebase","Supabase",
+    "REST API","GraphQL","WebSockets",
+    "AWS","Azure","Google Cloud","Docker","Kubernetes","Jenkins","CI/CD","Git","GitHub","GitLab",
+    "Web Development","Mobile App Development","Android Development","iOS Development","Flutter",
+    "UI/UX Design","Graphic Design","Photoshop","Illustrator","Figma","Adobe XD","Sketch",
+    "WordPress","Shopify","WooCommerce","Magento",
+    "QA Testing","Manual Testing","Automation Testing","Selenium","Cypress","Jest",
+    "Data Analysis","Data Science","Machine Learning","Deep Learning","Artificial Intelligence",
+    "Pandas","NumPy","TensorFlow","PyTorch",
+    "Cybersecurity","Ethical Hacking","Penetration Testing","Network Security",
+    "Networking","CCNA","CCNP","Linux","Windows Server","Active Directory",
+    "SEO","SEM","Google Ads","Facebook Ads","Google Analytics","Digital Marketing","Content Marketing","Affiliate Marketing",
+    "Video Editing","Premiere Pro","After Effects","Final Cut Pro","Animation","Motion Graphics",
+    "3D Modeling","Blender","AutoCAD","SolidWorks","SketchUp","3ds Max",
+
+    // HR & Admin (30)
+    "Recruitment","Talent Acquisition","Headhunting","Interviewing","Onboarding","Exit Interviews",
+    "Payroll Processing","Salary Structures","Tax & EOBI","Attendance Management",
+    "HR Policies","Employee Handbook","HR Compliance","Labor Law","Industrial Relations",
+    "Performance Management","KPI Setting","Appraisal Systems",
+    "Compensation & Benefits","Job Evaluation","Benchmarking",
+    "Training & Development","Training Needs Analysis","L&D Program Design",
+    "HRIS","SAP HR","Oracle HRMS","Workday","BambooHR",
+    "Employee Relations","Grievance Handling","Conflict Resolution","Disciplinary Procedures",
+    "Office Administration","Documentation","Filing","Scheduling","Email Management","Travel Arrangements",
+    "Event Management","Meeting Coordination","Vendor Management",
+
+    // Accounting & Finance (30)
+    "Bookkeeping","Financial Reporting","Financial Analysis","Financial Modeling",
+    "Taxation","Income Tax Return","Sales Tax","Withholding Tax",
+    "Auditing","Internal Audit","External Audit","Statutory Audit",
+    "Budgeting","Forecasting","Variance Analysis","Cost Accounting","Costing",
+    "Accounts Payable","Accounts Receivable","Reconciliation","Bank Reconciliation",
+    "Cash Flow Management","Treasury","Fund Management",
+    "QuickBooks","Tally ERP","SAP FICO","Peachtree","Xero","Wave",
+    "Payroll Accounting","Fixed Assets Management","Inventory Accounting",
+    "IFRS","GAAP","Financial Statements","Balance Sheet","P&L Analysis",
+
+    // Sales & Marketing (30)
+    "Sales","B2B Sales","B2C Sales","Retail Sales","Channel Sales","Field Sales","Inside Sales",
+    "Business Development","Lead Generation","Cold Calling","Telemarketing","Door-to-Door Sales",
+    "Negotiation","Closing Deals","Sales Funnel Management","Sales Forecasting",
+    "Account Management","Key Account Management","Customer Retention","After-Sales Support",
+    "CRM","Salesforce","HubSpot","Zoho CRM","Pipedrive",
+    "Market Research","Competitor Analysis","Product Launch","Brand Management","Positioning",
+    "Customer Service","Complaint Handling","Client Relationship","Customer Success",
+    "Tender Management","Government Tenders","RFQ Preparation",
+
+    // Engineering (40)
+    "AutoCAD","SolidWorks","CATIA","ANSYS","MATLAB","Simulink","LabVIEW",
+    "Civil Engineering","Structural Engineering","Geotechnical","Transportation Engineering",
+    "Site Supervision","Construction Management","Quantity Surveying","Estimating",
+    "Mechanical Engineering","Thermodynamics","Fluid Mechanics","Machine Design","CAD/CAM",
+    "Electrical Engineering","Power Systems","Control Systems","Instrumentation","PLC Programming",
+    "SCADA","HMI Programming","VFD Drives","Motor Control",
+    "HVAC","Chiller Systems","Refrigeration","Air Conditioning",
+    "Welding","Arc Welding","MIG Welding","TIG Welding","Gas Welding",
+    "Machining","Lathe Operation","Milling","Grinding","CNC Operation",
+    "Sheet Metal Work","Fabrication","Pipe Fitting","Millwright",
+    "Quality Control","Quality Assurance","ISO 9001","Six Sigma","Lean Manufacturing","Kaizen","5S",
+    "Production Planning","Scheduling","Work Orders","Shop Floor Management","Industrial Engineering",
+
+    // Healthcare (20)
+    "Patient Care","Vital Signs Monitoring","Medication Administration","IV Therapy",
+    "Phlebotomy","Blood Sampling","ECG","First Aid","CPR","BLS","ACLS",
+    "Medical Coding","ICD-10","CPT Coding","EMR Systems","HIS",
+    "Clinical Research","Data Collection","Patient Assessment","Wound Care","Emergency Care",
+
+    // Education (20)
+    "Teaching","Lesson Planning","Curriculum Development","Classroom Management","Student Assessment",
+    "Online Teaching","Zoom","Google Classroom","MS Teams","LMS Management","Moodle",
+    "Special Education","Early Childhood Education","Montessori","Child Psychology",
+    "Educational Technology","Smart Board","E-Learning Content","Academic Advising","Exam Invigilation",
+
+    // Construction & Labor (25)
+    "Masonry","Brick Laying","Block Work","Plastering","Concrete Work","RCC Work","Shuttering",
+    "Carpentry","Furniture Making","Wood Polishing",
+    "Plumbing","Pipe Installation","Sanitary Fittings","Leak Repair",
+    "Electrical Wiring","Conduit Installation","Panel Wiring","Switch Board Fitting",
+    "Painting","Wall Putty","Spray Painting","Texture Painting","Wallpaper Installation",
+    "Tiling","Marble Fixing","Granite Fitting","Pop Work","False Ceiling",
+    "Steel Fixing","Rebar","Fabrication","Welding (Structural)","Scaffolding","Rigger",
+    "Heavy Equipment Operation","Crane Operation","Excavator Operation","Bulldozer Operation",
+
+    // Transport & Driver (15)
+    "Driving","Heavy Vehicle Driving","HTV License","LTV License","Trailer Driving",
+    "Truck Driving","Bus Driving","Taxi Driving","Ride Hailing",
+    "Delivery","Food Delivery","Parcel Delivery","Courier",
+    "Route Planning","Vehicle Maintenance","Forklift Operation","Cargo Handling",
+
+    // Hospitality (20)
+    "Cooking","Continental Cooking","Desi Cooking","BBQ","Baking","Pastry","Cake Decoration",
+    "Food Preparation","Food Plating","Menu Planning","Food Costing","Food Safety","HACCP",
+    "Waiter","Table Service","Banquet Service","Room Service","Bartending","Barista","Coffee Making",
+    "Housekeeping","Room Cleaning","Laundry","Front Desk","Guest Relations","Event Planning",
+
+    // Security (10)
+    "Security Guarding","Gatekeeping","Patrolling","Access Control","CCTV Monitoring",
+    "Emergency Response","Fire Fighting","Fire Safety","First Aid","Bodyguard","Bouncer",
+
+    // Textile & Manufacturing (25)
+    "Tailoring","Stitching","Embroidery","Pattern Making","Cutting","Fabric Cutting","Sample Making",
+    "Garment Quality Checking","AQL Inspection","Final Inspection","Inline Checking",
+    "Weaving","Loom Operation","Warping","Sizing","Dyeing","Fabric Dyeing","Yarn Dyeing","Printing",
+    "Machine Operation","Assembly","Packaging","Labeling","Barcode Scanner",
+    "Inventory Management","Store Keeping","Warehouse Operations","Picking","Packing",
+
+    // Soft Skills (40)
+    "Communication","Verbal Communication","Written Communication","Presentations",
+    "Teamwork","Collaboration","Team Building","Mentoring",
+    "Time Management","Prioritization","Multitasking","Meeting Deadlines",
+    "Problem Solving","Analytical Thinking","Critical Thinking","Root Cause Analysis",
+    "Leadership","Supervisory Skills","Delegation","Decision Making",
+    "Adaptability","Flexibility","Learning Agility","Willingness to Learn",
+    "Creativity","Innovation","Out-of-the-Box Thinking",
+    "Work Ethic","Professionalism","Integrity","Accountability",
+    "Attention to Detail","Accuracy","Quality Focus","Precision",
+    "Customer Orientation","Empathy","Patience","Conflict Resolution",
+    "Stress Management","Work Under Pressure","Emotional Intelligence",
+    "Negotiation","Persuasion","Influencing Skills","Public Speaking",
+
+    // Software Tools (20)
+    "MS Office","MS Word","MS Excel","MS PowerPoint","MS Outlook","MS Access",
+    "Google Workspace","Google Sheets","Google Docs","Google Slides","Google Forms",
+    "Slack","Zoom","MS Teams","Trello","Asana","Jira","Notion","Monday.com",
+    "Canva","CapCut","Google Ads Manager","Meta Business Suite",
+
+    // Languages & Others
+    "Technical Writing","Report Writing","Business Writing","Email Etiquette",
+    "Photography","Videography","Drone Operation","Sound Engineering","DJ",
+    "Bookkeeping (Basic)","Data Entry","Typing Speed (40+ WPM)","Transcription"
 ];
 
 // ============================================
-// JOB TITLES BY INDUSTRY (For AI Title Generation)
+// JOB TITLES BY INDUSTRY (AI Title)
 // ============================================
 export const JOB_TITLES_DB = {
     "Accounting & Finance": ["Accountant","Senior Accountant","Accounts Manager","Finance Manager","Auditor","Cashier","Financial Analyst","Tax Consultant"],
@@ -174,7 +278,7 @@ export const JOB_TITLES_DB = {
 };
 
 // ============================================
-// UNIVERSITIES OF PAKISTAN
+// UNIVERSITIES
 // ============================================
 export const UNIVERSITIES = [
     "Air University, Islamabad","Allama Iqbal Open University, Islamabad","Arid Agriculture University, Rawalpindi",
@@ -192,12 +296,11 @@ export const UNIVERSITIES = [
     "University of Engineering & Technology, Taxila","University of Gujrat","University of Karachi","University of Lahore",
     "University of Malakand","University of Management & Technology (UMT)","University of Peshawar",
     "University of Punjab, Lahore","University of Sargodha","University of Sindh, Jamshoro",
-    "University of Veterinary & Animal Sciences, Lahore","Virtual University of Pakistan",
-    "Other"
+    "University of Veterinary & Animal Sciences, Lahore","Virtual University of Pakistan","Other"
 ];
 
 // ============================================
-// PAKISTAN PROVINCES → DISTRICTS → TEHSILS + POSTAL
+// PAKISTAN LOCATIONS
 // ============================================
 export const PAKISTAN_DATA = {
     "Punjab": {
@@ -356,25 +459,25 @@ export const COUNTRIES = [
 ];
 
 // ============================================
-// HELPER FUNCTIONS
+// HELPERS
 // ============================================
 export function getProvinces() { return Object.keys(PAKISTAN_DATA); }
-export function getDistricts(province) { return PAKISTAN_DATA[province] ? Object.keys(PAKISTAN_DATA[province]) : []; }
-export function getTehsils(province, district) {
-    if (!PAKISTAN_DATA[province] || !PAKISTAN_DATA[province][district]) return [];
-    return PAKISTAN_DATA[province][district].tehsils || [];
+export function getDistricts(p) { return PAKISTAN_DATA[p] ? Object.keys(PAKISTAN_DATA[p]) : []; }
+export function getTehsils(p, d) {
+    if (!PAKISTAN_DATA[p] || !PAKISTAN_DATA[p][d]) return [];
+    return PAKISTAN_DATA[p][d].tehsils || [];
 }
-export function getPostalCode(province, district) {
-    if (!PAKISTAN_DATA[province] || !PAKISTAN_DATA[province][district]) return '';
-    return PAKISTAN_DATA[province][district].postal || '';
+export function getPostalCode(p, d) {
+    if (!PAKISTAN_DATA[p] || !PAKISTAN_DATA[p][d]) return '';
+    return PAKISTAN_DATA[p][d].postal || '';
 }
 export function getAllTitles() {
     const all = [];
     Object.values(JOB_TITLES_DB).forEach(t => all.push(...t));
     return all;
 }
-export function searchSkills(keyword) {
-    if (!keyword) return [];
-    const k = keyword.toLowerCase();
-    return SKILLS_DB.filter(s => s.toLowerCase().includes(k));
+export function searchSkills(k) {
+    if (!k) return [];
+    const lk = k.toLowerCase();
+    return SKILLS_DB.filter(s => s.toLowerCase().includes(lk));
 }
