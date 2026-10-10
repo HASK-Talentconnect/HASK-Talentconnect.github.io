@@ -1,0 +1,33 @@
+name: Collect Project Code
+
+on:
+  workflow_dispatch:
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Collect all code into one file
+        run: |
+          OUTPUT="project_dump.txt"
+          echo "PROJECT CODE DUMP" > $OUTPUT
+          echo "==================" >> $OUTPUT
+          find . -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.json" -o -name "*.md" \) \
+            -not -path "./.git/*" \
+            -not -path "./node_modules/*" | while read file; do
+              echo "" >> $OUTPUT
+              echo "========================================" >> $OUTPUT
+              echo "FILE: $file" >> $OUTPUT
+              echo "========================================" >> $OUTPUT
+              cat "$file" >> $OUTPUT
+              echo "" >> $OUTPUT
+          done
+
+      - name: Upload dump as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-code-dump
+          path: project_dump.txt
